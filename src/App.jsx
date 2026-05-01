@@ -1,0 +1,21 @@
+import { HashRouter, Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout'
+import HomePage from './pages/HomePage'
+import DirectoryPage from './pages/DirectoryPage'
+import StatisticsPage from './pages/StatisticsPage'
+import ProfilePage from './pages/ProfilePage'
+
+export default function App() {
+  return (
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route path="directory" element={<DirectoryPage />} />
+          <Route path="statistics" element={<StatisticsPage />} />
+          <Route path="profile/:seatCode" element={<ProfilePage />} />
+        </Route>
+      </Routes>
+    </HashRouter>
+  )
+}

@@ -1,0 +1,530 @@
+@import "tailwindcss";
+
+/* ── OKLCH Color Tokens: Light Theme ── */
+:root {
+  /* Primary — soft sage green (pastel/lofi) */
+  --md-sys-color-primary: oklch(52% 0.065 148);
+  --md-sys-color-surface-tint: oklch(52% 0.065 148);
+  --md-sys-color-on-primary: oklch(99% 0.004 148);
+  --md-sys-color-primary-container: oklch(93% 0.025 148);
+  --md-sys-color-on-primary-container: oklch(30% 0.055 148);
+
+  /* Secondary — dusty mauve (lofi warmth) */
+  --md-sys-color-secondary: oklch(54% 0.045 340);
+  --md-sys-color-on-secondary: oklch(99% 0.004 340);
+  --md-sys-color-secondary-container: oklch(92% 0.018 340);
+  --md-sys-color-on-secondary-container: oklch(32% 0.040 340);
+
+  /* Tertiary — faded periwinkle */
+  --md-sys-color-tertiary: oklch(57% 0.050 255);
+  --md-sys-color-on-tertiary: oklch(99% 0.004 255);
+  --md-sys-color-tertiary-container: oklch(93% 0.020 255);
+  --md-sys-color-on-tertiary-container: oklch(30% 0.045 255);
+
+  /* Error */
+  --md-sys-color-error: oklch(52% 0.14 25);
+  --md-sys-color-on-error: oklch(99% 0.004 25);
+  --md-sys-color-error-container: oklch(94% 0.030 25);
+  --md-sys-color-on-error-container: oklch(30% 0.12 25);
+
+  /* Surfaces — warm cream tinted toward green */
+  --md-sys-color-background: oklch(98% 0.005 95);
+  --md-sys-color-on-background: oklch(22% 0.008 148);
+  --md-sys-color-surface: oklch(98% 0.005 95);
+  --md-sys-color-on-surface: oklch(22% 0.008 148);
+  --md-sys-color-surface-variant: oklch(91% 0.010 148);
+  --md-sys-color-on-surface-variant: oklch(44% 0.018 148);
+
+  /* Surface containers */
+  --md-sys-color-surface-container-lowest: oklch(99.5% 0.003 95);
+  --md-sys-color-surface-container-low: oklch(96.5% 0.007 95);
+  --md-sys-color-surface-container: oklch(94.5% 0.008 95);
+  --md-sys-color-surface-container-high: oklch(92% 0.009 148);
+  --md-sys-color-surface-container-highest: oklch(89% 0.010 148);
+  --md-sys-color-surface-dim: oklch(88% 0.010 148);
+  --md-sys-color-surface-bright: oklch(98% 0.005 95);
+
+  /* Outlines */
+  --md-sys-color-outline: oklch(66% 0.012 148);
+  --md-sys-color-outline-variant: oklch(87% 0.008 148);
+
+  /* Inverse */
+  --md-sys-color-inverse-surface: oklch(28% 0.010 148);
+  --md-sys-color-inverse-on-surface: oklch(94% 0.006 148);
+  --md-sys-color-inverse-primary: oklch(78% 0.055 148);
+
+  /* Misc */
+  --md-sys-color-shadow: oklch(22% 0.006 148);
+  --md-sys-color-scrim: oklch(22% 0.006 148);
+}
+
+/* ── OKLCH Color Tokens: Dark Theme ── */
+.dark {
+  /* Primary — soft sage (pastel/lofi dark) */
+  --md-sys-color-primary: oklch(75% 0.060 148);
+  --md-sys-color-surface-tint: oklch(75% 0.060 148);
+  --md-sys-color-on-primary: oklch(18% 0.040 148);
+  --md-sys-color-primary-container: oklch(30% 0.042 148);
+  --md-sys-color-on-primary-container: oklch(88% 0.030 148);
+
+  /* Secondary — dusty mauve dark */
+  --md-sys-color-secondary: oklch(72% 0.040 340);
+  --md-sys-color-on-secondary: oklch(20% 0.030 340);
+  --md-sys-color-secondary-container: oklch(33% 0.035 340);
+  --md-sys-color-on-secondary-container: oklch(88% 0.022 340);
+
+  /* Tertiary — muted periwinkle dark */
+  --md-sys-color-tertiary: oklch(72% 0.045 255);
+  --md-sys-color-on-tertiary: oklch(18% 0.035 255);
+  --md-sys-color-tertiary-container: oklch(30% 0.038 255);
+  --md-sys-color-on-tertiary-container: oklch(88% 0.025 255);
+
+  /* Error */
+  --md-sys-color-error: oklch(74% 0.12 25);
+  --md-sys-color-on-error: oklch(18% 0.10 25);
+  --md-sys-color-error-container: oklch(30% 0.12 25);
+  --md-sys-color-on-error-container: oklch(90% 0.06 25);
+
+  /* Surfaces — warm dark with slight hue */
+  --md-sys-color-background: oklch(16% 0.006 100);
+  --md-sys-color-on-background: oklch(90% 0.007 148);
+  --md-sys-color-surface: oklch(16% 0.006 100);
+  --md-sys-color-on-surface: oklch(90% 0.007 148);
+  --md-sys-color-surface-variant: oklch(33% 0.012 148);
+  --md-sys-color-on-surface-variant: oklch(76% 0.012 148);
+
+  /* Surface containers */
+  --md-sys-color-surface-container-lowest: oklch(11% 0.005 100);
+  --md-sys-color-surface-container-low: oklch(19% 0.008 100);
+  --md-sys-color-surface-container: oklch(22% 0.008 100);
+  --md-sys-color-surface-container-high: oklch(27% 0.010 148);
+  --md-sys-color-surface-container-highest: oklch(32% 0.010 148);
+  --md-sys-color-surface-dim: oklch(16% 0.006 100);
+  --md-sys-color-surface-bright: oklch(38% 0.010 148);
+
+  /* Outlines */
+  --md-sys-color-outline: oklch(54% 0.014 148);
+  --md-sys-color-outline-variant: oklch(31% 0.010 148);
+
+  /* Inverse */
+  --md-sys-color-inverse-surface: oklch(90% 0.007 148);
+  --md-sys-color-inverse-on-surface: oklch(26% 0.010 148);
+  --md-sys-color-inverse-primary: oklch(52% 0.065 148);
+
+  /* Misc */
+  --md-sys-color-shadow: oklch(5% 0.004 100);
+  --md-sys-color-scrim: oklch(5% 0.004 100);
+}
+
+/* ── Type Scale ── */
+:root {
+  --text-xs: 0.72rem;
+  --text-sm: 0.82rem;
+  --text-base: 0.95rem;
+  --text-md: 1.1rem;
+  --text-lg: 1.4rem;
+  --text-xl: 1.9rem;
+  --text-2xl: 2.6rem;
+  --text-3xl: 3.5rem;
+}
+
+/* ── Base Styles ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  font-size: var(--text-base);
+  line-height: 1.65;
+}
+
+/* ── Typography ── */
+h1, h2, h3 {
+  font-family: 'Libre Baskerville', Georgia, serif;
+  color: var(--md-sys-color-on-surface);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: var(--text-xl); margin: 0 0 8px; }
+h2 { font-size: var(--text-lg); margin: 0 0 6px; }
+h3 { font-size: var(--text-md); margin: 0 0 4px; }
+
+p {
+  max-width: 68ch;
+  margin: 0 0 1em;
+}
+
+/* ── Focus visible ── */
+:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--md-sys-color-surface-container-low);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--md-sys-color-outline-variant);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--md-sys-color-outline);
+}
+
+/* ── Utility classes ── */
+.bg-surface { background-color: var(--md-sys-color-surface); }
+.bg-surface-container { background-color: var(--md-sys-color-surface-container); }
+.bg-surface-container-low { background-color: var(--md-sys-color-surface-container-low); }
+.bg-surface-container-high { background-color: var(--md-sys-color-surface-container-high); }
+.bg-surface-variant { background-color: var(--md-sys-color-surface-variant); }
+.bg-primary { background-color: var(--md-sys-color-primary); }
+.bg-primary-container { background-color: var(--md-sys-color-primary-container); }
+.bg-tertiary-container { background-color: var(--md-sys-color-tertiary-container); }
+.bg-secondary-container { background-color: var(--md-sys-color-secondary-container); }
+
+.text-on-surface { color: var(--md-sys-color-on-surface); }
+.text-on-surface-variant { color: var(--md-sys-color-on-surface-variant); }
+.text-primary { color: var(--md-sys-color-primary); }
+.text-on-primary { color: var(--md-sys-color-on-primary); }
+.text-on-primary-container { color: var(--md-sys-color-on-primary-container); }
+.text-tertiary { color: var(--md-sys-color-tertiary); }
+.text-on-tertiary-container { color: var(--md-sys-color-on-tertiary-container); }
+.text-error { color: var(--md-sys-color-error); }
+.text-outline { color: var(--md-sys-color-outline); }
+
+.border-outline { border-color: var(--md-sys-color-outline); }
+.border-outline-variant { border-color: var(--md-sys-color-outline-variant); }
+
+/* ── Card ── */
+.card {
+  background-color: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 14px;
+  transition: box-shadow 0.15s ease-out, transform 0.15s ease-out;
+}
+.card:hover {
+  box-shadow: 0 2px 16px oklch(18% 0.008 155 / 0.08);
+  transform: translateY(-1px);
+}
+
+/* ── Badge ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+}
+.badge-mp {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+.badge-adun {
+  background-color: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+}
+.badge-active {
+  background-color: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+}
+.badge-inactive {
+  background-color: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+/* ── Input ── */
+.input-field {
+  background-color: var(--md-sys-color-surface-container-highest);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 10px;
+  color: var(--md-sys-color-on-surface);
+  padding: 10px 14px;
+  font-size: var(--text-base);
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+}
+.input-field::placeholder {
+  color: var(--md-sys-color-outline);
+}
+.input-field:focus {
+  outline: none;
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 3px oklch(52% 0.065 148 / 0.15);
+}
+.dark .input-field:focus {
+  box-shadow: 0 0 0 3px oklch(75% 0.060 148 / 0.18);
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.08s ease-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  letter-spacing: 0.01em;
+}
+.btn-primary:hover {
+  background-color: oklch(57% 0.065 148);
+}
+.dark .btn-primary:hover {
+  background-color: oklch(80% 0.060 148);
+}
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-tonal {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  border: none;
+  border-radius: 8px;
+  padding: 9px 18px;
+  font-family: 'Inter', sans-serif;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.btn-tonal:hover {
+  background-color: var(--md-sys-color-surface-container-highest);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--md-sys-color-primary);
+  border: 1.5px solid var(--md-sys-color-outline-variant);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.btn-outline:hover {
+  background-color: var(--md-sys-color-surface-container);
+  border-color: var(--md-sys-color-outline);
+}
+
+/* ── Navigation links ── */
+.nav-link {
+  color: var(--md-sys-color-on-surface-variant);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: 6px 2px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.nav-link:hover {
+  color: var(--md-sys-color-on-surface);
+}
+.nav-link.active {
+  color: var(--md-sys-color-primary);
+  border-bottom-color: var(--md-sys-color-primary);
+}
+
+/* ── Stat Card ── */
+.stat-card {
+  background-color: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 14px;
+  padding: 20px 24px;
+}
+.stat-card-accent {
+  background-color: var(--md-sys-color-primary-container);
+  border: none;
+  border-radius: 14px;
+  padding: 20px 24px;
+}
+
+/* ── Data Table ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+.data-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--md-sys-color-on-surface-variant);
+  border-bottom: 2px solid var(--md-sys-color-outline-variant);
+  background-color: var(--md-sys-color-surface-container);
+  white-space: nowrap;
+}
+.data-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface);
+  vertical-align: middle;
+}
+.data-table tr:hover td {
+  background-color: var(--md-sys-color-surface-container-low);
+}
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Progress Bar ── */
+.progress-bar-track {
+  background-color: var(--md-sys-color-surface-container-high);
+  border-radius: 999px;
+  overflow: hidden;
+  height: 8px;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Page Transitions ── */
+.page-enter {
+  animation: fadeSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Stat Cards (Home) ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 1100px) {
+  .stats-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.stat-card-modern {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 16px;
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  transition: box-shadow 0.18s ease-out, transform 0.18s ease-out, border-color 0.18s;
+  height: 100%;
+}
+
+.stat-card-link:hover .stat-card-modern {
+  box-shadow: 0 4px 20px oklch(22% 0.008 148 / 0.10);
+  transform: translateY(-2px);
+  border-color: var(--md-sys-color-outline);
+}
+
+.stat-card-link:hover .stat-card-arrow {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+.stat-card-arrow {
+  opacity: 0;
+  color: var(--md-sys-color-on-surface-variant);
+  transition: opacity 0.18s, transform 0.18s;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.stat-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+/* Icon accent variants */
+.stat-card-icon--primary {
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+.stat-card-icon--mp {
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+.stat-card-icon--adun {
+  background: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+}
+.stat-card-icon--secondary {
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+.stat-card-icon--tertiary {
+  background: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+}
+
+/* Value accent variants */
+.stat-card-value--primary { color: var(--md-sys-color-primary); }
+.stat-card-value--mp { color: var(--md-sys-color-primary); }
+.stat-card-value--adun { color: var(--md-sys-color-tertiary); }
+.stat-card-value--secondary { color: var(--md-sys-color-secondary); }
+.stat-card-value--tertiary { color: var(--md-sys-color-tertiary); }
+
+/* ── Divider ── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  margin: 0;
+}
+
+/* ── Section Label ── */
+.section-label {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--md-sys-color-on-surface-variant);
+}

@@ -1,0 +1,26 @@
+{
+  "name": "whoadunit-www",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Malaysian ADUN & MP Directory",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "data:split": "node scripts/split-by-year.js",
+    "data:manifest": "node scripts/gen-manifest.js"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "recharts": "^2.14.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.7",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.1.7",
+    "vite": "^6.3.5"
+  }
+}
