@@ -123,7 +123,7 @@ export default function Layout() {
                   color: 'var(--md-sys-color-on-surface)',
                   letterSpacing: '-0.01em',
                 }}>
-                  WhoAdUnit
+                  Whoadunit
                 </div>
                 <div style={{
                   fontSize: '0.6rem',
@@ -311,7 +311,7 @@ export default function Layout() {
                   <span style={{ color: 'var(--md-sys-color-on-primary)', fontWeight: '700', fontSize: '13px', fontFamily: 'Libre Baskerville, serif' }}>W</span>
                 </div>
                 <span style={{ fontFamily: 'Libre Baskerville, serif', fontWeight: '700', fontSize: '0.95rem', color: 'var(--md-sys-color-on-surface)' }}>
-                  WhoAdUnit
+                  Whoadunit
                 </span>
               </div>
               <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--md-sys-color-on-surface-variant)', maxWidth: '340px', lineHeight: 1.6 }}>

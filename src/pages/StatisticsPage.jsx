@@ -179,7 +179,7 @@ const CustomLegend = ({ payload }) => (
 
 export default function StatisticsPage() {
   usePageMeta({
-    title: 'Statistics — WhoAdUnit',
+    title: 'Statistics — Whoadunit',
     description: 'Data and trends on Malaysian parliamentary and state representation.',
   })
   const { data, loading } = useRepresentatives()

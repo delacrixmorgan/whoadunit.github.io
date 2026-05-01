@@ -41,7 +41,7 @@ const selectStyle = {
 
 export default function DirectoryPage() {
   usePageMeta({
-    title: 'Directory — WhoAdUnit',
+    title: 'Directory — Whoadunit',
     description: 'Browse and search all Malaysian MPs and ADUNs by name, party, or state.',
   })
   const { data, loading } = useRepresentatives()

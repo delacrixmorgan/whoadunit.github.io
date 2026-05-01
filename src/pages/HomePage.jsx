@@ -53,7 +53,7 @@ function ContactBar({ label, pct }) {
 
 export default function HomePage() {
   usePageMeta({
-    title: 'WhoAdUnit — Malaysian Representative Directory',
+    title: 'Whoadunit — Malaysian Representative Directory',
     description: 'Search and find your elected MP or ADUN across Malaysia.',
   })
   const { data, loading } = useRepresentatives()

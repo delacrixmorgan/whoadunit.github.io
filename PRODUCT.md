@@ -10,7 +10,7 @@ Malaysian citizens, journalists, and civic-minded individuals looking up elected
 
 ## Product Purpose
 
-WhoAdUnit (Whoadunit, like "whodunit") is an open directory of Malaysian elected representatives at both the federal (Dewan Rakyat / MP) and state (DUN / ADUN) levels. It exists to close the gap between citizens and their representatives through transparent, searchable data. Success means a user lands, finds their representative in under 30 seconds, and leaves knowing exactly how to reach them.
+Whoadunit (Whoadunit, like "whodunit") is an open directory of Malaysian elected representatives at both the federal (Dewan Rakyat / MP) and state (DUN / ADUN) levels. It exists to close the gap between citizens and their representatives through transparent, searchable data. Success means a user lands, finds their representative in under 30 seconds, and leaves knowing exactly how to reach them.
 
 ## Brand Personality
 
