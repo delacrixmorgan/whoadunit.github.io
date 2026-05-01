@@ -29,9 +29,7 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          # Set to your repo name so BrowserRouter basename and asset paths are correct.
-          # Update this if you rename the repo or switch to a custom domain (remove it).
-          BASE_URL: /whoadunit-www/
+          BASE_URL: /whoadunit.github.io/
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist
