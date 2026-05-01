@@ -7,5 +7,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: './',
+  // BASE_URL env var is set in the CI workflow for GitHub Pages subpath.
+  // For a custom domain at root, remove the env var (defaults to '/').
+  base: process.env.BASE_URL || '/',
 })

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WhoAdUnit</title>
+  <script>
+    // GitHub Pages SPA redirect workaround.
+    // When a user navigates directly to a path like /directory, GitHub Pages
+    // serves this 404.html. We encode the path into a query string and redirect
+    // to the root so the React app can restore the URL via history.replaceState.
+    // pathSegmentsToKeep=1 keeps the first path segment (the repo name) in tact.
+    var pathSegmentsToKeep = 1;
+    var l = window.location;
+    l.replace(
+      l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+      l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+      l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+      (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+      l.hash
+    );
+  </script>
+</head>
+<body></body>
+</html>

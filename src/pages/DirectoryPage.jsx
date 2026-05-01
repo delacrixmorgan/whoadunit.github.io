@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
+import { usePageMeta } from '../hooks/usePageMeta'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useRepresentatives, getContactCompleteness } from '../hooks/useRepresentatives'
 import { t } from '../i18n'
@@ -39,6 +40,10 @@ const selectStyle = {
 }
 
 export default function DirectoryPage() {
+  usePageMeta({
+    title: 'Directory — WhoAdUnit',
+    description: 'Browse and search all Malaysian MPs and ADUNs by name, party, or state.',
+  })
   const { data, loading } = useRepresentatives()
   const [searchParams, setSearchParams] = useSearchParams()
 

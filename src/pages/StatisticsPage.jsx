@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { usePageMeta } from '../hooks/usePageMeta'
 import { Link } from 'react-router-dom'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -177,6 +178,10 @@ const CustomLegend = ({ payload }) => (
 )
 
 export default function StatisticsPage() {
+  usePageMeta({
+    title: 'Statistics — WhoAdUnit',
+    description: 'Data and trends on Malaysian parliamentary and state representation.',
+  })
   const { data, loading } = useRepresentatives()
   const [selectedYear, setSelectedYear] = useState('All')
 

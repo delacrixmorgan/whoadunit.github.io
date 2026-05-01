@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
+import { usePageMeta } from '../hooks/usePageMeta'
 import { Link, useParams } from 'react-router-dom'
 import { useRepresentatives, getContactCompleteness } from '../hooks/useRepresentatives'
 import { t } from '../i18n'
@@ -313,6 +314,31 @@ export default function ProfilePage() {
   const rep = useMemo(() => {
     return data.find(r => r.federalSeatCode === seatCode || r.stateSeatCode === seatCode)
   }, [data, seatCode])
+
+  const repSeatName = rep ? (rep.federalSeatName || rep.stateSeatName || '') : ''
+  usePageMeta({
+    title: rep ? `${rep.name} (${seatCode})` : seatCode,
+    description: rep
+      ? `${rep.name} is the ${rep.type} for ${repSeatName}, ${rep.state}, representing ${rep.party}.`
+      : `View representative profile for seat ${seatCode}.`,
+  })
+
+  useEffect(() => {
+    if (!rep) return
+    const script = document.createElement('script')
+    script.type = 'application/ld+json'
+    script.id = 'ld-person'
+    script.text = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: rep.name,
+      jobTitle: rep.type === 'MP' ? 'Member of Parliament' : 'State Assemblyperson',
+      memberOf: { '@type': 'PoliticalParty', name: rep.party },
+      workLocation: { '@type': 'Place', name: rep.state },
+    })
+    document.head.appendChild(script)
+    return () => { document.getElementById('ld-person')?.remove() }
+  }, [rep])
 
   if (loading) {
     return (

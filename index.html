@@ -4,11 +4,62 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Malaysian ADUN & MP Directory — Search and explore elected representatives across Malaysia." />
+    <meta name="theme-color" content="#2d6a4f" />
+
+    <!-- Primary meta -->
     <title>WhoAdUnit — Malaysian Representative Directory</title>
+    <meta name="description" content="Malaysian ADUN & MP Directory — Search and explore elected representatives across Malaysia." />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="WhoAdUnit" />
+    <meta property="og:title" content="WhoAdUnit — Malaysian Representative Directory" />
+    <meta property="og:description" content="Malaysian ADUN & MP Directory — Search and explore elected representatives across Malaysia." />
+    <meta property="og:url" content="https://YOUR_DOMAIN/" />
+    <meta property="og:image" content="https://YOUR_DOMAIN/og-image.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="WhoAdUnit — Malaysian Representative Directory" />
+    <meta name="twitter:description" content="Malaysian ADUN & MP Directory — Search and explore elected representatives across Malaysia." />
+    <meta name="twitter:image" content="https://YOUR_DOMAIN/og-image.png" />
+
+    <!-- JSON-LD: WebSite with SearchAction -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "WhoAdUnit",
+      "description": "Malaysian ADUN & MP Directory — Search and explore elected representatives across Malaysia.",
+      "url": "https://YOUR_DOMAIN/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://YOUR_DOMAIN/directory?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- GitHub Pages SPA: restore path after 404.html redirect -->
+    <script>
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search.slice(1).split('&').map(function (s) {
+            return s.replace(/~and~/g, '&');
+          }).join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      }(window.location));
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    <!-- Analytics -->
+    <script data-goatcounter="https://delacrixmorgan.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   </head>
   <body>
     <div id="root"></div>

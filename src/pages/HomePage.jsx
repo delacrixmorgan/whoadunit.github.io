@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { usePageMeta } from '../hooks/usePageMeta'
 import { Link, useNavigate } from 'react-router-dom'
 import { useRepresentatives, computeStats } from '../hooks/useRepresentatives'
 import { t } from '../i18n'
@@ -51,6 +52,10 @@ function ContactBar({ label, pct }) {
 }
 
 export default function HomePage() {
+  usePageMeta({
+    title: 'WhoAdUnit — Malaysian Representative Directory',
+    description: 'Search and find your elected MP or ADUN across Malaysia.',
+  })
   const { data, loading } = useRepresentatives()
   const [query, setQuery] = useState('')
   const navigate = useNavigate()
