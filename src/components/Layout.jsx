@@ -86,6 +86,7 @@ export default function Layout() {
     { to: '/', label: t('nav.home'), end: true },
     { to: '/directory', label: t('nav.directory') },
     { to: '/statistics', label: t('nav.statistics') },
+    { to: '/dashboard', label: 'Dashboard' },
   ]
 
   return (
