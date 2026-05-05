@@ -8,10 +8,12 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "data:convert": "node data/scripts/convert-xlsx-to-json.cjs",
     "data:split": "node scripts/split-by-year.js",
     "data:manifest": "node scripts/gen-manifest.js"
   },
   "dependencies": {
+    "lucide-react": "^1.14.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",

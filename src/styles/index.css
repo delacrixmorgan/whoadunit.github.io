@@ -337,6 +337,7 @@ p {
   min-height: 44px;
   display: inline-flex;
   align-items: center;
+  gap: 6px;
 }
 .btn-outline:hover {
   background-color: var(--md-sys-color-surface-container);
@@ -401,7 +402,7 @@ p {
   vertical-align: middle;
 }
 .data-table tr:hover td {
-  background-color: var(--md-sys-color-surface-container-low);
+  background-color: var(--md-sys-color-surface-container-high);
 }
 .data-table tr:last-child td {
   border-bottom: none;

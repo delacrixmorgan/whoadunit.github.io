@@ -1,13 +1,36 @@
 import { useState, useEffect } from 'react'
 
 /**
- * Loads all representatives by:
- *  1. Fetching representatives-manifest.json  →  [2023, 2022, 2021, ...]
- *  2. Fetching each representatives_YYYY.json in parallel (newest-first order)
- *  3. Merging into a single list, deduplicating by seat:
- *       - MPs  keyed by federalSeatCode
- *       - ADUNs keyed by stateSeatCode
- *     Newer years take precedence; older entries for the same seat are skipped.
+ * Loads representatives from public/data/representatives.json.
+ *
+ * The JSON is an array of federal-seat objects shaped as:
+ * {
+ *   federalSeatCode: "P001",
+ *   federalSeatName: "Padang Besar",
+ *   state: "Perlis",
+ *   mp: {
+ *     electedYear: 2022,
+ *     stateSeatCode: "N01",  // state seat the MP's polling districts belong to
+ *     stateSeatName: "Titi Tinggi",
+ *     pollingDistricts: [...],
+ *     name, party, gender, address, email, phoneNumber, facebook, twitter
+ *   },
+ *   aduns: [
+ *     {
+ *       electedYear: 2023,
+ *       stateSeatCode: "N01",
+ *       stateSeatName: "Titi Tinggi",
+ *       pollingDistricts: [...],
+ *       name, party, gender, address, email, phoneNumber, facebook, twitter
+ *     },
+ *     ...
+ *   ]
+ * }
+ *
+ * This hook flattens the structure into a single array of representative
+ * records (one per person) for backwards compatibility with pages that
+ * iterate over a flat list.  Each record gets a `type` field ("MP" or "ADUN")
+ * and carries the parent `federalSeatCode` / `federalSeatName` / `state`.
  */
 export function useRepresentatives() {
   const [data, setData] = useState([])
@@ -17,41 +40,38 @@ export function useRepresentatives() {
   useEffect(() => {
     async function load() {
       try {
-        // 1. Fetch manifest → sorted descending by the script, but sort again for safety
-        const manifestRes = await fetch('./data/representatives-manifest.json')
-        if (!manifestRes.ok) throw new Error('Failed to fetch manifest')
-        const years = await manifestRes.json()
-        const sortedYears = [...years].sort((a, b) => b - a)
+        const res = await fetch(`${import.meta.env.BASE_URL}data/representatives.json`)
+        if (!res.ok) throw new Error('Failed to fetch representatives.json')
+        const seats = await res.json()
 
-        // 2. Fetch all year files in parallel
-        const yearArrays = await Promise.all(
-          sortedYears.map(async (year) => {
-            const res = await fetch(`./data/representatives_${year}.json`)
-            if (!res.ok) throw new Error(`Failed to fetch representatives_${year}.json`)
-            return res.json()
-          })
-        )
+        const flat = []
+        for (const seat of seats) {
+          const { federalSeatCode, federalSeatName, state } = seat
 
-        // 3. Merge: newest-first, deduplicate by seat key
-        const seen = new Set()
-        const merged = []
+          // MP record
+          if (seat.mp) {
+            flat.push({
+              type: 'MP',
+              federalSeatCode,
+              federalSeatName,
+              state,
+              ...seat.mp,
+            })
+          }
 
-        for (const reps of yearArrays) {
-          for (const rep of reps) {
-            // Build a unique key per seat
-            const key =
-              rep.type === 'MP'
-                ? `MP:${rep.federalSeatCode}`
-                : `ADUN:${rep.stateSeatCode}`
-
-            if (!seen.has(key)) {
-              seen.add(key)
-              merged.push(rep)
-            }
+          // ADUN records
+          for (const adun of seat.aduns ?? []) {
+            flat.push({
+              type: 'ADUN',
+              federalSeatCode,
+              federalSeatName,
+              state,
+              ...adun,
+            })
           }
         }
 
-        setData(merged)
+        setData(flat)
       } catch (err) {
         setError(err.message)
       } finally {
@@ -67,7 +87,9 @@ export function useRepresentatives() {
 
 export function getContactCompleteness(rep) {
   const fields = ['email', 'phoneNumber', 'facebook', 'twitter']
-  const filled = fields.filter((f) => rep[f] && rep[f].trim() !== '').length
+  const filled = fields.filter((f) =>
+    Array.isArray(rep[f]) ? rep[f].length > 0 : rep[f] && rep[f].trim() !== ''
+  ).length
   return Math.round((filled / fields.length) * 100)
 }
 
@@ -100,18 +122,22 @@ export function computeStats(data) {
     .sort((a, b) => b.count - a.count)
 
   // Contact completeness
-  const withEmail = data.filter((r) => r.email && r.email.trim()).length
-  const withPhone = data.filter((r) => r.phoneNumber && r.phoneNumber.trim()).length
-  const withFacebook = data.filter((r) => r.facebook && r.facebook.trim()).length
-  const withTwitter = data.filter((r) => r.twitter && r.twitter.trim()).length
+  const hasContact = (r, f) =>
+    Array.isArray(r[f]) ? r[f].length > 0 : r[f] && r[f].trim()
+  const withEmail    = data.filter((r) => hasContact(r, 'email')).length
+  const withPhone    = data.filter((r) => hasContact(r, 'phoneNumber')).length
+  const withFacebook = data.filter((r) => hasContact(r, 'facebook')).length
+  const withTwitter  = data.filter((r) => hasContact(r, 'twitter')).length
 
   // Party reachability: average contact completeness per party
   const partyReachability = Object.entries(partyMap).map(([party, count]) => {
-    const reps = data.filter(r => r.party === party)
+    const reps = data.filter((r) => r.party === party)
     const avgCompleteness = Math.round(
       reps.reduce((sum, r) => {
         const fields = ['email', 'phoneNumber', 'facebook', 'twitter']
-        const filled = fields.filter(f => r[f] && r[f].trim() !== '').length
+        const filled = fields.filter((f) =>
+          Array.isArray(r[f]) ? r[f].length > 0 : r[f] && r[f].trim() !== ''
+        ).length
         return sum + (filled / fields.length) * 100
       }, 0) / reps.length
     )
@@ -126,10 +152,10 @@ export function computeStats(data) {
     partyReachability,
     gender: { male, female, unknown: unknownGender },
     contact: {
-      email: { count: withEmail, pct: Math.round((withEmail / total) * 100) },
-      phone: { count: withPhone, pct: Math.round((withPhone / total) * 100) },
+      email:    { count: withEmail,    pct: Math.round((withEmail    / total) * 100) },
+      phone:    { count: withPhone,    pct: Math.round((withPhone    / total) * 100) },
       facebook: { count: withFacebook, pct: Math.round((withFacebook / total) * 100) },
-      twitter: { count: withTwitter, pct: Math.round((withTwitter / total) * 100) },
+      twitter:  { count: withTwitter,  pct: Math.round((withTwitter  / total) * 100) },
     },
   }
 }

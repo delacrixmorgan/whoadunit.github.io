@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { usePageMeta } from '../hooks/usePageMeta'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams, useNavigate, useNavigationType } from 'react-router-dom'
 import { useRepresentatives, getContactCompleteness } from '../hooks/useRepresentatives'
 import { t } from '../i18n'
 
@@ -46,30 +46,45 @@ export default function DirectoryPage() {
   })
   const { data, loading } = useRepresentatives()
   const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
 
   const [query, setQuery] = useState(searchParams.get('q') || '')
   const [typeFilter, setTypeFilter] = useState(searchParams.get('type') || 'All')
   const [partyFilter, setPartyFilter] = useState(searchParams.get('party') || 'All')
   const [stateFilter, setStateFilter] = useState(searchParams.get('state') || 'All')
-  const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'All')
   const [yearFilter, setYearFilter] = useState(searchParams.get('year') || 'All')
-  const [viewMode, setViewMode] = useState('table')
-  const [sortField, setSortField] = useState('name')
-  const [sortDir, setSortDir] = useState('asc')
+  const [viewMode, setViewMode] = useState(searchParams.get('view') || 'table')
+  const [sortField, setSortField] = useState(searchParams.get('sort') || 'name')
+  const [sortDir, setSortDir] = useState(searchParams.get('dir') || 'asc')
+  const scrollRestoredRef = useRef(false)
+  const navigationType = useNavigationType()
+
+  // Save scroll position to sessionStorage on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      sessionStorage.setItem('directory-scroll-y', String(window.scrollY))
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   useEffect(() => {
     const q = searchParams.get('q')
     const type = searchParams.get('type')
     const party = searchParams.get('party')
     const state = searchParams.get('state')
-    const status = searchParams.get('status')
     const year = searchParams.get('year')
+    const view = searchParams.get('view')
+    const sort = searchParams.get('sort')
+    const dir = searchParams.get('dir')
     if (q) setQuery(q)
     if (type) setTypeFilter(type)
     if (party) setPartyFilter(party)
     if (state) setStateFilter(state)
-    if (status) setStatusFilter(status)
     if (year) setYearFilter(year)
+    if (view) setViewMode(view)
+    if (sort) setSortField(sort)
+    if (dir) setSortDir(dir)
   }, [searchParams])
 
   const parties = useMemo(() => ['All', ...Array.from(new Set(data.map(r => r.party))).sort()], [data])
@@ -93,7 +108,6 @@ export default function DirectoryPage() {
     if (typeFilter !== 'All') result = result.filter(r => r.type === typeFilter)
     if (partyFilter !== 'All') result = result.filter(r => r.party === partyFilter)
     if (stateFilter !== 'All') result = result.filter(r => r.state === stateFilter)
-    if (statusFilter !== 'All') result = result.filter(r => r.status === statusFilter)
     if (yearFilter !== 'All') result = result.filter(r => String(r.electedYear) === String(yearFilter))
 
     return [...result].sort((a, b) => {
@@ -109,15 +123,47 @@ export default function DirectoryPage() {
       const cmp = aVal.localeCompare(bVal)
       return sortDir === 'asc' ? cmp : -cmp
     })
-  }, [data, query, typeFilter, partyFilter, stateFilter, statusFilter, yearFilter, sortField, sortDir])
+  }, [data, query, typeFilter, partyFilter, stateFilter, yearFilter, sortField, sortDir])
+
+  // Restore scroll position only when navigating back (POP); scroll to top on fresh navigation
+  useEffect(() => {
+    if (!loading && data.length > 0 && !scrollRestoredRef.current) {
+      scrollRestoredRef.current = true
+      if (navigationType === 'POP') {
+        const saved = sessionStorage.getItem('directory-scroll-y')
+        if (saved) {
+          requestAnimationFrame(() => {
+            window.scrollTo(0, parseInt(saved, 10))
+          })
+        }
+      } else {
+        sessionStorage.removeItem('directory-scroll-y')
+        window.scrollTo(0, 0)
+      }
+    }
+  }, [loading, data.length])
+
+  // Sync all state into URL params whenever any value changes
+  useEffect(() => {
+    const params = {}
+    if (query) params.q = query
+    if (typeFilter !== 'All') params.type = typeFilter
+    if (partyFilter !== 'All') params.party = partyFilter
+    if (stateFilter !== 'All') params.state = stateFilter
+    if (yearFilter !== 'All') params.year = yearFilter
+    if (viewMode !== 'table') params.view = viewMode
+    if (sortField !== 'name') params.sort = sortField
+    if (sortDir !== 'asc') params.dir = sortDir
+    setSearchParams(params, { replace: true })
+  }, [query, typeFilter, partyFilter, stateFilter, yearFilter, viewMode, sortField, sortDir])
 
   const clearFilters = () => {
     setQuery(''); setTypeFilter('All'); setPartyFilter('All')
-    setStateFilter('All'); setStatusFilter('All'); setYearFilter('All')
+    setStateFilter('All'); setYearFilter('All')
     setSearchParams({})
   }
 
-  const hasFilters = query || typeFilter !== 'All' || partyFilter !== 'All' || stateFilter !== 'All' || statusFilter !== 'All' || yearFilter !== 'All'
+  const hasFilters = query || typeFilter !== 'All' || partyFilter !== 'All' || stateFilter !== 'All' || yearFilter !== 'All'
 
   const handleSort = (field) => {
     if (sortField === field) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
@@ -199,12 +245,6 @@ export default function DirectoryPage() {
 
           <select value={stateFilter} onChange={e => setStateFilter(e.target.value)} style={selectStyle}>
             {states.map(s => <option key={s} value={s}>{s === 'All' ? 'All States' : s}</option>)}
-          </select>
-
-          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} style={selectStyle}>
-            <option value="All">All Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
           </select>
 
           <select value={yearFilter} onChange={e => setYearFilter(e.target.value)} style={selectStyle}>
@@ -297,8 +337,7 @@ export default function DirectoryPage() {
                     <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => handleSort('state')}>
                       State <SortIndicator field="state" />
                     </th>
-                    <th>Status</th>
-                    <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => handleSort('year')}>
+                     <th style={{ cursor: 'pointer', userSelect: 'none' }} onClick={() => handleSort('year')}>
                       Year <SortIndicator field="year" />
                     </th>
                     <th title="Contact completeness">Contact</th>
@@ -307,12 +346,13 @@ export default function DirectoryPage() {
                 </thead>
                 <tbody>
                   {filtered.map((rep) => {
-                    const seatCode = rep.federalSeatCode || rep.stateSeatCode
+                    const seatCode = rep.type === 'MP' ? rep.federalSeatCode : rep.stateSeatCode
                     const seatName = rep.federalSeatName || rep.stateSeatName
                     const completeness = getContactCompleteness(rep)
                     const partyColor = getPartyColor(rep.party)
+                    const rowKey = `${rep.type}-${rep.electedYear}-${seatCode}`
                     return (
-                      <tr key={seatCode} style={{ cursor: 'pointer' }}>
+                      <tr key={rowKey} style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${rep.electedYear}/${seatCode}`)}>
                         <td>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <div style={{
@@ -340,9 +380,8 @@ export default function DirectoryPage() {
                             {rep.party}
                           </span>
                         </td>
-                        <td style={{ fontSize: '0.82rem', color: 'var(--md-sys-color-on-surface-variant)' }}>{rep.state}</td>
-                        <td><span className={`badge badge-${rep.status?.toLowerCase()}`}>{rep.status}</span></td>
-                        <td>
+                         <td style={{ fontSize: '0.82rem', color: 'var(--md-sys-color-on-surface-variant)' }}>{rep.state}</td>
+                         <td>
                           {rep.electedYear ? (
                             <span style={{
                               fontSize: '0.75rem', fontWeight: 700, padding: '3px 8px', borderRadius: '6px',
@@ -377,7 +416,7 @@ export default function DirectoryPage() {
                         </td>
                         <td>
                           <Link
-                            to={`/profile/${seatCode}`}
+                            to={`/profile/${rep.electedYear}/${seatCode}`}
                             style={{
                               fontSize: '0.75rem', fontWeight: 600,
                               color: 'var(--md-sys-color-on-primary-container)',
@@ -412,12 +451,13 @@ export default function DirectoryPage() {
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '10px' }}>
               {filtered.map((rep) => {
-                const seatCode = rep.federalSeatCode || rep.stateSeatCode
+                const seatCode = rep.type === 'MP' ? rep.federalSeatCode : rep.stateSeatCode
                 const seatName = rep.federalSeatName || rep.stateSeatName
                 const completeness = getContactCompleteness(rep)
                 const partyColor = getPartyColor(rep.party)
+                const cardKey = `${rep.type}-${rep.electedYear}-${seatCode}`
                 return (
-                  <Link key={seatCode} to={`/profile/${seatCode}`} style={{ textDecoration: 'none' }}>
+                  <Link key={cardKey} to={`/profile/${rep.electedYear}/${seatCode}`} style={{ textDecoration: 'none' }}>
                     <div className="card" style={{ padding: '16px 18px' }}>
                       <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                         <div style={{
@@ -479,8 +519,8 @@ export default function DirectoryPage() {
       <style>{`
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
         @media (max-width: 640px) {
-          .data-table th:nth-child(6),
-          .data-table td:nth-child(6) { display: none; }
+          .data-table th:nth-child(5),
+          .data-table td:nth-child(5) { display: none; }
         }
       `}</style>
     </div>

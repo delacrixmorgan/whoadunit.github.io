@@ -51,11 +51,13 @@ const CloseIcon = () => (
   </svg>
 )
 
-function ContactRow({ icon, label, value, href }) {
-  const has = value && value.trim()
+function ContactRow({ icon, label, values, makeHref }) {
+  // values is always an array
+  const arr = Array.isArray(values) ? values : (values ? [values] : [])
+  const has = arr.length > 0
   return (
     <div style={{
-      display: 'flex', alignItems: 'center', gap: '14px',
+      display: 'flex', alignItems: 'flex-start', gap: '14px',
       padding: '13px 0',
       borderBottom: '1px solid var(--md-sys-color-outline-variant)',
     }}>
@@ -63,24 +65,29 @@ function ContactRow({ icon, label, value, href }) {
         width: '34px', height: '34px', borderRadius: '9px',
         background: has ? 'var(--md-sys-color-tertiary-container)' : 'var(--md-sys-color-surface-container-high)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        flexShrink: 0,
+        flexShrink: 0, marginTop: '1px',
         color: has ? 'var(--md-sys-color-on-tertiary-container)' : 'var(--md-sys-color-outline)',
       }}>
         {icon}
       </div>
       <div style={{ flex: 1 }}>
-        <div style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--md-sys-color-on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '2px' }}>
+        <div style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--md-sys-color-on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '4px' }}>
           {label}
         </div>
         {has ? (
-          href ? (
-            <a href={href} target="_blank" rel="noopener noreferrer"
-              style={{ color: 'var(--md-sys-color-primary)', textDecoration: 'none', fontWeight: 500, fontSize: '0.88rem' }}>
-              {value}
-            </a>
-          ) : (
-            <span style={{ fontWeight: 500, fontSize: '0.88rem', color: 'var(--md-sys-color-on-surface)' }}>{value}</span>
-          )
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+            {arr.map((v, i) => {
+              const href = makeHref ? makeHref(v) : null
+              return href ? (
+                <a key={i} href={href} target="_blank" rel="noopener noreferrer"
+                  style={{ color: 'var(--md-sys-color-primary)', textDecoration: 'none', fontWeight: 500, fontSize: '0.88rem' }}>
+                  {v}
+                </a>
+              ) : (
+                <span key={i} style={{ fontWeight: 500, fontSize: '0.88rem', color: 'var(--md-sys-color-on-surface)' }}>{v}</span>
+              )
+            })}
+          </div>
         ) : (
           <span style={{ fontSize: '0.82rem', color: 'var(--md-sys-color-outline)', fontStyle: 'italic' }}>{t('profile.not_available')}</span>
         )}
@@ -88,6 +95,7 @@ function ContactRow({ icon, label, value, href }) {
       <span style={{
         fontSize: '0.7rem', fontWeight: 600,
         color: has ? 'var(--md-sys-color-tertiary)' : 'var(--md-sys-color-outline-variant)',
+        marginTop: '1px',
       }}>
         {has ? '✓' : '–'}
       </span>
@@ -307,13 +315,16 @@ function SuggestChangesModal({ rep, onClose }) {
 }
 
 export default function ProfilePage() {
-  const { seatCode } = useParams()
+  const { year, seatCode } = useParams()
   const { data, loading } = useRepresentatives()
   const [showSuggestForm, setShowSuggestForm] = useState(false)
 
   const rep = useMemo(() => {
-    return data.find(r => r.federalSeatCode === seatCode || r.stateSeatCode === seatCode)
-  }, [data, seatCode])
+    return data.find(r =>
+      String(r.electedYear) === String(year) &&
+      (r.federalSeatCode === seatCode || r.stateSeatCode === seatCode)
+    )
+  }, [data, year, seatCode])
 
   const repSeatName = rep ? (rep.federalSeatName || rep.stateSeatName || '') : ''
   usePageMeta({
@@ -375,10 +386,10 @@ export default function ProfilePage() {
     : 'var(--md-sys-color-outline)'
 
   const contactFields = [
-    { label: t('profile.email'), value: rep.email, href: rep.email ? `mailto:${rep.email}` : null, icon: <EmailIcon /> },
-    { label: t('profile.phone'), value: rep.phoneNumber, href: rep.phoneNumber ? `tel:${rep.phoneNumber}` : null, icon: <PhoneIcon /> },
-    { label: t('profile.facebook'), value: rep.facebook, href: rep.facebook ? `https://facebook.com/${rep.facebook}` : null, icon: <FacebookIcon /> },
-    { label: t('profile.twitter'), value: rep.twitter, href: rep.twitter ? `https://x.com/${rep.twitter}` : null, icon: <TwitterIcon /> },
+    { label: t('profile.email'), values: rep.email, makeHref: (v) => `mailto:${v}`, icon: <EmailIcon /> },
+    { label: t('profile.phone'), values: rep.phoneNumber, makeHref: (v) => `tel:${v}`, icon: <PhoneIcon /> },
+    { label: t('profile.facebook'), values: rep.facebook, makeHref: (v) => `https://facebook.com/${v}`, icon: <FacebookIcon /> },
+    { label: t('profile.twitter'), values: rep.twitter, makeHref: (v) => `https://x.com/${v.replace(/^@/, '')}`, icon: <TwitterIcon /> },
   ]
 
   return (
@@ -471,7 +482,6 @@ export default function ProfilePage() {
                   }}>
                     {rep.party}
                   </span>
-                  <span className={`badge badge-${rep.status?.toLowerCase()}`}>{rep.status}</span>
                 </div>
               </div>
             </div>
@@ -511,9 +521,6 @@ export default function ProfilePage() {
                 {rep.gender === 'M' ? 'Male' : rep.gender === 'F' ? 'Female' : '—'}
               </span>
             </InfoRow>
-            <InfoRow label={t('profile.status')}>
-              <span className={`badge badge-${rep.status?.toLowerCase()}`}>{rep.status}</span>
-            </InfoRow>
           </div>
 
           {/* Contact */}
@@ -527,8 +534,8 @@ export default function ProfilePage() {
               {t('profile.contact_title')}
             </h2>
             <div>
-              {contactFields.map(({ label, value, href, icon }) => (
-                <ContactRow key={label} icon={icon} label={label} value={value} href={href} />
+              {contactFields.map(({ label, values, makeHref, icon }) => (
+                <ContactRow key={label} icon={icon} label={label} values={values} makeHref={makeHref} />
               ))}
             </div>
           </div>
@@ -575,10 +582,10 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {contactFields.map(({ label, value }) => {
-              const has = value && value.trim()
+            {contactFields.map(({ label, values }) => {
+              const has = Array.isArray(values) ? values.length > 0 : values && values.trim()
               return (
-                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '9px', marginBottom: '9px' }}>
+                  <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '9px', marginBottom: '9px', cursor: 'default' }}>
                   <span style={{
                     width: '7px', height: '7px', borderRadius: '50%', flexShrink: 0,
                     background: has ? 'var(--md-sys-color-tertiary)' : 'var(--md-sys-color-outline-variant)',

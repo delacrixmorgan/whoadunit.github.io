@@ -1,24 +1,5 @@
 # TODO
 
-## Update DATA_SCHEMA.md
-
-Update DATA_SCHEMA.md with this new data structure.
-
-state
-federalSeatCode	
-federalSeatName
-stateSeatCode
-stateSeatName
-pollingDistricts: List<String>
-type
-name
-party
-gender
-email: List<String>
-phoneNumber: List<String>
-facebook: List<String>
-twitter/𝕏: List<String>
-
 ## Update Website Data Structure Implementation
 
 Update the website based on this new data structure DATA_SCHEMA.md.

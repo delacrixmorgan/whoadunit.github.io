@@ -86,7 +86,9 @@ export default function Layout() {
     { to: '/', label: t('nav.home'), end: true },
     { to: '/directory', label: t('nav.directory') },
     { to: '/statistics', label: t('nav.statistics') },
-    { to: '/dashboard', label: 'Dashboard' },
+    { to: '/data-methodology', label: t('methodology.heading') },
+    { to: '/volunteer', label: 'Volunteer' },
+    { to: '/about', label: 'About' },
   ]
 
   return (
@@ -295,51 +297,183 @@ export default function Layout() {
 
       {/* Footer */}
       <footer style={{
-        background: 'var(--md-sys-color-surface-container-low)',
+        background: 'var(--md-sys-color-surface-container)',
         borderTop: '1px solid var(--md-sys-color-outline-variant)',
-        padding: '40px 24px 32px',
+        padding: '48px 24px 0',
         marginTop: 'auto',
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '40px', alignItems: 'start' }} className="footer-grid">
+
+          {/* Main footer grid */}
+          <div className="footer-grid" style={{
+            display: 'grid',
+            gridTemplateColumns: '1.6fr 1fr 1fr',
+            gap: '48px',
+            alignItems: 'start',
+            paddingBottom: '40px',
+          }}>
+
+            {/* Brand column */}
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+              <Link to="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
                 <div style={{
-                  width: '28px', height: '28px', borderRadius: '8px',
+                  width: '30px', height: '30px', borderRadius: '9px',
                   background: 'var(--md-sys-color-primary)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
                 }}>
-                  <span style={{ color: 'var(--md-sys-color-on-primary)', fontWeight: '700', fontSize: '13px', fontFamily: 'Libre Baskerville, serif' }}>W</span>
+                  <span style={{ color: 'var(--md-sys-color-on-primary)', fontWeight: '700', fontSize: '14px', fontFamily: 'Libre Baskerville, serif' }}>W</span>
                 </div>
-                <span style={{ fontFamily: 'Libre Baskerville, serif', fontWeight: '700', fontSize: '0.95rem', color: 'var(--md-sys-color-on-surface)' }}>
+                <span style={{ fontFamily: 'Libre Baskerville, serif', fontWeight: '700', fontSize: '1rem', color: 'var(--md-sys-color-on-surface)', letterSpacing: '-0.01em' }}>
                   Whoadunit
                 </span>
-              </div>
-              <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--md-sys-color-on-surface-variant)', maxWidth: '340px', lineHeight: 1.6 }}>
-                An open directory of Malaysian elected representatives. Data is for informational purposes only.
+              </Link>
+              <p style={{
+                margin: '0 0 10px',
+                fontFamily: 'Libre Baskerville, Georgia, serif',
+                fontStyle: 'italic',
+                fontSize: '0.95rem',
+                color: 'var(--md-sys-color-on-surface)',
+                lineHeight: 1.4,
+                letterSpacing: '-0.005em',
+              }}>
+                Know who represents you.
+              </p>
+              <p style={{
+                margin: 0,
+                fontSize: '0.82rem',
+                color: 'var(--md-sys-color-on-surface-variant)',
+                maxWidth: '300px',
+                lineHeight: 1.65,
+              }}>
+                An open directory of Malaysian elected representatives at federal and state level.
               </p>
             </div>
-            <nav style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
-              {navLinks.map((link) => (
+
+            {/* Navigate column */}
+            <div>
+              <p style={{
+                margin: '0 0 14px',
+                fontSize: '0.72rem',
+                fontWeight: 600,
+                letterSpacing: '0.07em',
+                textTransform: 'uppercase',
+                color: 'var(--md-sys-color-outline)',
+                fontFamily: 'Inter, sans-serif',
+              }}>
+                Navigate
+              </p>
+              <nav style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    className="footer-link"
+                    style={{
+                      fontSize: '0.88rem',
+                      color: 'var(--md-sys-color-on-surface-variant)',
+                      textDecoration: 'none',
+                      padding: '5px 0',
+                      transition: 'color 0.15s',
+                      fontFamily: 'Inter, sans-serif',
+                      fontWeight: 450,
+                    }}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            {/* Contribute column */}
+            <div>
+              <p style={{
+                margin: '0 0 14px',
+                fontSize: '0.72rem',
+                fontWeight: 600,
+                letterSpacing: '0.07em',
+                textTransform: 'uppercase',
+                color: 'var(--md-sys-color-outline)',
+                fontFamily: 'Inter, sans-serif',
+              }}>
+                Contribute
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                 <Link
-                  key={link.to}
-                  to={link.to}
+                  to="/volunteer"
+                  className="footer-link"
                   style={{
-                    fontSize: '0.82rem',
+                    fontSize: '0.88rem',
                     color: 'var(--md-sys-color-on-surface-variant)',
                     textDecoration: 'none',
+                    padding: '5px 0',
                     transition: 'color 0.15s',
+                    fontFamily: 'Inter, sans-serif',
+                    fontWeight: 450,
                   }}
                 >
-                  {link.label}
+                  Volunteer
                 </Link>
-              ))}
-            </nav>
+                <Link
+                  to="/data-methodology"
+                  className="footer-link"
+                  style={{
+                    fontSize: '0.88rem',
+                    color: 'var(--md-sys-color-on-surface-variant)',
+                    textDecoration: 'none',
+                    padding: '5px 0',
+                    transition: 'color 0.15s',
+                    fontFamily: 'Inter, sans-serif',
+                    fontWeight: 450,
+                  }}
+                >
+                  Data Methodology
+                </Link>
+                <a
+                  href="https://github.com/delacrixmorgan/whoadunit.github.io"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link"
+                  style={{
+                    fontSize: '0.88rem',
+                    color: 'var(--md-sys-color-on-surface-variant)',
+                    textDecoration: 'none',
+                    padding: '5px 0',
+                    transition: 'color 0.15s',
+                    fontFamily: 'Inter, sans-serif',
+                    fontWeight: 450,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  GitHub
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
           </div>
-          <hr className="divider" style={{ margin: '24px 0 16px' }} />
-          <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--md-sys-color-outline)', textAlign: 'center', maxWidth: 'none' }}>
-            Sample data only. Replace with your production dataset.
-          </p>
+
+          {/* Bottom bar */}
+          <div style={{
+            borderTop: '1px solid var(--md-sys-color-outline-variant)',
+            padding: '16px 0',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '16px',
+            flexWrap: 'wrap',
+          }}>
+            <span style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-outline)', fontFamily: 'Inter, sans-serif' }}>
+              © {new Date().getFullYear()} Whoadunit
+            </span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-outline)', fontFamily: 'Inter, sans-serif' }}>
+              Open data for the Rakyat
+            </span>
+          </div>
+
         </div>
       </footer>
 
@@ -348,8 +482,13 @@ export default function Layout() {
           .desktop-nav { display: none !important; }
           .desktop-search { display: none !important; }
           .mobile-menu-btn { display: flex !important; }
-          .footer-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
-          .footer-grid nav { align-items: flex-start !important; flex-direction: row !important; flex-wrap: wrap; gap: 16px !important; }
+          .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+        }
+        @media (max-width: 640px) {
+          .footer-grid { gap: 28px !important; }
+        }
+        .footer-link:hover {
+          color: var(--md-sys-color-on-surface) !important;
         }
       `}</style>
     </div>
