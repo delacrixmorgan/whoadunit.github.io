@@ -151,11 +151,10 @@ function PersonDetail({ rep, year, seatCode }) {
 
 function AdunRow({ adun }) {
   const partyColor = getPartyColor(adun.party)
-  const seatCode = adun.stateSeatCode
 
   return (
     <Link
-      to={`/profile/${adun.electedYear}/${seatCode}`}
+      to={`/profile/${adun.electedYear}/${adun.federalSeatCode}/${adun.stateSeatCode}`}
       style={{ textDecoration: 'none', color: 'inherit' }}
     >
       <div style={{

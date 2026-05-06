@@ -31,6 +31,7 @@ export default function App() {
           <Route path="directory" element={<DirectoryPage />} />
           <Route path="statistics" element={<StatisticsPage />} />
           <Route path="profile/:year/:seatCode" element={<ProfilePage />} />
+          <Route path="profile/:year/:federalSeatCode/:stateSeatCode" element={<ProfilePage />} />
           <Route path="data-methodology" element={<DataMethodologyPage />} />
           <Route path="volunteer" element={<VolunteerPage />} />
           <Route path="about" element={<AboutPage />} />

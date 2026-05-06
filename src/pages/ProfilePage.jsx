@@ -315,23 +315,31 @@ function SuggestChangesModal({ rep, onClose }) {
 }
 
 export default function ProfilePage() {
-  const { year, seatCode } = useParams()
+  const { year, seatCode, federalSeatCode: fscParam, stateSeatCode: sscParam } = useParams()
   const { data, loading } = useRepresentatives()
   const [showSuggestForm, setShowSuggestForm] = useState(false)
 
   const rep = useMemo(() => {
+    if (sscParam) {
+      return data.find(r =>
+        String(r.electedYear) === String(year) &&
+        r.federalSeatCode === fscParam &&
+        r.stateSeatCode === sscParam
+      )
+    }
     return data.find(r =>
       String(r.electedYear) === String(year) &&
       (r.federalSeatCode === seatCode || r.stateSeatCode === seatCode)
     )
-  }, [data, year, seatCode])
+  }, [data, year, seatCode, fscParam, sscParam])
 
   const repSeatName = rep ? (rep.federalSeatName || rep.stateSeatName || '') : ''
+  const displayCode = sscParam ?? seatCode ?? ''
   usePageMeta({
-    title: rep ? `${rep.name} (${seatCode})` : seatCode,
+    title: rep ? `${rep.name} (${sscParam ?? seatCode})` : displayCode,
     description: rep
       ? `${rep.name} is the ${rep.type} for ${repSeatName}, ${rep.state}, representing ${rep.party}.`
-      : `View representative profile for seat ${seatCode}.`,
+      : `View representative profile for seat ${displayCode}.`,
   })
 
   useEffect(() => {
@@ -366,7 +374,7 @@ export default function ProfilePage() {
         <div style={{ fontSize: '3rem', marginBottom: '12px' }}>🔍</div>
         <h2 style={{ margin: '0 0 8px' }}>Representative not found</h2>
         <p style={{ color: 'var(--md-sys-color-on-surface-variant)', marginBottom: '24px' }}>
-          No representative found for seat code <strong>{seatCode}</strong>.
+          No representative found for seat code <strong>{displayCode}</strong>.
         </p>
         <Link to="/directory" className="btn-primary" style={{ textDecoration: 'none' }}>
           Back to Directory
@@ -467,7 +475,7 @@ export default function ProfilePage() {
                   {rep.name}
                 </h1>
                 <div style={{ fontSize: '0.88rem', color: 'var(--md-sys-color-on-surface-variant)', marginBottom: '14px' }}>
-                  <span style={{ fontWeight: 700, color: 'var(--md-sys-color-primary)', marginRight: '6px' }}>{seatCode}</span>
+                  <span style={{ fontWeight: 700, color: 'var(--md-sys-color-primary)', marginRight: '6px' }}>{displayCode}</span>
                   {seatName}
                 </div>
                 <div style={{ display: 'flex', gap: '7px', flexWrap: 'wrap' }}>

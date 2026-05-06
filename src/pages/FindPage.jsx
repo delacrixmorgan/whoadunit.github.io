@@ -65,6 +65,7 @@ function matchesPerson(person, q) {
 function individualSearch(flat, query, filters) {
   const q = query.trim().toLowerCase()
   return flat.filter(person => {
+    if (filters.type && person.type !== filters.type) return false
     if (filters.party && person.party !== filters.party) return false
     if (filters.year && person.electedYear !== Number(filters.year)) return false
     if (filters.gender && person.gender !== filters.gender) return false
@@ -83,8 +84,9 @@ function individualSearch(flat, query, filters) {
 function PersonRow({ rep }) {
   const navigate = useNavigate()
   const partyColor = getPartyColor(rep.party)
-  const seatCode = rep.type === 'MP' ? rep.federalSeatCode : rep.stateSeatCode
-  const profilePath = `/profile/${rep.electedYear}/${seatCode}`
+  const profilePath = rep.type === 'MP'
+    ? `/profile/${rep.electedYear}/${rep.federalSeatCode}`
+    : `/profile/${rep.electedYear}/${rep.federalSeatCode}/${rep.stateSeatCode}`
   const completeness = getContactCompleteness(rep)
 
   return (
@@ -199,6 +201,7 @@ export default function FindPage() {
   const [yearFilter, setYear]       = useState(searchParams.get('year') || '')
   const [genderFilter, setGender]   = useState(searchParams.get('gender') || '')
   const [stateFilter, setState]     = useState(searchParams.get('state') || '')
+  const [typeFilter, setType]       = useState(searchParams.get('type') || '')
   const [viewMode, setViewMode]     = useState(searchParams.get('view') || 'table')
   const [sortField, setSortField]   = useState(null)
   const [sortDir, setSortDir]       = useState('asc')
@@ -218,8 +221,8 @@ export default function FindPage() {
   const genders = [{ value: 'M', label: 'Male' }, { value: 'F', label: 'Female' }]
 
   const results = useMemo(() =>
-    individualSearch(data, query, { party: partyFilter, year: yearFilter, gender: genderFilter, state: stateFilter }),
-    [data, query, partyFilter, yearFilter, genderFilter, stateFilter]
+    individualSearch(data, query, { type: typeFilter, party: partyFilter, year: yearFilter, gender: genderFilter, state: stateFilter }),
+    [data, query, typeFilter, partyFilter, yearFilter, genderFilter, stateFilter]
   )
 
   const sortedResults = useMemo(() => {
@@ -248,19 +251,20 @@ export default function FindPage() {
   useEffect(() => {
     const params = {}
     if (query) params.q = query
+    if (typeFilter) params.type = typeFilter
     if (partyFilter) params.party = partyFilter
     if (yearFilter) params.year = yearFilter
     if (genderFilter) params.gender = genderFilter
     if (stateFilter) params.state = stateFilter
     if (viewMode !== 'table') params.view = viewMode
     setSearchParams(params, { replace: true })
-  }, [query, partyFilter, yearFilter, genderFilter, stateFilter, viewMode])
+  }, [query, typeFilter, partyFilter, yearFilter, genderFilter, stateFilter, viewMode])
 
   const clearFilters = () => {
-    setQuery(''); setParty(''); setYear(''); setGender(''); setState('');
+    setQuery(''); setType(''); setParty(''); setYear(''); setGender(''); setState('');
   }
 
-  const hasFilters = query || partyFilter || yearFilter || genderFilter || stateFilter
+  const hasFilters = query || typeFilter || partyFilter || yearFilter || genderFilter || stateFilter
 
   return (
     <div className="page-enter" style={{ maxWidth: '1100px', margin: '0 auto', padding: '36px 24px 80px' }}>
@@ -320,6 +324,12 @@ export default function FindPage() {
           <span style={{ fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--md-sys-color-on-surface-variant)' }}>
             Filter:
           </span>
+
+          <select value={typeFilter} onChange={e => setType(e.target.value)} style={selectStyle}>
+            <option value="">All Types</option>
+            <option value="MP">MP</option>
+            <option value="ADUN">ADUN</option>
+          </select>
 
           <select value={partyFilter} onChange={e => setParty(e.target.value)} style={selectStyle}>
             <option value="">{t('find.filter_party')}</option>
@@ -445,8 +455,11 @@ export default function FindPage() {
                     const completeness = getContactCompleteness(rep)
                     const partyColor = getPartyColor(rep.party)
                     const rowKey = repKey(rep)
+                    const profilePath = rep.type === 'MP'
+                      ? `/profile/${rep.electedYear}/${rep.federalSeatCode}`
+                      : `/profile/${rep.electedYear}/${rep.federalSeatCode}/${rep.stateSeatCode}`
                     return (
-                      <tr key={rowKey} style={{ cursor: 'pointer' }} onClick={() => navigate(`/profile/${rep.electedYear}/${seatCode}`)}>
+                      <tr key={rowKey} style={{ cursor: 'pointer' }} onClick={() => navigate(profilePath)}>
                         <td>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <div style={{
@@ -510,7 +523,7 @@ export default function FindPage() {
                         </td>
                         <td>
                           <Link
-                            to={`/profile/${rep.electedYear}/${seatCode}`}
+                            to={profilePath}
                             onClick={e => e.stopPropagation()}
                             style={{
                               fontSize: '0.75rem', fontWeight: 600,
