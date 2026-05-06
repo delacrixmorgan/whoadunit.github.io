@@ -215,6 +215,31 @@ const en = {
     cta_link_article: 'Read the original article',
   },
 
+  // Learn (Group Search — constituency lookup)
+  learn: {
+    title: 'Learn — Find Your Constituency',
+    subtitle: 'Type anything — a place name, seat code, representative name, or polling district.',
+    search_placeholder: 'Search constituencies…',
+    empty_prompt: 'Start typing to find your constituency.',
+    results_count: (n) => `${n} ${n === 1 ? 'constituency' : 'constituencies'} found`,
+    tab_mp: 'MP',
+    tab_adun: (n) => `ADUN (${n})`,
+    no_aduns: 'No state assembly seats (Federal Territory)',
+    no_mp: 'MP data not yet available',
+  },
+
+  // Find (Individual Search — representative finder)
+  find: {
+    title: 'Find — Browse Representatives',
+    subtitle: 'Filter and search individual MPs and ADUNs across Malaysia.',
+    search_placeholder: 'Search name, seat, party…',
+    filter_party: 'All Parties',
+    filter_year: 'All Years',
+    filter_gender: 'All Genders',
+    results_count: (n) => `${n} representative${n !== 1 ? 's' : ''} found`,
+    no_results: 'No representatives match your search.',
+  },
+
   // Common
   common: {
     loading: 'Loading…',

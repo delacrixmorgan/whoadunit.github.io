@@ -76,7 +76,7 @@ export default function Layout() {
   const handleSearch = (e) => {
     e.preventDefault()
     if (searchQuery.trim()) {
-      navigate(`/directory?q=${encodeURIComponent(searchQuery.trim())}`)
+      navigate(`/learn?q=${encodeURIComponent(searchQuery.trim())}`)
       setSearchQuery('')
       setMenuOpen(false)
     }
@@ -84,6 +84,8 @@ export default function Layout() {
 
   const navLinks = [
     { to: '/', label: t('nav.home'), end: true },
+    { to: '/learn', label: 'Learn' },
+    { to: '/find', label: 'Find' },
     { to: '/directory', label: t('nav.directory') },
     { to: '/statistics', label: t('nav.statistics') },
     { to: '/data-methodology', label: t('methodology.heading') },

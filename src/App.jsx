@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
+import LearnPage from './pages/LearnPage'
+import FindPage from './pages/FindPage'
 import DirectoryPage from './pages/DirectoryPage'
 import StatisticsPage from './pages/StatisticsPage'
 import ProfilePage from './pages/ProfilePage'
@@ -24,6 +26,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
+          <Route path="learn" element={<LearnPage />} />
+          <Route path="find" element={<FindPage />} />
           <Route path="directory" element={<DirectoryPage />} />
           <Route path="statistics" element={<StatisticsPage />} />
           <Route path="profile/:year/:seatCode" element={<ProfilePage />} />

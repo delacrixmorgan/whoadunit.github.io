@@ -1,76 +1,77 @@
 import { useState, useEffect } from 'react'
 
 /**
- * Loads representatives from public/data/representatives.json.
+ * Loads representatives from per-year JSON files via the manifest.
  *
- * The JSON is an array of federal-seat objects shaped as:
- * {
- *   federalSeatCode: "P001",
- *   federalSeatName: "Padang Besar",
- *   state: "Perlis",
- *   mp: {
- *     electedYear: 2022,
- *     stateSeatCode: "N01",  // state seat the MP's polling districts belong to
- *     stateSeatName: "Titi Tinggi",
- *     pollingDistricts: [...],
- *     name, party, gender, address, email, phoneNumber, facebook, twitter
- *   },
- *   aduns: [
- *     {
- *       electedYear: 2023,
- *       stateSeatCode: "N01",
- *       stateSeatName: "Titi Tinggi",
- *       pollingDistricts: [...],
- *       name, party, gender, address, email, phoneNumber, facebook, twitter
- *     },
- *     ...
- *   ]
- * }
+ * Manifest: public/data/representatives-manifest.json → [2023, 2022]
+ * Year files: public/data/representatives_{year}.json → flat array of records
  *
- * This hook flattens the structure into a single array of representative
- * records (one per person) for backwards compatibility with pages that
- * iterate over a flat list.  Each record gets a `type` field ("MP" or "ADUN")
- * and carries the parent `federalSeatCode` / `federalSeatName` / `state`.
+ * Each record in a year file has: type ("MP"|"ADUN"), federalSeatCode,
+ * federalSeatName, state, stateSeatCode, stateSeatName, pollingDistricts[],
+ * name, party, gender, address, email[], phoneNumber[], facebook[], twitter[]
+ *
+ * This hook:
+ *   1. Tags each record with electedYear (from the filename year)
+ *   2. Groups records into hierarchical seat objects { federalSeatCode,
+ *      federalSeatName, state, mp, aduns[] } — exposed as `seats`
+ *   3. Flattens seats back to a single array — exposed as `data` (backward compat)
  */
 export function useRepresentatives() {
   const [data, setData] = useState([])
+  const [seats, setSeats] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`${import.meta.env.BASE_URL}data/representatives.json`)
-        if (!res.ok) throw new Error('Failed to fetch representatives.json')
-        const seats = await res.json()
+        const BASE = import.meta.env.BASE_URL
 
-        const flat = []
-        for (const seat of seats) {
-          const { federalSeatCode, federalSeatName, state } = seat
+        const years = await fetch(`${BASE}data/representatives-manifest.json`).then(r => {
+          if (!r.ok) throw new Error('Failed to fetch representatives-manifest.json')
+          return r.json()
+        })
 
-          // MP record
-          if (seat.mp) {
-            flat.push({
-              type: 'MP',
-              federalSeatCode,
-              federalSeatName,
-              state,
-              ...seat.mp,
+        const yearData = await Promise.all(
+          years.map(async year => {
+            const records = await fetch(`${BASE}data/representatives_${year}.json`).then(r => {
+              if (!r.ok) throw new Error(`Failed to fetch representatives_${year}.json`)
+              return r.json()
             })
+            return records.map(r => ({ ...r, electedYear: year }))
+          })
+        )
+
+        const allRecords = yearData.flat()
+
+        // Group into hierarchical seat objects
+        const seatsMap = {}
+        for (const rec of allRecords) {
+          const key = rec.federalSeatCode
+          if (!seatsMap[key]) {
+            seatsMap[key] = {
+              federalSeatCode: key,
+              federalSeatName: rec.federalSeatName,
+              state: rec.state,
+              mp: null,
+              aduns: [],
+            }
           }
-
-          // ADUN records
-          for (const adun of seat.aduns ?? []) {
-            flat.push({
-              type: 'ADUN',
-              federalSeatCode,
-              federalSeatName,
-              state,
-              ...adun,
-            })
+          if (rec.type === 'MP') {
+            seatsMap[key].mp = rec
+          } else {
+            seatsMap[key].aduns.push(rec)
           }
         }
 
+        const seatList = Object.values(seatsMap).sort((a, b) =>
+          a.federalSeatCode.localeCompare(b.federalSeatCode)
+        )
+
+        // Flat list preserves order: MP first, then ADUNs, per seat
+        const flat = seatList.flatMap(s => [s.mp, ...s.aduns].filter(Boolean))
+
+        setSeats(seatList)
         setData(flat)
       } catch (err) {
         setError(err.message)
@@ -82,7 +83,7 @@ export function useRepresentatives() {
     load()
   }, [])
 
-  return { data, loading, error }
+  return { data, seats, loading, error }
 }
 
 export function getContactCompleteness(rep) {
@@ -130,7 +131,7 @@ export function computeStats(data) {
   const withTwitter  = data.filter((r) => hasContact(r, 'twitter')).length
 
   // Party reachability: average contact completeness per party
-  const partyReachability = Object.entries(partyMap).map(([party, count]) => {
+  const partyReachability = Object.entries(partyMap).map(([party]) => {
     const reps = data.filter((r) => r.party === party)
     const avgCompleteness = Math.round(
       reps.reduce((sum, r) => {
@@ -141,7 +142,7 @@ export function computeStats(data) {
         return sum + (filled / fields.length) * 100
       }, 0) / reps.length
     )
-    return { party, count, avgCompleteness }
+    return { party, count: partyMap[party], avgCompleteness }
   }).sort((a, b) => b.avgCompleteness - a.avgCompleteness || b.count - a.count)
 
   return {
