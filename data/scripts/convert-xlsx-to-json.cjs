@@ -16,8 +16,8 @@ const XLSX = require('xlsx');
 const fs = require('fs');
 const path = require('path');
 
-const INPUT_PATH = path.join(__dirname, '../xlsx/representative_base.xlsx');
-const OUTPUT_PATH = path.join(__dirname, '../../public/data/representatives.json');
+const INPUT_PATH = path.join(__dirname, '../xlsx/representative_wip.xlsx');
+const OUTPUT_PATH = path.join(__dirname, '../../public/data/representatives_2022.json');
 
 // ---------------------------------------------------------------------------
 // Helpers

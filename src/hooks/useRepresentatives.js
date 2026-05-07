@@ -34,41 +34,22 @@ export function useRepresentatives() {
 
         const yearData = await Promise.all(
           years.map(async year => {
-            const records = await fetch(`${BASE}data/representatives_${year}.json`).then(r => {
+            const seats = await fetch(`${BASE}data/representatives_${year}.json`).then(r => {
               if (!r.ok) throw new Error(`Failed to fetch representatives_${year}.json`)
               return r.json()
             })
-            return records.map(r => ({ ...r, electedYear: year }))
+            return seats.map(s => ({
+              ...s,
+              mp: s.mp ? { federalSeatCode: s.federalSeatCode, federalSeatName: s.federalSeatName, state: s.state, type: 'MP', ...s.mp } : null,
+              aduns: (s.aduns || []).map(a => ({ federalSeatCode: s.federalSeatCode, federalSeatName: s.federalSeatName, state: s.state, type: 'ADUN', ...a })),
+            }))
           })
         )
 
-        const allRecords = yearData.flat()
-
-        // Group into hierarchical seat objects
-        const seatsMap = {}
-        for (const rec of allRecords) {
-          const key = rec.federalSeatCode
-          if (!seatsMap[key]) {
-            seatsMap[key] = {
-              federalSeatCode: key,
-              federalSeatName: rec.federalSeatName,
-              state: rec.state,
-              mp: null,
-              aduns: [],
-            }
-          }
-          if (rec.type === 'MP') {
-            seatsMap[key].mp = rec
-          } else {
-            seatsMap[key].aduns.push(rec)
-          }
-        }
-
-        const seatList = Object.values(seatsMap).sort((a, b) =>
+        const seatList = yearData.flat().sort((a, b) =>
           a.federalSeatCode.localeCompare(b.federalSeatCode)
         )
 
-        // Flat list preserves order: MP first, then ADUNs, per seat
         const flat = seatList.flatMap(s => [s.mp, ...s.aduns].filter(Boolean))
 
         setSeats(seatList)
