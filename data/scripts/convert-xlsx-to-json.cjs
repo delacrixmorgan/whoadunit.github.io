@@ -1,13 +1,13 @@
 /**
  * convert-xlsx-to-json.cjs
  *
- * Reads representative_base.xlsx (two sheets: MP + ADUN) and outputs
- * public/data/representatives.json — an array of federal-seat objects,
+ * Reads representative_<year>.xlsx (two sheets: MP + ADUN) and outputs
+ * public/data/representatives_<year>.json — an array of federal-seat objects,
  * each containing the MP record and an array of ADUN records.
  *
  * Usage:
- *   node data/scripts/convert-xlsx-to-json.cjs
- *   npm run data:convert
+ *   node data/scripts/convert-xlsx-to-json.cjs <year>
+ *   node data/scripts/convert-xlsx-to-json.cjs 2022
  */
 
 'use strict';
@@ -16,8 +16,25 @@ const XLSX = require('xlsx');
 const fs = require('fs');
 const path = require('path');
 
-const INPUT_PATH = path.join(__dirname, '../xlsx/representative_wip.xlsx');
-const OUTPUT_PATH = path.join(__dirname, '../../public/data/representatives_2022.json');
+const argYear = process.argv[2];
+let years;
+
+if (argYear) {
+  if (!/^\d{4}$/.test(argYear)) {
+    console.error('Usage: node data/scripts/convert-xlsx-to-json.cjs <year>');
+    console.error('Example: node data/scripts/convert-xlsx-to-json.cjs 2022');
+    process.exit(1);
+  }
+  years = [argYear];
+} else {
+  const manifestPath = path.join(__dirname, '../../public/data/representatives-manifest.json');
+  if (!fs.existsSync(manifestPath)) {
+    console.error('No year argument given and manifest not found:', manifestPath);
+    process.exit(1);
+  }
+  years = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  console.log(`No year specified — using manifest: ${years.join(', ')}`);
+}
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -75,125 +92,117 @@ function mapRepresentative(row) {
 // Main
 // ---------------------------------------------------------------------------
 
-if (!fs.existsSync(INPUT_PATH)) {
-  console.error(`Input file not found: ${INPUT_PATH}`);
-  console.error('Run: node data/scripts/create-base-xlsx.cjs  to create the template first.');
-  process.exit(1);
-}
+function convertYear(year) {
+  const INPUT_PATH  = path.join(__dirname, `../xlsx/representative_${year}.xlsx`);
+  const OUTPUT_PATH = path.join(__dirname, `../../public/data/representatives_${year}.json`);
 
-const wb = XLSX.readFile(INPUT_PATH);
+  if (!fs.existsSync(INPUT_PATH)) {
+    console.error(`Input file not found: ${INPUT_PATH}`);
+    console.error('Run: node data/scripts/create-base-xlsx.cjs  to create the template first.');
+    process.exit(1);
+  }
 
-// Read both sheets
-const mpRows   = readSheet(wb, 'MP');
-const adunRows = readSheet(wb, 'ADUN');
+  const wb = XLSX.readFile(INPUT_PATH);
 
-// Skip header-only or empty rows (rows where name is blank)
-const mpRecords   = mpRows.map(mapRepresentative).filter(r => r.name);
-const adunRecords = adunRows.map(mapRepresentative).filter(r => r.name);
+  const mpRows   = readSheet(wb, 'MP');
+  const adunRows = readSheet(wb, 'ADUN');
 
-console.log(`MP sheet:   ${mpRecords.length} records`);
-console.log(`ADUN sheet: ${adunRecords.length} records`);
+  const mpRecords   = mpRows.map(mapRepresentative).filter(r => r.name);
+  const adunRecords = adunRows.map(mapRepresentative).filter(r => r.name);
 
-// ---------------------------------------------------------------------------
-// Group by federalSeatCode
-// ---------------------------------------------------------------------------
+  console.log(`\n[${year}] MP sheet:   ${mpRecords.length} records`);
+  console.log(`[${year}] ADUN sheet: ${adunRecords.length} records`);
 
-// Build a map from federalSeatCode → { seat metadata, mp, aduns[] }
-const seatMap = new Map();
+  const seatMap = new Map();
 
-// Seed from MP rows (they carry the authoritative federal seat metadata)
-for (const mp of mpRecords) {
-  const code = mp.federalSeatCode;
-  if (!code) continue;
-  if (!seatMap.has(code)) {
-    seatMap.set(code, {
-      federalSeatCode: code,
-      federalSeatName: mp.federalSeatName,
-      state: mp.state,
-      mp: null,
-      aduns: [],
+  for (const mp of mpRecords) {
+    const code = mp.federalSeatCode;
+    if (!code) continue;
+    if (!seatMap.has(code)) {
+      seatMap.set(code, {
+        federalSeatCode: code,
+        federalSeatName: mp.federalSeatName,
+        state: mp.state,
+        mp: null,
+        aduns: [],
+      });
+    }
+    const seat = seatMap.get(code);
+    if (!seat.mp || (mp.electedYear ?? 0) > (seat.mp.electedYear ?? 0)) {
+      seat.mp = {
+        electedYear: mp.electedYear,
+        stateSeatCode: mp.stateSeatCode,
+        stateSeatName: mp.stateSeatName,
+        pollingDistricts: mp.pollingDistricts,
+        name: mp.name,
+        party: mp.party,
+        gender: mp.gender,
+        address: mp.address,
+        email: mp.email,
+        phoneNumber: mp.phoneNumber,
+        facebook: mp.facebook,
+        twitter: mp.twitter,
+      };
+    }
+  }
+
+  for (const adun of adunRecords) {
+    const code = adun.federalSeatCode;
+    if (!code) continue;
+    if (!seatMap.has(code)) {
+      seatMap.set(code, {
+        federalSeatCode: code,
+        federalSeatName: adun.federalSeatName,
+        state: adun.state,
+        mp: null,
+        aduns: [],
+      });
+    }
+  }
+
+  for (const adun of adunRecords) {
+    const code = adun.federalSeatCode;
+    if (!code) continue;
+    const seat = seatMap.get(code);
+    if (!seat) continue;
+    seat.aduns.push({
+      electedYear: adun.electedYear,
+      stateSeatCode: adun.stateSeatCode,
+      stateSeatName: adun.stateSeatName,
+      pollingDistricts: adun.pollingDistricts,
+      name: adun.name,
+      party: adun.party,
+      gender: adun.gender,
+      address: adun.address,
+      email: adun.email,
+      phoneNumber: adun.phoneNumber,
+      facebook: adun.facebook,
+      twitter: adun.twitter,
     });
   }
-  const seat = seatMap.get(code);
-  // Keep highest-year MP (in case of multiple terms in the sheet)
-  if (!seat.mp || (mp.electedYear ?? 0) > (seat.mp.electedYear ?? 0)) {
-    seat.mp = {
-      electedYear: mp.electedYear,
-      stateSeatCode: mp.stateSeatCode,
-      stateSeatName: mp.stateSeatName,
-      pollingDistricts: mp.pollingDistricts,
-      name: mp.name,
-      party: mp.party,
-      gender: mp.gender,
-      address: mp.address,
-      email: mp.email,
-      phoneNumber: mp.phoneNumber,
-      facebook: mp.facebook,
-      twitter: mp.twitter,
-    };
-  }
-}
 
-// Seed federal seats that only appear in ADUN rows (edge case)
-for (const adun of adunRecords) {
-  const code = adun.federalSeatCode;
-  if (!code) continue;
-  if (!seatMap.has(code)) {
-    seatMap.set(code, {
-      federalSeatCode: code,
-      federalSeatName: adun.federalSeatName,
-      state: adun.state,
-      mp: null,
-      aduns: [],
-    });
-  }
-}
-
-// Attach ADUN records
-for (const adun of adunRecords) {
-  const code = adun.federalSeatCode;
-  if (!code) continue;
-  const seat = seatMap.get(code);
-  if (!seat) continue;
-  seat.aduns.push({
-    electedYear: adun.electedYear,
-    stateSeatCode: adun.stateSeatCode,
-    stateSeatName: adun.stateSeatName,
-    pollingDistricts: adun.pollingDistricts,
-    name: adun.name,
-    party: adun.party,
-    gender: adun.gender,
-    address: adun.address,
-    email: adun.email,
-    phoneNumber: adun.phoneNumber,
-    facebook: adun.facebook,
-    twitter: adun.twitter,
-  });
-}
-
-// Sort seats by federalSeatCode (P001, P002, …)
-const output = Array.from(seatMap.values()).sort((a, b) => {
-  const numA = parseInt(a.federalSeatCode.replace(/\D/g, ''), 10);
-  const numB = parseInt(b.federalSeatCode.replace(/\D/g, ''), 10);
-  return numA - numB;
-});
-
-// Sort ADUNs within each seat by stateSeatCode
-for (const seat of output) {
-  seat.aduns.sort((a, b) => {
-    const numA = parseInt(a.stateSeatCode.replace(/\D/g, ''), 10);
-    const numB = parseInt(b.stateSeatCode.replace(/\D/g, ''), 10);
+  const output = Array.from(seatMap.values()).sort((a, b) => {
+    const numA = parseInt(a.federalSeatCode.replace(/\D/g, ''), 10);
+    const numB = parseInt(b.federalSeatCode.replace(/\D/g, ''), 10);
     return numA - numB;
   });
+
+  for (const seat of output) {
+    seat.aduns.sort((a, b) => {
+      const numA = parseInt(a.stateSeatCode.replace(/\D/g, ''), 10);
+      const numB = parseInt(b.stateSeatCode.replace(/\D/g, ''), 10);
+      return numA - numB;
+    });
+  }
+
+  fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
+  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2), 'utf8');
+
+  console.log(`[${year}] Written ${output.length} federal seats to ${OUTPUT_PATH}`);
+  console.log(`[${year}]   MPs:   ${output.filter(s => s.mp).length}`);
+  console.log(`[${year}]   ADUNs: ${output.reduce((sum, s) => sum + s.aduns.length, 0)}`);
 }
 
-// ---------------------------------------------------------------------------
-// Write output
-// ---------------------------------------------------------------------------
-
-fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
-fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2), 'utf8');
-
-console.log(`\nWritten ${output.length} federal seats to ${OUTPUT_PATH}`);
-console.log(`  MPs:   ${output.filter(s => s.mp).length}`);
-console.log(`  ADUNs: ${output.reduce((sum, s) => sum + s.aduns.length, 0)}`);
+for (const year of years) {
+  convertYear(String(year));
+}
