@@ -15,6 +15,13 @@
 const XLSX = require('xlsx');
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
+
+const BASE_PATH = path.join(__dirname, '../xlsx/representative_base.xlsx');
+if (!fs.existsSync(BASE_PATH)) {
+  console.log('representative_base.xlsx not found — running create-base-xlsx.cjs first...');
+  execSync('node data/scripts/create-base-xlsx.cjs', { stdio: 'inherit', cwd: path.join(__dirname, '../..') });
+}
 
 const argYear = process.argv[2];
 let years;

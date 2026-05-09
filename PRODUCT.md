@@ -2,35 +2,36 @@
 
 ## Register
 
-product
+brand
 
 ## Users
 
-Malaysian citizens, journalists, and civic-minded individuals looking up elected representatives (MPs and ADUNs). Used both on mobile (quick lookup of a local rep's contact) and desktop (deeper research sessions). They come with a specific question: who represents this seat, and how do I reach them?
+Malaysian citizens — young adults, students, first-time voters — who have heard of MPs and ADUNs but don't really know what they do or how to reach them. Also school teachers who use the site in civic education lessons (on a projector, with a class following along). The user is likely on a phone, mildly skeptical that this topic is relevant to them, and unlikely to read a wall of text.
 
 ## Product Purpose
 
-Whoadunit (Whoadunit, like "whodunit") is an open directory of Malaysian elected representatives at both the federal (Dewan Rakyat / MP) and state (DUN / ADUN) levels. It exists to close the gap between citizens and their representatives through transparent, searchable data. Success means a user lands, finds their representative in under 30 seconds, and leaves knowing exactly how to reach them.
+Whoadunit demystifies Malaysian democracy. It helps citizens understand the difference between an MP and an ADUN, find their representative, and take a concrete action — writing an email, making a call, or showing up at an office. The site is built on open data sourced from Wikipedia and maintained by volunteers, and it invites users to contribute back. Success looks like someone who arrived clueless leaving with a name, a contact, and the confidence to use it.
 
 ## Brand Personality
 
-Approachable, clear, civic-minded. The "whodunit" mystery wordplay hints at detective curiosity — the tool helps you find out who's responsible for your area. Not a government portal (stiff, bureaucratic), not a gamified app (patronizing), but a well-made civic instrument you'd trust and return to.
+Approachable, empowering, playful. The site explains democracy the way a knowledgeable, slightly cheeky friend would — not a civil servant, not a professor. It respects the user's intelligence while never assuming they already know the system.
 
 ## Anti-references
 
-- Generic government websites: grey, dense, patronizing
-- Dry data portals: spreadsheet aesthetics, zero craft
-- SaaS dashboard templates: hero metrics, gradient banners, badge-heavy UI
-- Overly playful civic apps that feel like they're trying too hard
+- Malaysian government portals: dense, hierarchical, impossible to navigate, designed for compliance not curiosity.
+- Wikipedia-style article dumps: walls of text, no visual rhythm, no sense of discovery.
+- Generic "civics education" clipart aesthetics: flag-heavy, stiff, condescending to anyone over 10.
+- Malaysiakini: dense news-column grid, competing headlines at every scale, cluttered navigation — the journalist's tool, not the curious citizen's entry point.
 
 ## Design Principles
 
-1. **Findability first.** Every screen gets out of the user's way so they can find what they need quickly. Information architecture beats decoration.
-2. **Earned trust.** Calm, measured visual language signals reliability. Nothing screams for attention; everything earns it.
-3. **Modern, not trendy.** Modern typography and spacing, but no fleeting aesthetics. This should look as good in 5 years as today.
-4. **Green as civic identity.** Forest green carries the calm civic tone. It is committed, not decorative.
-5. **One surprise.** Each screen earns one moment of personality (the wordplay in the logo, a subtle animation, a well-crafted empty state). Never more than one.
+1. **Show, don't lecture.** Every explanation is interactive, visual, or bite-sized. If it reads like a textbook paragraph, rewrite it as a chart, a step, or a callout.
+2. **Make it personal fast.** Democracy is abstract until it has a name and a face. The first thing the user does is find *their* representative — not learn a definition.
+3. **Teach through examples, not definitions.** Abstract roles become real through concrete situations. "If your drain is blocked, that's your ADUN. If GST changed your grocery bill, that's your MP." Every role explanation includes at least three real-life issue examples.
+4. **Action at the end of every path.** Learning is not the goal; doing something is. Every flow ends with a clear, copyable action: an email address, a phone number, a door to knock on.
+5. **Museum, not manual.** Information arrives in discrete, discoverable moments — cards, scroll-driven reveals, charts with personality — not as a document to read top-to-bottom. Each section reveals only after the previous is completed.
+6. **Radically accessible.** Works on a projector in a classroom, on a five-year-old Android phone on a slow connection, and for users who need screen readers or high contrast. Bilingual-ready (Bahasa Malaysia and English).
 
 ## Accessibility & Inclusion
 
-WCAG AA minimum. Strong color contrast for text on colored backgrounds. Focus indicators on all interactive elements. All interactive targets touch-friendly (≥44px). Supports both light and dark mode via user preference.
+WCAG AA minimum. Priority accommodations: works at large display resolutions (classroom projectors), mobile-first layout, reduced motion support, sufficient color contrast for varied lighting conditions. Bilingual labeling (BM/EN) considered from the start, not bolted on later.
