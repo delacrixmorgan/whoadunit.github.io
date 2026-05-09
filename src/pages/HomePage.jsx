@@ -1,472 +1,498 @@
-import { useState, useMemo } from 'react'
-import { usePageMeta } from '../hooks/usePageMeta'
-import { Link, useNavigate } from 'react-router-dom'
-import { useRepresentatives, computeStats } from '../hooks/useRepresentatives'
-import { t } from '../i18n'
-import RepCard from '../components/RepCard'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
+import { useRepresentatives, getContactCompleteness } from '../hooks/useRepresentatives.js'
+import { groupSearch } from '../lib/search.js'
+import { usePageMeta } from '../hooks/usePageMeta.js'
+import { useT } from '../i18n/LanguageContext.jsx'
+import StepPill from '../components/StepPill.jsx'
+import RepCard from '../components/RepCard.jsx'
+import ContactCard from '../components/ContactCard.jsx'
+import ExplainerPanel from '../components/ExplainerPanel.jsx'
+import StatBlock from '../components/StatBlock.jsx'
+import DiffGrid from '../components/DiffGrid.jsx'
+import DecoBlob from '../components/DecoBlob.jsx'
+import Reveal from '../components/Reveal.jsx'
+import CopyButton from '../components/CopyButton.jsx'
 
-function SearchIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-    </svg>
-  )
-}
+const SUGGESTION_LIMIT = 6
+const QUICK_TIPS = ['Padang Besar', 'Hannah Yeoh', 'PAS', 'Selangor', 'P051']
 
-function ArrowRightIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-    </svg>
-  )
-}
+const EMAIL_TEMPLATE = `Dear YB [Representative Name],
 
-function ContactBar({ label, pct }) {
-  const color = pct >= 75
-    ? 'var(--md-sys-color-tertiary)'
-    : pct >= 50
-    ? 'var(--md-sys-color-primary)'
-    : 'var(--md-sys-color-outline)'
+I am writing concerning [the issue]. [One paragraph stating what's happening and why it concerns me.]
 
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-      <span style={{ fontSize: '0.8rem', color: 'var(--md-sys-color-on-surface-variant)', minWidth: '72px' }}>{label}</span>
-      <div style={{
-        flex: 1,
-        height: '6px',
-        borderRadius: '999px',
-        background: 'var(--md-sys-color-surface-container-high)',
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          height: '100%', width: `${pct}%`, borderRadius: '999px',
-          background: color,
-          transition: 'width 0.7s cubic-bezier(0.16,1,0.3,1)',
-        }} />
-      </div>
-      <span style={{ fontSize: '0.78rem', fontWeight: 600, color, minWidth: '36px', textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
-        {pct}%
-      </span>
-    </div>
-  )
-}
+I have lived in [your area] for [some time]. [Why this matters to you personally.]
+
+[Your specific ask — what you want them to do.]
+
+A reply to these key questions will be highly appreciated.
+
+Sincerely,
+[Your name]`
+
+const EMAIL_BLOCKS = [
+  { label: '01 · Greeting',  hint: 'Address the rep with their title and name.',                          example: 'Dear YB [Representative Name],' },
+  { label: '02 · The issue', hint: 'State the topic and your concern in one paragraph.',                  example: 'I am writing concerning [the issue]. [What\'s happening and why it matters.]' },
+  { label: '03 · Your story',hint: 'Make it personal. Why does this matter to you?',                       example: 'I have lived in [area] for [years]. [Personal stake — family, work, daily life.]' },
+  { label: '04 · Your ask',  hint: 'Be specific about what you want them to do.',                          example: '[One clear request — vote against, raise in parliament, pressure the minister.]' },
+  { label: '05 · Sign off',  hint: 'Optional thanks, questions, or a request for a reply. Always sign your name.', example: 'A reply to these key questions will be highly appreciated.\n\nSincerely,\n[Your name]' },
+]
 
 export default function HomePage() {
-  usePageMeta({
-    title: 'Whoadunit — Malaysian Representative Directory',
-    description: 'Search and find your elected MP or ADUN across Malaysia.',
-  })
-  const { data, loading } = useRepresentatives()
+  const { seats, loading } = useRepresentatives()
+  const [params, setParams] = useSearchParams()
+  const t = useT()
+
+  usePageMeta({ title: t('meta.home_title'), description: t('meta.home_desc') })
+
   const [query, setQuery] = useState('')
-  const navigate = useNavigate()
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const dropdownRef = useRef(null)
 
-  const stats = useMemo(() => data.length ? computeStats(data) : null, [data])
-  const featured = useMemo(() => data.slice(0, 5), [data])
+  const seatCode = params.get('seat')
+  const selectedSeat = useMemo(
+    () => seats.find((s) => s.federalSeatCode === seatCode) || null,
+    [seats, seatCode],
+  )
 
-  const handleSearch = (e) => {
+  const suggestions = useMemo(() => {
+    if (!query.trim()) return []
+    return groupSearch(seats, query).slice(0, SUGGESTION_LIMIT)
+  }, [seats, query])
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (!dropdownRef.current?.contains(e.target)) setShowSuggestions(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  useEffect(() => {
+    if (!seatCode || loading) return
+    const el = document.getElementById('s2')
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [seatCode, loading])
+
+  const handleSelect = (code) => {
+    setParams({ seat: code }, { replace: false })
+    setShowSuggestions(false)
+    setQuery('')
+  }
+
+  const handleSubmit = (e) => {
     e.preventDefault()
-    if (query.trim()) navigate(`/directory?q=${encodeURIComponent(query.trim())}`)
+    if (suggestions[0]) handleSelect(suggestions[0].seat.federalSeatCode)
   }
 
   return (
-    <div className="page-enter">
+    <>
+      <Step1Search
+        query={query}
+        onQueryChange={(v) => { setQuery(v); setShowSuggestions(true) }}
+        onSubmit={handleSubmit}
+        onSelect={handleSelect}
+        onFocus={() => setShowSuggestions(true)}
+        suggestions={suggestions}
+        showSuggestions={showSuggestions}
+        dropdownRef={dropdownRef}
+        t={t}
+      />
 
-      {/* Hero */}
-      <section style={{
-        position: 'relative',
-        overflow: 'hidden',
-        borderBottom: '1px solid var(--md-sys-color-outline-variant)',
-        padding: '80px 24px 72px',
-        background: 'var(--md-sys-color-surface)',
-      }}>
-        {/* Subtle dot-grid texture */}
-        <div aria-hidden="true" style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          backgroundImage: 'radial-gradient(circle, var(--md-sys-color-outline-variant) 1px, transparent 1px)',
-          backgroundSize: '28px 28px',
-          opacity: 0.45,
-        }} />
-        {/* Soft sage glow behind heading */}
-        <div aria-hidden="true" style={{
-          position: 'absolute',
-          top: '-80px', left: '50%', transform: 'translateX(-50%)',
-          width: '600px', height: '400px',
-          borderRadius: '50%',
-          background: 'radial-gradient(ellipse at center, var(--md-sys-color-primary-container) 0%, transparent 70%)',
-          opacity: 0.55,
-          pointerEvents: 'none',
-        }} />
-
-        <div style={{ maxWidth: '640px', margin: '0 auto', textAlign: 'center', position: 'relative' }}>
-
-          {/* Eyebrow pill — pastel, outlined */}
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: '6px',
-            background: 'var(--md-sys-color-primary-container)',
-            color: 'var(--md-sys-color-on-primary-container)',
-            border: '1px solid var(--md-sys-color-outline-variant)',
-            borderRadius: '999px', padding: '5px 16px',
-            fontSize: '0.70rem', fontWeight: '600', letterSpacing: '0.08em',
-            textTransform: 'uppercase', marginBottom: '28px',
-            fontFamily: 'Inter, sans-serif',
-          }}>
-            <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--md-sys-color-primary)', flexShrink: 0 }} />
-            Malaysia · Dewan Rakyat & DUN
-          </div>
-
-          <h1 style={{
-            fontFamily: 'Libre Baskerville, Georgia, serif',
-            fontSize: 'clamp(1.9rem, 5vw, 2.75rem)',
-            fontWeight: '700', margin: '0 0 18px',
-            color: 'var(--md-sys-color-on-surface)',
-            lineHeight: 1.14,
-            letterSpacing: '-0.025em',
-          }}>
-            {t('home.hero_title')}
-          </h1>
-
-          <p style={{
-            fontSize: '1rem',
-            color: 'var(--md-sys-color-on-surface-variant)',
-            margin: '0 auto 44px',
-            lineHeight: 1.75,
-            maxWidth: '52ch',
-          }}>
-            {t('home.hero_subtitle')}
-          </p>
-
-          {/* Search bar */}
-          <form onSubmit={handleSearch} style={{ display: 'flex', gap: '8px', maxWidth: '520px', margin: '0 auto 24px' }}>
-            <div style={{ position: 'relative', flex: 1 }}>
-              <span style={{
-                position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
-                color: 'var(--md-sys-color-outline)', pointerEvents: 'none',
-              }}>
-                <SearchIcon />
-              </span>
-              <input
-                type="text"
-                placeholder={t('home.search_placeholder')}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                style={{
-                  width: '100%',
-                  background: 'var(--md-sys-color-surface-container-lowest)',
-                  border: '1.5px solid var(--md-sys-color-outline-variant)',
-                  borderRadius: '14px',
-                  color: 'var(--md-sys-color-on-surface)',
-                  padding: '13px 16px 13px 46px',
-                  fontSize: '0.95rem',
-                  fontFamily: 'Inter, sans-serif',
-                  transition: 'border-color 0.18s, box-shadow 0.18s',
-                  outline: 'none',
-                  boxShadow: '0 1px 4px oklch(22% 0.006 148 / 0.05)',
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = 'var(--md-sys-color-primary)'
-                  e.target.style.boxShadow = '0 0 0 3px oklch(52% 0.065 148 / 0.12)'
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = 'var(--md-sys-color-outline-variant)'
-                  e.target.style.boxShadow = '0 1px 4px oklch(22% 0.006 148 / 0.05)'
-                }}
-              />
-            </div>
-            <button
-              type="submit"
-              className="btn-primary"
-              style={{ borderRadius: '14px', padding: '13px 22px', fontSize: '0.88rem', flexShrink: 0 }}
-            >
-              {t('home.search_btn')}
-            </button>
-          </form>
-
-          {/* Quick party filters */}
-          <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            {['PKR', 'DAP', 'UMNO', 'BERSATU', 'PAS'].map((party) => (
-              <Link
-                key={party}
-                to={`/directory?party=${encodeURIComponent(party)}`}
-                style={{
-                  padding: '5px 14px', borderRadius: '999px',
-                  fontSize: '0.73rem', fontWeight: 600,
-                  background: 'var(--md-sys-color-surface-container-low)',
-                  color: 'var(--md-sys-color-on-surface-variant)',
-                  border: '1px solid var(--md-sys-color-outline-variant)',
-                  textDecoration: 'none',
-                  transition: 'background 0.12s, color 0.12s',
-                  letterSpacing: '0.03em',
-                  fontFamily: 'Inter, sans-serif',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'var(--md-sys-color-primary-container)'
-                  e.currentTarget.style.color = 'var(--md-sys-color-on-primary-container)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'var(--md-sys-color-surface-container-low)'
-                  e.currentTarget.style.color = 'var(--md-sys-color-on-surface-variant)'
-                }}
-              >
-                {party}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Summary cards */}
-      {stats && (
-        <div style={{
-          background: 'var(--md-sys-color-surface)',
-          borderBottom: '1px solid var(--md-sys-color-outline-variant)',
-          padding: '28px 24px',
-        }}>
-          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-            <div className="stats-grid">
-              {[
-                {
-                  value: stats.total,
-                  label: 'Representatives',
-                  sublabel: 'Federal & state seats',
-                  href: '/directory',
-                  accent: 'primary',
-                  icon: (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                  ),
-                },
-                {
-                  value: stats.mps,
-                  label: 'MPs',
-                  sublabel: 'Federal (Dewan Rakyat)',
-                  href: '/directory?type=MP',
-                  accent: 'mp',
-                  icon: (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
-                    </svg>
-                  ),
-                },
-                {
-                  value: stats.aduns,
-                  label: 'ADUNs',
-                  sublabel: 'State assembly members',
-                  href: '/directory?type=ADUN',
-                  accent: 'adun',
-                  icon: (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-                    </svg>
-                  ),
-                },
-                {
-                  value: stats.partyCount,
-                  label: 'Parties',
-                  sublabel: 'Political parties',
-                  href: '/directory',
-                  accent: 'secondary',
-                  icon: (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                  ),
-                },
-                {
-                  value: stats.stateCount,
-                  label: 'States',
-                  sublabel: 'States & territories',
-                  href: '/directory',
-                  accent: 'tertiary',
-                  icon: (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
-                      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                    </svg>
-                  ),
-                },
-              ].map((item) => (
-                <Link
-                  key={item.label}
-                  to={item.href}
-                  className={`stat-card-link stat-card-link--${item.accent}`}
-                  style={{ textDecoration: 'none' }}
-                >
-                  <div className="stat-card-modern">
-                    <div className={`stat-card-icon stat-card-icon--${item.accent}`}>
-                      {item.icon}
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{
-                        fontFamily: 'Libre Baskerville, Georgia, serif',
-                        fontSize: '1.85rem',
-                        fontWeight: 700,
-                        lineHeight: 1,
-                        letterSpacing: '-0.025em',
-                        fontVariantNumeric: 'tabular-nums',
-                      }} className={`stat-card-value--${item.accent}`}>
-                        {item.value}
-                      </div>
-                      <div style={{
-                        marginTop: '5px',
-                        fontFamily: 'Inter, sans-serif',
-                        fontSize: '0.82rem',
-                        fontWeight: 600,
-                        color: 'var(--md-sys-color-on-surface)',
-                        lineHeight: 1.2,
-                      }}>
-                        {item.label}
-                      </div>
-                      <div style={{
-                        marginTop: '2px',
-                        fontFamily: 'Inter, sans-serif',
-                        fontSize: '0.72rem',
-                        color: 'var(--md-sys-color-on-surface-variant)',
-                        lineHeight: 1.3,
-                      }}>
-                        {item.sublabel}
-                      </div>
-                    </div>
-                    <div className="stat-card-arrow">
-                      <ArrowRightIcon />
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
+      {selectedSeat && (
+        <>
+          <SectionDivider seat={selectedSeat} />
+          <Step2Mp seat={selectedSeat} t={t} />
+          <Step3Aduns seat={selectedSeat} t={t} />
+          <Step4Contact seat={selectedSeat} t={t} />
+          <Step5Share seat={selectedSeat} t={t} />
+        </>
       )}
 
-      {/* Main content */}
-      <section style={{ padding: '48px 24px 72px', maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '48px', alignItems: 'start' }} className="home-grid">
+      {!selectedSeat && !loading && (
+        <SuggestedExplorationStrip onSelect={handleSelect} seats={seats} />
+      )}
+    </>
+  )
+}
 
-          {/* Left: recent reps */}
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-              <div>
-                <h2 style={{ fontSize: 'var(--text-lg)', margin: 0 }}>{t('home.recent_title')}</h2>
-                <p style={{ margin: '4px 0 0', fontSize: '0.82rem', color: 'var(--md-sys-color-on-surface-variant)', maxWidth: 'none' }}>
-                  A selection from the directory
-                </p>
-              </div>
-              <Link
-                to="/directory"
-                style={{
-                  fontSize: '0.82rem', color: 'var(--md-sys-color-primary)',
-                  textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px',
-                  fontWeight: 600, flexShrink: 0,
-                }}
-              >
-                {t('home.view_all')} <ArrowRightIcon />
-              </Link>
-            </div>
+function Step1Search({
+  query, onQueryChange, onSubmit, onSelect, onFocus,
+  suggestions, showSuggestions, dropdownRef, t,
+}) {
+  return (
+    <section className="step-search" id="s1">
+      <DecoBlob tone="rose" size={520} opacity={0.18} top={-200} right={-100} />
+      <DecoBlob tone="gold" size={280} opacity={0.16} bottom={-80} left="6%" />
 
-            {loading ? (
-              <div style={{ display: 'grid', gap: '8px' }}>
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} style={{
-                    height: '76px', borderRadius: '14px',
-                    background: 'var(--md-sys-color-surface-container)',
-                    animation: 'pulse 1.5s ease-in-out infinite',
-                    animationDelay: `${i * 0.1}s`,
-                  }} />
-                ))}
-              </div>
-            ) : (
-              <div style={{ display: 'grid', gap: '8px' }}>
-                {featured.map((rep) => (
-                  <RepCard key={rep.federalSeatCode || rep.stateSeatCode} rep={rep} />
-                ))}
-              </div>
-            )}
+      <StepPill tone="rose" num={1}>{t('home.step1')}</StepPill>
+
+      <h1 className="t-display" style={{ marginTop: '1.5rem' }}>
+        {t('home.title_lead')}
+        <br />
+        <span className="kw-rose">{t('home.title_kw')}</span>
+      </h1>
+      <p className="page-hero__sub" style={{ marginTop: '1.5rem' }}>{t('home.sub')}</p>
+
+      <form className="search-rose" onSubmit={onSubmit} ref={dropdownRef}>
+        <label htmlFor="home-search" className="sr-only">{t('search.placeholder')}</label>
+        <div className="search-rose__form">
+          <div className="search-rose__wrap">
+            <SearchIcon className="search-rose__icon" />
+            <input
+              id="home-search"
+              type="text"
+              className="search-rose__input"
+              placeholder={t('search.placeholder')}
+              value={query}
+              onChange={(e) => onQueryChange(e.target.value)}
+              onFocus={onFocus}
+              autoComplete="off"
+            />
           </div>
+          <button type="submit" className="search-rose__btn">{t('search.button')}</button>
+        </div>
 
-          {/* Right: contact transparency scorecard */}
-          {stats && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {showSuggestions && suggestions.length > 0 && (
+          <div className="search-dropdown" role="listbox">
+            {suggestions.map(({ seat }) => (
+              <button
+                key={seat.federalSeatCode}
+                type="button"
+                role="option"
+                aria-selected="false"
+                className="search-suggestion"
+                onClick={() => onSelect(seat.federalSeatCode)}
+              >
+                <span className="search-suggestion__code">{seat.federalSeatCode}</span>
+                <strong>{seat.federalSeatName}</strong>
+                <span className="search-suggestion__meta"> · {seat.state}</span>
+              </button>
+            ))}
+          </div>
+        )}
+        {showSuggestions && query.trim() && suggestions.length === 0 && (
+          <div className="search-dropdown">
+            <div className="search-suggestion__empty">No matches. Try a place, party, or seat code like P001.</div>
+          </div>
+        )}
+      </form>
 
-              {/* Scorecard */}
-              <div style={{
-                background: 'var(--md-sys-color-surface-container-low)',
-                border: '1px solid var(--md-sys-color-outline-variant)',
-                borderRadius: '16px',
-                padding: '24px',
-              }}>
-                <div style={{ marginBottom: '20px' }}>
-                  <h2 style={{ fontSize: 'var(--text-md)', margin: '0 0 4px' }}>{t('home.scorecard_title')}</h2>
-                  <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--md-sys-color-on-surface-variant)', maxWidth: 'none' }}>
-                    {t('home.scorecard_subtitle')}
-                  </p>
-                </div>
+      <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <span className="t-label" style={{ color: 'var(--ink-faint)' }}>{t('search.quick_label')}:</span>
+        {QUICK_TIPS.map((tip) => (
+          <button
+            key={tip}
+            type="button"
+            className="prompt-tip"
+            onClick={() => { onQueryChange(tip); onFocus(); }}
+          >{tip}</button>
+        ))}
+      </div>
+    </section>
+  )
+}
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  <ContactBar label={t('home.scorecard_email')} pct={stats.contact.email.pct} />
-                  <ContactBar label={t('home.scorecard_phone')} pct={stats.contact.phone.pct} />
-                  <ContactBar label={t('home.scorecard_facebook')} pct={stats.contact.facebook.pct} />
-                  <ContactBar label={t('home.scorecard_twitter')} pct={stats.contact.twitter.pct} />
-                </div>
+function SearchIcon({ className }) {
+  return (
+    <svg className={className} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.35-4.35" />
+    </svg>
+  )
+}
 
-                <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--md-sys-color-outline-variant)' }}>
-                  <Link
-                    to="/statistics"
-                    style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '5px',
-                      fontSize: '0.82rem', color: 'var(--md-sys-color-primary)',
-                      textDecoration: 'none', fontWeight: 600,
-                    }}
-                  >
-                    {t('home.view_stats')} <ArrowRightIcon />
-                  </Link>
-                </div>
-              </div>
+function SectionDivider({ seat }) {
+  return (
+    <div className="section-divider">
+      <div className="section-divider__num" style={{ background: 'var(--rose)', color: 'white' }}>📍</div>
+      <div>
+        <div className="section-divider__text">
+          Showing results for <strong>{seat.federalSeatName}</strong>
+        </div>
+        <div className="section-divider__sub">
+          {seat.federalSeatCode} · {seat.state}
+        </div>
+      </div>
+    </div>
+  )
+}
 
-              {/* Browse by party */}
-              <div style={{
-                background: 'var(--md-sys-color-surface-container-low)',
-                border: '1px solid var(--md-sys-color-outline-variant)',
-                borderRadius: '16px',
-                padding: '20px 24px',
-              }}>
-                <h3 style={{ fontSize: '0.88rem', margin: '0 0 14px', fontFamily: 'Inter, sans-serif', fontWeight: 600, color: 'var(--md-sys-color-on-surface-variant)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                  Browse by Party
-                </h3>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {['PKR', 'DAP', 'Amanah', 'UMNO', 'BERSATU', 'PAS', 'MCA', 'GPS'].map((party) => (
-                    <Link
-                      key={party}
-                      to={`/directory?party=${encodeURIComponent(party)}`}
-                      style={{
-                        padding: '6px 12px', borderRadius: '999px',
-                        fontSize: '0.78rem', fontWeight: 600,
-                        background: 'var(--md-sys-color-surface-container)',
-                        color: 'var(--md-sys-color-on-surface)',
-                        border: '1px solid var(--md-sys-color-outline-variant)',
-                        textDecoration: 'none',
-                        transition: 'background 0.1s, border-color 0.1s',
-                      }}
-                    >
-                      {party}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
+function Step2Mp({ seat, t }) {
+  return (
+    <section className="step-section step-section--leaf" id="s2">
+      <DecoBlob tone="leaf" size={500} opacity={0.14} top={-180} right={-100} />
+      <div className="section-inner">
+        <StepPill tone="leaf" num={2}>{t('home.step2')}</StepPill>
+        <Reveal>
+          <h2 className="t-headline" style={{ marginTop: '1.5rem' }}>
+            Meet your<br />
+            <span className="kw-leaf">Member of Parliament</span>
+          </h2>
+        </Reveal>
+
+        <div style={{ marginTop: '2rem' }}>
+          {seat.mp ? (
+            <Reveal><RepCard person={seat.mp} kind="mp" /></Reveal>
+          ) : (
+            <p className="contact-row__missing" style={{ background: 'white', padding: '1.5rem', borderRadius: 'var(--r-card)' }}>
+              MP data not yet available for this constituency.
+            </p>
           )}
         </div>
-      </section>
 
-      <style>{`
-        @media (max-width: 900px) {
-          .home-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
-        }
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.45; }
-        }
-      `}</style>
+        <Reveal delay={1} style={{ display: 'block', marginTop: '1.75rem' }}>
+          <ExplainerPanel
+            question="What does your MP do?"
+            answer="Your MP votes on national laws at Parliament in Kuala Lumpur. They raise questions directly to ministers and shape policy that affects every Malaysian — not just your area."
+            chips={[
+              { tone: 'rose',   label: '🧾 GST & national tax' },
+              { tone: 'leaf',   label: '🏫 Education curriculum' },
+              { tone: 'violet', label: '📶 Internet regulation' },
+              { tone: 'gold',   label: '⚖️ Federal crime law' },
+            ]}
+          />
+        </Reveal>
+
+        <Reveal delay={2} style={{ display: 'block', marginTop: '2rem', maxWidth: 480 }}>
+          <StatBlock
+            tone="gold"
+            label="Did you know?"
+            num="222"
+            caption="MPs represent Malaysia's 222 federal constituencies in Dewan Rakyat."
+          />
+        </Reveal>
+      </div>
+    </section>
+  )
+}
+
+function Step3Aduns({ seat, t }) {
+  const aduns = seat.aduns || []
+  const isFT = aduns.length === 0
+
+  return (
+    <section className="step-section step-section--violet" id="s3">
+      <DecoBlob tone="violet" size={550} opacity={0.14} top={-200} right={-120} />
+      <div className="section-inner">
+        <StepPill tone="violet" num={3}>{t('home.step3')}</StepPill>
+        <Reveal>
+          <h2 className="t-headline" style={{ marginTop: '1.5rem' }}>
+            Meet your<br />
+            <span className="kw-violet">State Assembly Members</span>
+          </h2>
+        </Reveal>
+
+        {isFT ? (
+          <Reveal delay={1} style={{ display: 'block', marginTop: '2rem' }}>
+            <div className="explainer-panel">
+              <h3 className="explainer-panel__q">Federal Territory — no state assembly</h3>
+              <p className="explainer-panel__a">
+                {seat.federalSeatName} is in a Federal Territory (KL, Putrajaya, or Labuan), which is administered by the federal government rather than a state. There are no ADUNs here — your MP handles both federal and local matters.
+              </p>
+            </div>
+          </Reveal>
+        ) : (
+          <div style={{ marginTop: '2rem', display: 'grid', gap: '1rem' }}>
+            {aduns.map((adun, i) => (
+              <Reveal key={`${adun.federalSeatCode}-${adun.stateSeatCode}`} delay={Math.min(i + 1, 3)}>
+                <RepCard person={adun} kind="adun" />
+              </Reveal>
+            ))}
+          </div>
+        )}
+
+        <Reveal delay={2} style={{ display: 'block', marginTop: '1.75rem' }}>
+          <ExplainerPanel
+            question="What does your ADUN do?"
+            answer="Your ADUN sits in the state assembly and handles local governance — the neighbourhood-level things you actually see and feel every day."
+            chips={[
+              { tone: 'rose',   label: '🚰 Blocked drains' },
+              { tone: 'leaf',   label: '🌳 Park & road maintenance' },
+              { tone: 'violet', label: '🏗️ Local development' },
+              { tone: 'gold',   label: '📋 State land matters' },
+            ]}
+          />
+        </Reveal>
+
+        {!isFT && (
+          <Reveal delay={3} style={{ display: 'block', marginTop: '2rem' }}>
+            <DiffGrid mp={seat.mp} adun={aduns[0]} />
+          </Reveal>
+        )}
+      </div>
+    </section>
+  )
+}
+
+function Step4Contact({ seat, t }) {
+  const reps = [seat.mp, ...(seat.aduns || [])].filter(Boolean)
+  const overall = reps.length === 0
+    ? 0
+    : Math.round(reps.reduce((s, r) => s + getContactCompleteness(r), 0) / reps.length)
+
+  return (
+    <section className="step-section step-section--gold" id="s4">
+      <DecoBlob tone="gold" size={500} opacity={0.14} top={-180} right={-100} />
+      <div className="section-inner section-inner--wide">
+        <StepPill tone="gold" num={4}>{t('home.step4')}</StepPill>
+        <Reveal>
+          <h2 className="t-headline" style={{ marginTop: '1.5rem' }}>
+            Now <span className="kw-gold">contact them</span>
+          </h2>
+        </Reveal>
+        <Reveal delay={1}>
+          <p className="t-body" style={{ color: 'var(--ink-soft)', margin: '1rem 0 2rem' }}>
+            Copy what you need. Then actually send that message. Your representative is accountable to you — not the other way around.
+          </p>
+        </Reveal>
+
+        <div className="contact-grid">
+          <div className="contact-grid__col contact-grid__col--cards">
+            {seat.mp && <Reveal style={{ display: 'block' }}><ContactCard person={seat.mp} kind="mp" /></Reveal>}
+            {(seat.aduns || []).map((adun) => (
+              <Reveal key={`${adun.federalSeatCode}-${adun.stateSeatCode}`} delay={1} style={{ display: 'block' }}>
+                <ContactCard person={adun} kind="adun" />
+              </Reveal>
+            ))}
+
+            <Reveal delay={2} style={{ display: 'block' }}>
+              <div className="completeness">
+                <div className="completeness__row">
+                  <div>
+                    <div className="completeness__label">Profile completeness for {seat.federalSeatName}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--ink-faint)', marginTop: '0.25rem' }}>
+                      Across {reps.length} representative{reps.length === 1 ? '' : 's'}
+                    </div>
+                  </div>
+                  <span className="completeness__pct">{overall}%</span>
+                </div>
+                <div className="bar-track">
+                  <div className="bar-fill" style={{ width: `${overall}%` }} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', marginTop: '1.25rem' }}>
+                  {reps.map((r) => (
+                    <RepScoreRow key={`${r.type}-${r.stateSeatCode}-${r.name}`} rep={r} />
+                  ))}
+                </div>
+                <p className="completeness__copy" style={{ marginTop: '1rem' }}>
+                  Spotted something missing?{' '}
+                  <Link to="/volunteer" style={{ color: 'var(--rose)', fontWeight: 700 }}>Suggest a correction →</Link>
+                </p>
+              </div>
+            </Reveal>
+          </div>
+
+          <Reveal delay={2} style={{ display: 'block' }}>
+            <aside className="email-template" aria-label="Sample email template">
+              <div className="email-template__topbar" />
+              <div className="email-template__head">
+                <div className="email-template__icon" aria-hidden="true">✉️</div>
+                <div>
+                  <div className="email-template__eyebrow">Sample email</div>
+                  <div className="email-template__title">Stuck? Borrow this template.</div>
+                </div>
+              </div>
+              <ol className="email-template__blocks">
+                {EMAIL_BLOCKS.map((b) => (
+                  <li className="etb" key={b.label}>
+                    <div className="etb__label">{b.label}</div>
+                    <div className="etb__hint">{b.hint}</div>
+                    <div className="etb__example">{b.example}</div>
+                  </li>
+                ))}
+              </ol>
+              <div className="email-template__btn-row">
+                <CopyButton value={EMAIL_TEMPLATE} label="Copy template" copiedLabel="✓ Copied template" />
+              </div>
+            </aside>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function RepScoreRow({ rep }) {
+  const pct = getContactCompleteness(rep)
+  const tone = pct >= 75 ? 'leaf' : pct >= 50 ? '' : 'rose'
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
+      <span style={{ fontSize: '0.85rem', fontWeight: 700, flex: '0 0 auto', minWidth: 84 }}>
+        {rep.type === 'MP' ? 'MP' : `ADUN ${rep.stateSeatCode}`}
+      </span>
+      <div className="bar-track" style={{ flex: 1, height: 6 }}>
+        <div className={`bar-fill ${tone ? `bar-fill--${tone}` : ''}`} style={{ width: `${pct}%` }} />
+      </div>
+      <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--gold)', minWidth: 36, textAlign: 'right' }}>{pct}%</span>
     </div>
+  )
+}
+
+function Step5Share({ seat }) {
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
+  const shareText = `Find out who represents you in Malaysia — ${seat.federalSeatName} (${seat.federalSeatCode}). Whoadunit.`
+
+  const handleWhatsApp = () => {
+    const url = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
+  return (
+    <section className="step-section step-section--paper" id="s5">
+      <div className="section-inner">
+        <StepPill tone="rose" num={5}>SPREAD THE WORD</StepPill>
+        <Reveal style={{ display: 'block', marginTop: '2rem' }}>
+          <div className="share-card">
+            <span className="share-card__blob" aria-hidden="true" />
+            <h3>Now share it with<br />the people around you.</h3>
+            <p>You now know who represents you. Most Malaysians still don't. A message from you is more powerful than any campaign. Share Whoadunit and help build a more accountable democracy.</p>
+            <div className="share-card__btns">
+              <button type="button" className="btn btn--white" onClick={handleWhatsApp}>
+                Share on WhatsApp
+              </button>
+              <CopyButton value={shareUrl} label="Copy link" copiedLabel="✓ Link copied" />
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal delay={1} style={{ display: 'block', marginTop: '3rem' }}>
+          <p className="t-label" style={{ color: 'var(--ink-faint)', marginBottom: '1rem' }}>Want to go deeper?</p>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <Link className="btn btn--ghost" to="/learn">Full civic explainer →</Link>
+            <Link className="btn btn--ghost" to="/volunteer">Help improve the data →</Link>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  )
+}
+
+function SuggestedExplorationStrip({ onSelect, seats }) {
+  const featured = ['P001', 'P104', 'P051', 'P124', 'P148']
+    .map((code) => seats.find((s) => s.federalSeatCode === code))
+    .filter(Boolean)
+  if (featured.length === 0) return null
+
+  return (
+    <section className="section bg-paper">
+      <div className="section-inner section-inner--wide">
+        <p className="t-label" style={{ color: 'var(--ink-faint)', marginBottom: '0.875rem' }}>
+          Or explore a few seats
+        </p>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+          {featured.map((s) => (
+            <button
+              key={s.federalSeatCode}
+              type="button"
+              onClick={() => onSelect(s.federalSeatCode)}
+              className="prompt-tip"
+            >
+              <strong>{s.federalSeatCode}</strong> {s.federalSeatName} · {s.state}
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
   )
 }

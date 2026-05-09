@@ -1,25 +1,17 @@
+// Re-exports for backward compatibility. Prefer `useT()` / `useLanguage()` from
+// './LanguageContext.jsx' inside React components — those react to the active
+// language. The function below is a non-reactive escape hatch that always
+// returns English and is only kept for occasional non-component callers.
 import en from './en.js'
 
-const locales = { en }
-
-let currentLocale = 'en'
-
-export function setLocale(locale) {
-  if (locales[locale]) currentLocale = locale
-}
-
-export function getLocale() {
-  return currentLocale
-}
+export { LanguageProvider, useLanguage, useT } from './LanguageContext.jsx'
 
 export function t(key) {
-  const keys = key.split('.')
-  let value = locales[currentLocale]
-  for (const k of keys) {
-    if (value === undefined) return key
-    value = value[k]
+  const parts = key.split('.')
+  let v = en
+  for (const p of parts) {
+    if (v == null) return key
+    v = v[p]
   }
-  return value ?? key
+  return v ?? key
 }
-
-export default { t, setLocale, getLocale }
