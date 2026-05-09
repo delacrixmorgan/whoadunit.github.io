@@ -40,10 +40,13 @@
     padding: 0.875rem clamp(1.5rem, 6vw, 5rem);
     background: rgba(253,249,244,0.92); backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(26,23,20,0.09);
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center;
   }
   .nav__logo { font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; text-decoration: none; color: var(--ink); }
-  .nav__links { display: flex; gap: 1.75rem; list-style: none; }
+  .nav__links {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 1.75rem; list-style: none;
+  }
   .nav__links a { font-size: 0.8125rem; font-weight: 600; color: var(--ink-soft); text-decoration: none; transition: color 0.15s; }
   .nav__links a:hover { color: var(--ink); }
   .nav__links a.active { color: var(--rose); }
@@ -53,6 +56,19 @@
     text-decoration: none; box-shadow: 0 3px 0 #c84a35; transition: transform 0.15s, box-shadow 0.15s;
   }
   .nav__cta:hover { transform: translateY(-1px); box-shadow: 0 4px 0 #c84a35; }
+
+  /* ── Language toggle ── */
+  .lang-toggle {
+    display: inline-flex; gap: 0; padding: 4px;
+    background: rgba(26,23,20,0.07); border-radius: var(--r-pill);
+    margin-left: auto; margin-right: 0.875rem;
+  }
+  .lang-btn {
+    padding: 0.4rem 0.875rem; border-radius: var(--r-pill); border: none; background: none;
+    font-family: var(--font); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+    color: var(--ink-faint); cursor: pointer; transition: background 0.2s, color 0.2s;
+  }
+  .lang-btn.active { background: white; color: var(--ink); box-shadow: 0 1px 4px rgba(26,23,20,0.1); }
 
   /* ── Deco blobs ── */
   .deco-blob { position: absolute; border-radius: 50%; pointer-events: none; }
@@ -130,10 +146,7 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 0.875rem; font-weight: 800; color: white;
   }
-  .contrib-step--1 .contrib-step__num { background: var(--rose); }
-  .contrib-step--2 .contrib-step__num { background: var(--leaf); }
-  .contrib-step--3 .contrib-step__num { background: var(--violet); }
-  .contrib-step--4 .contrib-step__num { background: var(--gold); color: var(--ink); }
+  .contrib-step__num { background: var(--leaf); color: white; }
   .contrib-step__title { font-size: 1.0625rem; font-weight: 800; margin-bottom: 0.375rem; }
   .contrib-step__body { font-size: 0.875rem; color: var(--ink-soft); line-height: 1.65; }
 
@@ -239,21 +252,31 @@
 <nav>
   <a class="nav__logo" href="index.html">Whoadunit</a>
   <ul class="nav__links">
-    <li><a href="learn.html">Learn</a></li>
-    <li><a href="find.html">Find</a></li>
-    <li><a href="learn.html#methodology">Methodology</a></li>
-    <li><a href="volunteer.html" class="active">Volunteer</a></li>
+    <li><a href="learn.html" data-en="Learn" data-ms="Pelajari">Learn</a></li>
+    <li><a href="find.html" data-en="Find" data-ms="Cari">Find</a></li>
+    <li><a href="methodology.html" data-en="Methodology" data-ms="Metodologi">Methodology</a></li>
+    <li><a href="volunteer.html" class="active" data-en="Volunteer" data-ms="Sukarelawan">Volunteer</a></li>
   </ul>
-  <a class="nav__cta" href="find.html">Find yours →</a>
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button class="lang-btn active" data-lang-set="en" data-lang-toggle aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang-set="ms" data-lang-toggle aria-pressed="false">BM</button>
+  </div>
+  <a class="nav__cta" href="find.html" data-en="Find yours →" data-ms="Cari wakil anda →">Find yours →</a>
 </nav>
 
 <!-- ── Page hero ── -->
 <div class="page-hero">
   <div class="deco-blob" style="width:600px;height:600px;background:var(--gold);opacity:0.12;top:-200px;right:-150px;"></div>
   <div class="deco-blob" style="width:280px;height:280px;background:var(--rose);opacity:0.14;bottom:-80px;left:5%;"></div>
-  <p class="page-hero__eyebrow">Open data · Community · Civic tech</p>
-  <h1 class="t-display">Help us<br><span style="color:var(--gold);">fill the gaps</span></h1>
-  <p class="page-hero__sub">Our data is incomplete — and we're honest about that. Every contact detail a volunteer adds makes the whole site more useful for every Malaysian.</p>
+  <p class="page-hero__eyebrow"
+     data-en="Open data · Community · Civic tech"
+     data-ms="Data terbuka · Komuniti · Teknologi sivik">Open data · Community · Civic tech</p>
+  <h1 class="t-display"
+      data-en='Help us<br><span style="color:var(--gold);">fill the gaps</span>'
+      data-ms='Bantu kami<br><span style="color:var(--gold);">isi jurang</span>'>Help us<br><span style="color:var(--gold);">fill the gaps</span></h1>
+  <p class="page-hero__sub"
+     data-en="Our data is incomplete — and we're honest about that. Every contact detail a volunteer adds makes the whole site more useful for every Malaysian."
+     data-ms="Data kami tidak lengkap, dan kami jujur tentang itu. Setiap maklumat hubungan yang ditambah sukarelawan menjadikan keseluruhan laman ini lebih berguna untuk setiap rakyat Malaysia.">Our data is incomplete — and we're honest about that. Every contact detail a volunteer adds makes the whole site more useful for every Malaysian.</p>
 </div>
 
 <!-- ═══ Section: Why it matters ══════════════════════════ -->
@@ -482,7 +505,7 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn--gold" style="width:100%;justify-content:center;">Submit suggestion →</button>
+          <button type="submit" class="btn btn--gold" style="width:100%;justify-content:center;" data-en="Submit suggestion →" data-ms="Hantar cadangan →">Submit suggestion →</button>
         </form>
       </div>
 
@@ -549,7 +572,7 @@
           <div style="font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:1rem;">Code &amp; data</div>
           <div style="font-size:1.125rem;font-weight:800;color:white;line-height:1.2;margin-bottom:0.875rem;">Open source on GitHub</div>
           <p style="font-size:0.875rem;color:rgba(255,255,255,0.55);line-height:1.65;margin-bottom:1.5rem;">The full dataset, schema, and site code are available. File issues, open PRs, or fork the whole thing.</p>
-          <a href="#" class="btn btn--ghost-white" style="font-size:0.8125rem;padding:0.625rem 1.25rem;">View repository ↗</a>
+          <a href="https://github.com/delacrixmorgan/whoadunit.github.io" target="_blank" rel="noopener" class="btn btn--ghost-white" style="font-size:0.8125rem;padding:0.625rem 1.25rem;">View repository ↗</a>
         </div>
       </div>
     </div>
@@ -563,8 +586,8 @@
       <div style="font-size:clamp(1.5rem,3vw,2.25rem);font-weight:800;color:var(--ink);letter-spacing:-0.02em;line-height:1.1;margin-bottom:1rem;">Ready to help?<br>Start with one ADUN.</div>
       <p style="font-size:1rem;color:rgba(26,23,20,0.65);line-height:1.65;max-width:46ch;margin-bottom:2rem;">You don't have to fill in the whole country. Find one ADUN near you who's missing their email. That's enough to start.</p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-        <a class="btn btn--rose" href="#suggest">Suggest a change now</a>
-        <a class="btn btn--ghost" href="find.html">Browse the data →</a>
+        <a class="btn btn--rose" href="#suggest" data-en="Suggest a change now" data-ms="Cadangkan perubahan sekarang">Suggest a change now</a>
+        <a class="btn btn--ghost" href="find.html" data-en="Browse the data →" data-ms="Lihat data →">Browse the data →</a>
       </div>
     </div>
   </div>
@@ -575,20 +598,21 @@
   <div class="footer-top">
     <div>
       <div class="footer-logo">Whoadunit</div>
-      <div class="footer-tagline">Demystifying Malaysian democracy, one constituency at a time.</div>
+      <div class="footer-tagline">Your rep, your voice. Jom kenal.</div>
     </div>
     <div class="footer-links">
-      <a href="learn.html">Learn</a>
-      <a href="find.html">Find</a>
-      <a href="learn.html#methodology">Methodology</a>
-      <a href="volunteer.html">Volunteer</a>
+      <a href="learn.html" data-en="Learn" data-ms="Pelajari">Learn</a>
+      <a href="find.html" data-en="Find" data-ms="Cari">Find</a>
+      <a href="methodology.html" data-en="Methodology" data-ms="Metodologi">Methodology</a>
+      <a href="volunteer.html" data-en="Volunteer" data-ms="Sukarelawan">Volunteer</a>
+      <a href="https://github.com/delacrixmorgan/whoadunit.github.io" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 Whoadunit. Data from Wikipedia &amp; community volunteers.</span>
     <div style="display:flex; gap:1.5rem;">
-      <a href="#">Privacy</a>
-      <a href="#">Open data licence (CC BY-SA 4.0)</a>
+      <a href="#" data-en="Privacy" data-ms="Privasi">Privacy</a>
+      <a href="#" data-en="Open data licence (CC BY-SA 4.0)" data-ms="Lesen data terbuka (CC BY-SA 4.0)">Open data licence (CC BY-SA 4.0)</a>
     </div>
   </div>
 </footer>
@@ -624,5 +648,6 @@
   }, { threshold: 0.12 });
   revealEls.forEach(el => ro.observe(el));
 </script>
+<script src="i18n.js" defer></script>
 </body>
 </html>

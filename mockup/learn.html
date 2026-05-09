@@ -40,10 +40,13 @@
     padding: 0.875rem clamp(1.5rem, 6vw, 5rem);
     background: rgba(253,249,244,0.92); backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(26,23,20,0.09);
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center;
   }
   .nav__logo { font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; text-decoration: none; color: var(--ink); }
-  .nav__links { display: flex; gap: 1.75rem; list-style: none; }
+  .nav__links {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 1.75rem; list-style: none;
+  }
   .nav__links a { font-size: 0.8125rem; font-weight: 600; color: var(--ink-soft); text-decoration: none; transition: color 0.15s; }
   .nav__links a:hover { color: var(--ink); }
   .nav__links a.active { color: var(--rose); }
@@ -53,6 +56,19 @@
     text-decoration: none; box-shadow: 0 3px 0 #c84a35; transition: transform 0.15s, box-shadow 0.15s;
   }
   .nav__cta:hover { transform: translateY(-1px); box-shadow: 0 4px 0 #c84a35; }
+
+  /* ── Language toggle ── */
+  .lang-toggle {
+    display: inline-flex; gap: 0; padding: 4px;
+    background: rgba(26,23,20,0.07); border-radius: var(--r-pill);
+    margin-left: auto; margin-right: 0.875rem;
+  }
+  .lang-btn {
+    padding: 0.4rem 0.875rem; border-radius: var(--r-pill); border: none; background: none;
+    font-family: var(--font); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+    color: var(--ink-faint); cursor: pointer; transition: background 0.2s, color 0.2s;
+  }
+  .lang-btn.active { background: white; color: var(--ink); box-shadow: 0 1px 4px rgba(26,23,20,0.1); }
 
   /* ── Blobs ── */
   .deco-blob { position: absolute; border-radius: 50%; pointer-events: none; }
@@ -268,21 +284,31 @@
 <nav>
   <a class="nav__logo" href="index.html">Whoadunit</a>
   <ul class="nav__links">
-    <li><a href="learn.html" class="active">Learn</a></li>
-    <li><a href="find.html">Find</a></li>
-    <li><a href="#methodology">Methodology</a></li>
-    <li><a href="volunteer.html">Volunteer</a></li>
+    <li><a href="learn.html" class="active" data-en="Learn" data-ms="Pelajari">Learn</a></li>
+    <li><a href="find.html" data-en="Find" data-ms="Cari">Find</a></li>
+    <li><a href="methodology.html" data-en="Methodology" data-ms="Metodologi">Methodology</a></li>
+    <li><a href="volunteer.html" data-en="Volunteer" data-ms="Sukarelawan">Volunteer</a></li>
   </ul>
-  <a class="nav__cta" href="find.html">Find yours →</a>
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button class="lang-btn active" data-lang-set="en" data-lang-toggle aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang-set="ms" data-lang-toggle aria-pressed="false">BM</button>
+  </div>
+  <a class="nav__cta" href="find.html" data-en="Find yours →" data-ms="Cari wakil anda →">Find yours →</a>
 </nav>
 
 <!-- ── Page hero ── -->
 <div class="page-hero">
   <div class="deco-blob" style="width:600px;height:600px;background:var(--leaf);opacity:0.12;top:-200px;right:-150px;"></div>
   <div class="deco-blob" style="width:280px;height:280px;background:var(--gold);opacity:0.14;bottom:-80px;left:5%;"></div>
-  <p class="page-hero__eyebrow">Civic education · MP · ADUN · Parliament</p>
-  <h1 class="t-display">How Malaysian<br><span style="color:var(--leaf);">democracy works</span></h1>
-  <p class="page-hero__sub">Learn who represents you, what they actually do, and why it matters. No textbook walls of text.</p>
+  <p class="page-hero__eyebrow"
+     data-en="Civic education · MP · ADUN · Parliament"
+     data-ms="Pendidikan sivik · MP · ADUN · Parlimen">Civic education · MP · ADUN · Parliament</p>
+  <h1 class="t-display"
+      data-en='How Malaysian<br><span style="color:var(--leaf);">democracy works</span>'
+      data-ms='Cara demokrasi<br><span style="color:var(--leaf);">Malaysia berfungsi</span>'>How Malaysian<br><span style="color:var(--leaf);">democracy works</span></h1>
+  <p class="page-hero__sub"
+     data-en="Learn who represents you, what they actually do, and why it matters. No textbook walls of text."
+     data-ms="Belajar siapa wakil anda, apa yang mereka buat sebenarnya, dan kenapa ia penting. Bukan dinding teks gaya buku teks.">Learn who represents you, what they actually do, and why it matters. No textbook walls of text.</p>
 </div>
 
 <!-- ── TOC ── -->
@@ -292,7 +318,6 @@
   <a class="toc-link" href="#parliament">Parliament</a>
   <a class="toc-link" href="#elections">Elections</a>
   <a class="toc-link" href="#faq">FAQ</a>
-  <a class="toc-link" href="#methodology">Methodology</a>
 </div>
 
 <!-- ═══ Section: MP vs ADUN ══════════════════════════════ -->
@@ -474,30 +499,54 @@
 
     <div class="timeline">
       <div class="timeline-item reveal">
-        <div class="timeline-dot timeline-dot--rose">GE15</div>
+        <div class="timeline-dot timeline-dot--violet">SE</div>
         <div class="timeline-content">
-          <div class="timeline-content__year">November 2022</div>
-          <div class="timeline-content__title">General Election 15 — Federal</div>
-          <p class="timeline-content__body">222 MPs elected. No coalition won outright majority. Unity Government formed under PM Anwar Ibrahim (PKR) with Pakatan Harapan, BN, GPS and GRS.</p>
+          <div class="timeline-content__year">Nov &amp; Dec 2021</div>
+          <div class="timeline-content__title">2021 State Elections (Sarawak &amp; Malacca)</div>
+          <p class="timeline-content__body">First state polls held during the COVID period. GPS won decisively in Sarawak; BN regained Malacca.</p>
         </div>
       </div>
       <div class="timeline-item reveal reveal-d1">
         <div class="timeline-dot timeline-dot--violet">SE</div>
         <div class="timeline-content">
-          <div class="timeline-content__year">August 2023</div>
-          <div class="timeline-content__title">6 State Elections — Selangor, KL, Kedah, Kelantan, Terengganu, Negeri Sembilan</div>
-          <p class="timeline-content__body">576 ADUNs contested across 6 states. PAS/Perikatan dominated northern states; Pakatan retained Selangor and Negeri Sembilan.</p>
+          <div class="timeline-content__year">March 2022</div>
+          <div class="timeline-content__title">2022 Johor State Election</div>
+          <p class="timeline-content__body">BN swept 40 of 56 seats, signalling momentum that fed into GE15 later that year.</p>
         </div>
       </div>
       <div class="timeline-item reveal reveal-d2">
-        <div class="timeline-dot timeline-dot--leaf">SE</div>
+        <div class="timeline-dot timeline-dot--rose">GE15</div>
         <div class="timeline-content">
-          <div class="timeline-content__year">2023 — ongoing</div>
-          <div class="timeline-content__title">Sarawak, Sabah, and remaining states</div>
-          <p class="timeline-content__body">GPS dominates Sarawak; GRS leads Sabah. States like Johor, Perak, and Pahang last held state elections in 2023 alongside GE15 dissolution.</p>
+          <div class="timeline-content__year">November 2022</div>
+          <div class="timeline-content__title">General Election 15 (Federal)</div>
+          <p class="timeline-content__body">222 MPs elected. No coalition won outright majority. Unity Government formed under PM Anwar Ibrahim (PKR) with Pakatan Harapan, BN, GPS and GRS.</p>
         </div>
       </div>
       <div class="timeline-item reveal reveal-d3">
+        <div class="timeline-dot timeline-dot--violet">SE</div>
+        <div class="timeline-content">
+          <div class="timeline-content__year">November 2022</div>
+          <div class="timeline-content__title">2022 State Elections (Perlis, Pahang, Perak)</div>
+          <p class="timeline-content__body">Three state assemblies dissolved alongside GE15. Mixed results: PN swept Perlis, BN held Pahang, Perak hung.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot timeline-dot--leaf">SE</div>
+        <div class="timeline-content">
+          <div class="timeline-content__year">August 2023</div>
+          <div class="timeline-content__title">2023 State Elections (six states)</div>
+          <p class="timeline-content__body">Kedah, Kelantan, Negeri Sembilan, Penang, Selangor, Terengganu. PN dominated the north; PH retained Selangor, Negeri Sembilan and Penang.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal reveal-d1">
+        <div class="timeline-dot timeline-dot--violet">SE</div>
+        <div class="timeline-content">
+          <div class="timeline-content__year">November 2025</div>
+          <div class="timeline-content__title">2025 Sabah State Election</div>
+          <p class="timeline-content__body">Sabah's first state poll since 2020. The GRS-led coalition continued to lead state politics.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal reveal-d2">
         <div class="timeline-dot timeline-dot--gold">GE16</div>
         <div class="timeline-content">
           <div class="timeline-content__year">By 2027</div>
@@ -506,6 +555,7 @@
         </div>
       </div>
     </div>
+    <p style="font-size:0.85rem; color:var(--ink-faint); margin-top:1.5rem;">Sources for every line above are cited on the <a href="methodology.html" style="color:var(--violet); font-weight:700;">methodology page</a>.</p>
 
     <div style="margin-top:3rem;" class="reveal">
       <div style="background:var(--violet);border-radius:var(--r-card);padding:2rem 2.5rem;max-width:560px;">
@@ -570,58 +620,14 @@
   </div>
 </section>
 
-<!-- ═══ Section: Methodology ══════════════════════════════ -->
-<section class="learn-section learn-section--ink" id="methodology">
-  <div class="deco-blob" style="width:500px;height:500px;background:var(--rose);opacity:0.08;top:-160px;right:-120px;"></div>
-  <div class="deco-blob" style="width:300px;height:300px;background:var(--violet);opacity:0.08;bottom:-100px;left:5%;"></div>
-  <div class="section-inner">
-    <p class="t-label" style="color:rgba(255,255,255,0.4); margin-bottom:1rem;">How this site works</p>
-    <h2 class="t-headline reveal" style="color:white;">Our data<br><span style="color:var(--gold);">methodology</span></h2>
-    <p class="t-body reveal" style="color:rgba(255,255,255,0.6); margin-top:1.25rem;">Whoadunit is built on open data. We don't claim to be perfect — we claim to be transparent about what we know and what we don't.</p>
-
-    <div class="source-grid reveal" style="margin-top:3rem;">
-      <div class="source-tile">
-        <div class="source-tile__icon">🏛️</div>
-        <div class="source-tile__title">Official Parliament records</div>
-        <div class="source-tile__body">Seat codes, constituency names, and election results sourced from the Electoral Commission (SPR) and Parliament's official portal.</div>
-      </div>
-      <div class="source-tile">
-        <div class="source-tile__icon">📖</div>
-        <div class="source-tile__title">Wikipedia</div>
-        <div class="source-tile__body">Representative names, party affiliations, and election years cross-referenced with Wikipedia's Malaysian electoral articles and talk-page discussions.</div>
-      </div>
-      <div class="source-tile">
-        <div class="source-tile__icon">✍️</div>
-        <div class="source-tile__title">Community volunteers</div>
-        <div class="source-tile__body">Contact details — emails, phone numbers, office addresses — submitted by community members and verified before publishing.</div>
-      </div>
-    </div>
-
-    <div style="margin-top:3rem;display:flex;gap:1rem;flex-wrap:wrap;" class="reveal">
-      <div style="background:rgba(232,163,32,0.15);border:1px solid rgba(232,163,32,0.3);border-radius:16px;padding:1.25rem 1.75rem;flex:1;min-width:220px;">
-        <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);margin-bottom:0.375rem;">Completeness</div>
-        <div style="font-size:0.875rem;color:rgba(255,255,255,0.7);line-height:1.6;">We show you exactly what's missing. Every profile has a completeness score — 100% means all fields are verified. Below 60% means we lack contact info.</div>
-      </div>
-      <div style="background:rgba(45,158,107,0.15);border:1px solid rgba(45,158,107,0.3);border-radius:16px;padding:1.25rem 1.75rem;flex:1;min-width:220px;">
-        <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--leaf);margin-bottom:0.375rem;">Accuracy</div>
-        <div style="font-size:0.875rem;color:rgba(255,255,255,0.7);line-height:1.6;">Data was last updated after GE15 and the 2023 State Elections. It may lag on by-election results, resignations, or defections. When in doubt, check the SPR portal.</div>
-      </div>
-    </div>
-
-    <div style="margin-top:3rem;" class="reveal">
-      <a class="btn btn--ghost-white" href="volunteer.html" style="margin-right:1rem;">Help improve the data →</a>
-    </div>
-  </div>
-</section>
-
 <!-- ═══ Final CTA ═══════════════════════════════════════ -->
 <section class="learn-section learn-section--white">
   <div class="section-inner">
     <div class="learn-cta reveal">
-      <h3>Now you know.<br>Go find yours.</h3>
+      <h3 data-en="Now you know.<br>Go find yours." data-ms="Sekarang anda tahu.<br>Pergi cari wakil anda.">Now you know.<br>Go find yours.</h3>
       <p>You've seen what MPs and ADUNs do. Now take 10 seconds to find the specific person who represents you — and get their contact details.</p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;">
-        <a class="btn btn--ghost-ink" href="find.html" style="background:white;">Find my representative →</a>
+        <a class="btn btn--ghost-ink" href="find.html" style="background:white;" data-en="Find my representative →" data-ms="Cari wakil saya →">Find my representative →</a>
       </div>
     </div>
   </div>
@@ -632,20 +638,21 @@
   <div class="footer-top">
     <div>
       <div class="footer-logo">Whoadunit</div>
-      <div class="footer-tagline">Demystifying Malaysian democracy, one constituency at a time.</div>
+      <div class="footer-tagline">Your rep, your voice. Jom kenal.</div>
     </div>
     <div class="footer-links">
-      <a href="learn.html">Learn</a>
-      <a href="find.html">Find</a>
-      <a href="#methodology">Methodology</a>
-      <a href="volunteer.html">Volunteer</a>
+      <a href="learn.html" data-en="Learn" data-ms="Pelajari">Learn</a>
+      <a href="find.html" data-en="Find" data-ms="Cari">Find</a>
+      <a href="methodology.html" data-en="Methodology" data-ms="Metodologi">Methodology</a>
+      <a href="volunteer.html" data-en="Volunteer" data-ms="Sukarelawan">Volunteer</a>
+      <a href="https://github.com/delacrixmorgan/whoadunit.github.io" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 Whoadunit. Data from Wikipedia &amp; community volunteers.</span>
     <div style="display:flex; gap:1.5rem;">
-      <a href="#">Privacy</a>
-      <a href="#">Open data licence</a>
+      <a href="#" data-en="Privacy" data-ms="Privasi">Privacy</a>
+      <a href="#" data-en="Open data licence" data-ms="Lesen data terbuka">Open data licence</a>
     </div>
   </div>
 </footer>
@@ -667,7 +674,7 @@
 
   // TOC active
   const tocLinks = document.querySelectorAll('.toc-link');
-  const sections = ['mp-vs-adun','real-scenarios','parliament','elections','faq','methodology'].map(id => document.getElementById(id)).filter(Boolean);
+  const sections = ['mp-vs-adun','real-scenarios','parliament','elections','faq'].map(id => document.getElementById(id)).filter(Boolean);
   const tocObs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -684,5 +691,6 @@
   }, { threshold: 0.12 });
   revealEls.forEach(el => ro.observe(el));
 </script>
+<script src="i18n.js" defer></script>
 </body>
 </html>

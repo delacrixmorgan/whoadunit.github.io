@@ -40,10 +40,13 @@
     padding: 0.875rem clamp(1.5rem, 6vw, 5rem);
     background: rgba(253,249,244,0.92); backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(26,23,20,0.09);
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center;
   }
   .nav__logo { font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; text-decoration: none; color: var(--ink); }
-  .nav__links { display: flex; gap: 1.75rem; list-style: none; }
+  .nav__links {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 1.75rem; list-style: none;
+  }
   .nav__links a { font-size: 0.8125rem; font-weight: 600; color: var(--ink-soft); text-decoration: none; transition: color 0.15s; }
   .nav__links a:hover { color: var(--ink); }
   .nav__links a.active { color: var(--rose); }
@@ -53,6 +56,19 @@
     text-decoration: none; box-shadow: 0 3px 0 #c84a35; transition: transform 0.15s, box-shadow 0.15s;
   }
   .nav__cta:hover { transform: translateY(-1px); box-shadow: 0 4px 0 #c84a35; }
+
+  /* ── Language toggle ── */
+  .lang-toggle {
+    display: inline-flex; gap: 0; padding: 4px;
+    background: rgba(26,23,20,0.07); border-radius: var(--r-pill);
+    margin-left: auto; margin-right: 0.875rem;
+  }
+  .lang-btn {
+    padding: 0.4rem 0.875rem; border-radius: var(--r-pill); border: none; background: none;
+    font-family: var(--font); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+    color: var(--ink-faint); cursor: pointer; transition: background 0.2s, color 0.2s;
+  }
+  .lang-btn.active { background: white; color: var(--ink); box-shadow: 0 1px 4px rgba(26,23,20,0.1); }
 
   /* ── Side dots ── */
   .side-dots {
@@ -258,12 +274,16 @@
 <nav>
   <a class="nav__logo" href="index.html">Whoadunit</a>
   <ul class="nav__links">
-    <li><a href="learn.html">Learn</a></li>
-    <li><a href="find.html" class="active">Find</a></li>
-    <li><a href="learn.html#methodology">Methodology</a></li>
-    <li><a href="volunteer.html">Volunteer</a></li>
+    <li><a href="learn.html" data-en="Learn" data-ms="Pelajari">Learn</a></li>
+    <li><a href="find.html" class="active" data-en="Find" data-ms="Cari">Find</a></li>
+    <li><a href="methodology.html" data-en="Methodology" data-ms="Metodologi">Methodology</a></li>
+    <li><a href="volunteer.html" data-en="Volunteer" data-ms="Sukarelawan">Volunteer</a></li>
   </ul>
-  <a class="nav__cta" href="find.html">Find yours →</a>
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button class="lang-btn active" data-lang-set="en" data-lang-toggle aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang-set="ms" data-lang-toggle aria-pressed="false">BM</button>
+  </div>
+  <a class="nav__cta" href="find.html" data-en="Find yours →" data-ms="Cari wakil anda →">Find yours →</a>
 </nav>
 
 <div class="side-dots">
@@ -279,14 +299,14 @@
   <div class="deco-blob" style="width:300px;height:300px;background:var(--gold);bottom:-100px;left:10%;"></div>
 
   <div class="breadcrumb">
-    <a href="find.html">← Back to search</a>
+    <a href="find.html" data-en="← Back to search" data-ms="← Kembali ke carian">← Back to search</a>
     <span class="breadcrumb__sep">/</span>
     <span class="breadcrumb__current" id="bc-seat">P001 Padang Besar</span>
   </div>
 
   <div class="step-pill step-pill--rose">
     <span class="step-pill__num">1</span>
-    <span class="step-pill__text">Your area</span>
+    <span class="step-pill__text" data-en="Your area" data-ms="Kawasan anda">Your area</span>
   </div>
 
   <h1 class="t-display" style="position:relative;z-index:1;" id="hero-name">
@@ -299,15 +319,15 @@
   <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:3rem;position:relative;z-index:1;">
     <div style="background:white;border-radius:14px;padding:1rem 1.5rem;border:2px solid rgba(26,23,20,0.07);">
       <div style="font-size:1.5rem;font-weight:800;line-height:1;color:var(--rose);" id="stat-code">P001</div>
-      <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-faint);margin-top:0.2rem;">Federal code</div>
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-faint);margin-top:0.2rem;" data-en="Federal code" data-ms="Kod persekutuan">Federal code</div>
     </div>
     <div style="background:white;border-radius:14px;padding:1rem 1.5rem;border:2px solid rgba(26,23,20,0.07);">
       <div style="font-size:1.5rem;font-weight:800;line-height:1;color:var(--violet);" id="stat-aduns">2</div>
-      <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-faint);margin-top:0.2rem;">State seats</div>
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-faint);margin-top:0.2rem;" data-en="State seats" data-ms="Kerusi negeri">State seats</div>
     </div>
     <div style="background:white;border-radius:14px;padding:1rem 1.5rem;border:2px solid rgba(26,23,20,0.07);">
       <div style="font-size:1.5rem;font-weight:800;line-height:1;color:var(--leaf);" id="stat-state">Perlis</div>
-      <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-faint);margin-top:0.2rem;">State</div>
+      <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--ink-faint);margin-top:0.2rem;" data-en="State" data-ms="Negeri">State</div>
     </div>
   </div>
 </section>
@@ -419,20 +439,21 @@
   <div class="footer-top">
     <div>
       <div class="footer-logo">Whoadunit</div>
-      <div class="footer-tagline">Demystifying Malaysian democracy, one constituency at a time.</div>
+      <div class="footer-tagline">Your rep, your voice. Jom kenal.</div>
     </div>
     <div class="footer-links">
-      <a href="learn.html">Learn</a>
-      <a href="find.html">Find</a>
-      <a href="learn.html#methodology">Methodology</a>
-      <a href="volunteer.html">Volunteer</a>
+      <a href="learn.html" data-en="Learn" data-ms="Pelajari">Learn</a>
+      <a href="find.html" data-en="Find" data-ms="Cari">Find</a>
+      <a href="methodology.html" data-en="Methodology" data-ms="Metodologi">Methodology</a>
+      <a href="volunteer.html" data-en="Volunteer" data-ms="Sukarelawan">Volunteer</a>
+      <a href="https://github.com/delacrixmorgan/whoadunit.github.io" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 Whoadunit. Data from Wikipedia &amp; community volunteers.</span>
     <div style="display:flex;gap:1.5rem;">
-      <a href="#">Privacy</a>
-      <a href="#">Open data licence</a>
+      <a href="#" data-en="Privacy" data-ms="Privasi">Privacy</a>
+      <a href="#" data-en="Open data licence" data-ms="Lesen data terbuka">Open data licence</a>
     </div>
   </div>
 </footer>
@@ -659,5 +680,6 @@ function initScrollSpy() {
   secs.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
 }
 </script>
+<script src="i18n.js" defer></script>
 </body>
 </html>

@@ -14,6 +14,7 @@
     --leaf-light:  #d4f0e4;
     --violet:      #5b5bd6;
     --violet-light:#e0e0fa;
+    --violet-deep: #3e3eb8;
     --gold:        #e8a320;
     --gold-light:  #fef4d6;
     --paper:       #fdf9f4;
@@ -40,13 +41,16 @@
     padding: 0.875rem clamp(1.5rem, 6vw, 5rem);
     background: rgba(253,249,244,0.92); backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(26,23,20,0.09);
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center;
   }
   .nav__logo { font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; text-decoration: none; color: var(--ink); }
-  .nav__links { display: flex; gap: 1.75rem; list-style: none; }
+  .nav__links {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 1.75rem; list-style: none;
+  }
   .nav__links a { font-size: 0.8125rem; font-weight: 600; color: var(--ink-soft); text-decoration: none; transition: color 0.15s; }
   .nav__links a:hover { color: var(--ink); }
-  .nav__links a.active { color: var(--rose); }
+  .nav__links a.active { color: var(--violet); }
   .nav__cta {
     padding: 0.5rem 1.25rem; background: var(--rose); color: white;
     border-radius: var(--r-pill); font-size: 0.8125rem; font-weight: 700;
@@ -54,16 +58,29 @@
   }
   .nav__cta:hover { transform: translateY(-1px); box-shadow: 0 4px 0 #c84a35; }
 
+  /* ── Language toggle ── */
+  .lang-toggle {
+    display: inline-flex; gap: 0; padding: 4px;
+    background: rgba(26,23,20,0.07); border-radius: var(--r-pill);
+    margin-left: auto; margin-right: 0.875rem;
+  }
+  .lang-btn {
+    padding: 0.4rem 0.875rem; border-radius: var(--r-pill); border: none; background: none;
+    font-family: var(--font); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+    color: var(--ink-faint); cursor: pointer; transition: background 0.2s, color 0.2s;
+  }
+  .lang-btn.active { background: white; color: var(--ink); box-shadow: 0 1px 4px rgba(26,23,20,0.1); }
+
   /* ── Page hero ── */
   .page-hero {
     min-height: 50vh; padding: clamp(7rem, 11vw, 11rem) clamp(1.5rem, 7vw, 7rem) 3rem;
-    background: var(--rose-light); position: relative; overflow: hidden;
+    background: var(--violet-light); position: relative; overflow: hidden;
     display: flex; flex-direction: column; justify-content: flex-end;
   }
-  .page-hero__blob1 { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: var(--rose); opacity: 0.12; top: -220px; right: -150px; pointer-events: none; }
+  .page-hero__blob1 { position: absolute; width: 600px; height: 600px; border-radius: 50%; background: var(--violet); opacity: 0.13; top: -220px; right: -150px; pointer-events: none; }
   .page-hero__blob2 { position: absolute; width: 250px; height: 250px; border-radius: 50%; background: var(--gold); opacity: 0.15; bottom: -80px; left: 5%; pointer-events: none; }
 
-  .page-hero__eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rose); margin-bottom: 0.875rem; position: relative; z-index: 1; }
+  .page-hero__eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--violet); margin-bottom: 0.875rem; position: relative; z-index: 1; }
   .page-hero h1 { position: relative; z-index: 1; }
   .page-hero__sub { font-size: 1rem; color: var(--ink-soft); margin-top: 0.875rem; max-width: 50ch; line-height: 1.65; position: relative; z-index: 1; }
 
@@ -73,37 +90,32 @@
     position: sticky; top: 56px; z-index: 80; border-bottom: 1px solid rgba(26,23,20,0.08);
   }
 
-  /* Mode toggle */
-  .mode-toggle { display: flex; gap: 0; background: rgba(26,23,20,0.07); border-radius: var(--r-pill); padding: 4px; width: fit-content; margin-bottom: 1.25rem; }
-  .mode-btn {
-    padding: 0.5rem 1.25rem; border-radius: var(--r-pill); border: none; background: none;
-    font-family: var(--font); font-size: 0.8125rem; font-weight: 700; cursor: pointer; color: var(--ink-soft);
-    transition: background 0.2s, color 0.2s;
-  }
-  .mode-btn.active { background: white; color: var(--ink); box-shadow: 0 1px 4px rgba(26,23,20,0.1); }
-
   /* Search row */
   .search-row { display: flex; gap: 0.875rem; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; }
   .search-input-wrap { position: relative; flex: 1; min-width: 260px; }
-  .search-icon { position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); color: var(--rose); pointer-events: none; }
+  .search-icon { position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); color: var(--violet); pointer-events: none; }
   .search-input {
     width: 100%; padding: 0.9rem 1.25rem 0.9rem 3.25rem;
-    border-radius: var(--r-pill); border: 2.5px solid var(--rose);
+    border-radius: var(--r-pill); border: 2.5px solid var(--violet);
     background: white; font-family: var(--font); font-size: 0.9375rem; color: var(--ink); outline: none;
-    box-shadow: 3px 3px 0 var(--rose); transition: box-shadow 0.2s;
+    box-shadow: 3px 3px 0 var(--violet); transition: box-shadow 0.2s;
   }
-  .search-input:focus { box-shadow: 5px 5px 0 var(--rose); }
+  .search-input:focus { box-shadow: 5px 5px 0 var(--violet); }
   .search-input::placeholder { color: var(--ink-faint); }
   .search-btn {
-    padding: 0.9rem 1.75rem; background: var(--rose); color: white;
+    padding: 0.9rem 1.75rem; background: var(--violet); color: white;
     border: none; border-radius: var(--r-pill); font-family: var(--font);
     font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: background 0.15s;
-    box-shadow: 0 3px 0 #c84a35; white-space: nowrap;
+    box-shadow: 0 3px 0 var(--violet-deep); white-space: nowrap;
   }
-  .search-btn:hover { background: #d4533f; }
+  .search-btn:hover { background: #4848b8; }
 
-  /* Filters row (individual mode) */
-  .filters-row { display: flex; gap: 0.75rem; flex-wrap: wrap; padding-bottom: 1.25rem; }
+  /* Filters row */
+  .filters-row { display: flex; gap: 0.75rem; flex-wrap: wrap; padding-bottom: 1.25rem; align-items: center; }
+  .filters-row__label {
+    font-size: 0.65rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--ink-faint); margin-right: 0.25rem;
+  }
   .filter-select {
     padding: 0.5rem 1rem; border-radius: var(--r-pill); border: 2px solid rgba(26,23,20,0.12);
     background: white; font-family: var(--font); font-size: 0.8125rem; font-weight: 600; color: var(--ink-soft);
@@ -111,13 +123,14 @@
     background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%237a746e' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right 0.75rem center;
   }
-  .filter-select:focus { border-color: var(--rose); }
+  .filter-select:focus { border-color: var(--violet); }
+  .filter-select.active { border-color: var(--violet); color: var(--violet); background-color: var(--violet-light); }
   .filter-clear-btn {
     padding: 0.5rem 1rem; border-radius: var(--r-pill); border: 2px solid rgba(26,23,20,0.12);
     background: none; font-family: var(--font); font-size: 0.8125rem; font-weight: 600;
     color: var(--ink-faint); cursor: pointer; transition: border-color 0.15s, color 0.15s;
   }
-  .filter-clear-btn:hover { border-color: var(--rose); color: var(--rose); }
+  .filter-clear-btn:hover { border-color: var(--violet); color: var(--violet); }
 
   /* ── Results area ── */
   .results-area { padding: 2.5rem clamp(1.5rem, 7vw, 7rem) 6rem; }
@@ -137,7 +150,7 @@
   }
   .seat-code {
     font-size: 0.7rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase;
-    padding: 3px 10px; background: var(--rose-light); color: var(--rose); border-radius: var(--r-pill);
+    padding: 3px 10px; background: var(--violet-light); color: var(--violet); border-radius: var(--r-pill);
   }
   .seat-name { font-size: 1.125rem; font-weight: 800; margin-left: 0.875rem; }
   .seat-state { font-size: 0.8125rem; color: var(--ink-faint); font-weight: 600; }
@@ -150,7 +163,7 @@
     border: none; background: none; font-family: var(--font); color: var(--ink-faint);
     border-bottom: 3px solid transparent; margin-bottom: -1px; transition: color 0.15s, border-color 0.15s;
   }
-  .card-tab.active { color: var(--ink); border-bottom-color: var(--rose); }
+  .card-tab.active { color: var(--ink); border-bottom-color: var(--violet); }
   .card-tab:hover:not(.active) { color: var(--ink-soft); }
 
   /* Tab content */
@@ -175,11 +188,11 @@
   .person-name { font-size: 1rem; font-weight: 800; line-height: 1.2; margin-bottom: 0.2rem; }
   .person-meta { font-size: 0.8rem; color: var(--ink-faint); }
   .person-cta {
-    margin-left: auto; padding: 0.5rem 1.25rem; background: var(--rose); color: white;
+    margin-left: auto; padding: 0.5rem 1.25rem; background: var(--violet); color: white;
     border-radius: var(--r-pill); font-size: 0.8rem; font-weight: 700; text-decoration: none;
-    box-shadow: 0 2px 0 #c84a35; flex-shrink: 0; transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 2px 0 var(--violet-deep); flex-shrink: 0; transition: transform 0.15s, box-shadow 0.15s;
   }
-  .person-cta:hover { transform: translateY(-1px); box-shadow: 0 3px 0 #c84a35; }
+  .person-cta:hover { transform: translateY(-1px); box-shadow: 0 3px 0 var(--violet-deep); }
 
   /* ADUN list in card */
   .adun-list { list-style: none; }
@@ -195,41 +208,58 @@
   }
   .adun-cta:hover { background: var(--violet); color: white; }
 
-  /* ── Individual search results ── */
-  .ind-results { display: flex; flex-direction: column; gap: 0.75rem; }
-  .ind-row {
-    background: white; border-radius: 18px; padding: 1.125rem 1.5rem;
-    border: 2px solid rgba(26,23,20,0.07); display: flex; gap: 1rem; align-items: center;
-    cursor: pointer; transition: border-color 0.2s;
-    text-decoration: none; color: var(--ink);
+  /* ── Walkthrough CTA (violet vivid) ── */
+  .walkthrough-cta {
+    display: block; max-width: 560px; margin: 0 auto;
+    background: var(--violet); color: white; border-radius: var(--r-card);
+    padding: 1.625rem 1.875rem; text-decoration: none;
+    box-shadow: 0 4px 0 var(--violet-deep);
+    transition: transform 0.15s, box-shadow 0.15s;
+    position: relative; overflow: hidden;
   }
-  .ind-row:hover { border-color: rgba(26,23,20,0.2); }
-  .ind-type-badge {
-    width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.65rem; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;
+  .walkthrough-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--violet-deep); }
+  .walkthrough-cta__blob {
+    position: absolute; width: 240px; height: 240px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); top: -90px; right: -70px; pointer-events: none;
   }
-  .ind-type-badge--mp { background: var(--leaf); color: white; }
-  .ind-type-badge--adun { background: var(--violet); color: white; }
-  .ind-name { font-size: 1rem; font-weight: 800; margin-bottom: 0.25rem; }
-  .ind-meta { font-size: 0.8rem; color: var(--ink-faint); }
-  .ind-arrow { margin-left: auto; color: var(--ink-faint); }
+  .walkthrough-cta__eyebrow {
+    font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255,255,255,0.75); margin-bottom: 0.5rem; position: relative; z-index: 1;
+  }
+  .walkthrough-cta__title {
+    font-size: 1.375rem; font-weight: 800; line-height: 1.15; letter-spacing: -0.015em;
+    color: white; margin-bottom: 0.5rem; position: relative; z-index: 1;
+  }
+  .walkthrough-cta__sub {
+    font-size: 0.875rem; color: rgba(255,255,255,0.85); line-height: 1.55;
+    max-width: 38ch; position: relative; z-index: 1;
+  }
 
   /* ── Empty state ── */
-  .empty-state { text-align: center; padding: 4rem 2rem; }
+  .empty-state { text-align: center; padding: 3rem 2rem; }
   .empty-state__icon { font-size: 3rem; margin-bottom: 1rem; }
   .empty-state__title { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; }
-  .empty-state__body { font-size: 0.9rem; color: var(--ink-faint); max-width: 38ch; margin: 0 auto; }
+  .empty-state__body { font-size: 0.9rem; color: var(--ink-faint); max-width: 38ch; margin: 0 auto 2rem; }
 
-  /* ── Prompt state ── */
-  .prompt-state { display: flex; flex-direction: column; align-items: center; padding: 4rem 2rem; gap: 1.5rem; }
-  .prompt-tips { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+  /* ── Prompt state (initial / no query) ── */
+  .prompt-state { display: flex; flex-direction: column; align-items: center; padding: 3rem 2rem 4rem; gap: 2.25rem; }
+  .prompt-divider {
+    display: flex; align-items: center; gap: 1rem; max-width: 460px; width: 100%;
+    color: var(--ink-faint); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase;
+  }
+  .prompt-divider::before, .prompt-divider::after {
+    content: ''; flex: 1; height: 1px; background: rgba(26,23,20,0.1);
+  }
+  .prompt-tips__heading {
+    text-align: center; font-size: 0.875rem; font-weight: 700; color: var(--ink-soft); margin-bottom: 0.875rem;
+  }
+  .prompt-tips { display: flex; gap: 0.625rem; flex-wrap: wrap; justify-content: center; max-width: 580px; }
   .prompt-tip {
     padding: 0.5rem 1.125rem; border-radius: var(--r-pill); font-size: 0.8125rem; font-weight: 600;
     cursor: pointer; border: 2px solid rgba(26,23,20,0.1); background: white; transition: all 0.15s;
     font-family: var(--font);
   }
-  .prompt-tip:hover { border-color: var(--rose); color: var(--rose); }
+  .prompt-tip:hover { border-color: var(--violet); color: var(--violet); }
 
   /* ── Footer ── */
   footer {
@@ -246,14 +276,11 @@
   .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; font-size: 0.75rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
   .footer-bottom a { color: rgba(255,255,255,0.4); text-decoration: none; }
 
-  /* ── Mode panels ── */
-  #mode-constituency { display: block; }
-  #mode-individual { display: none; }
-
   @media (max-width: 640px) {
     .seat-header-left { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
     .seat-name { margin-left: 0; }
     .person-cta { display: none; }
+    .walkthrough-cta__title { font-size: 1.25rem; }
   }
 </style>
 </head>
@@ -263,97 +290,95 @@
 <nav>
   <a class="nav__logo" href="index.html">Whoadunit</a>
   <ul class="nav__links">
-    <li><a href="learn.html">Learn</a></li>
-    <li><a href="find.html" class="active">Find</a></li>
-    <li><a href="learn.html#methodology">Methodology</a></li>
-    <li><a href="volunteer.html">Volunteer</a></li>
+    <li><a href="learn.html" data-en="Learn" data-ms="Pelajari">Learn</a></li>
+    <li><a href="find.html" class="active" data-en="Find" data-ms="Cari">Find</a></li>
+    <li><a href="methodology.html" data-en="Methodology" data-ms="Metodologi">Methodology</a></li>
+    <li><a href="volunteer.html" data-en="Volunteer" data-ms="Sukarelawan">Volunteer</a></li>
   </ul>
-  <a class="nav__cta" href="find.html">Find yours →</a>
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button class="lang-btn active" data-lang-set="en" data-lang-toggle aria-pressed="true">EN</button>
+    <button class="lang-btn" data-lang-set="ms" data-lang-toggle aria-pressed="false">BM</button>
+  </div>
+  <a class="nav__cta" href="find.html" data-en="Find yours →" data-ms="Cari wakil anda →">Find yours →</a>
 </nav>
 
 <!-- ── Page hero ── -->
 <div class="page-hero">
   <div class="page-hero__blob1"></div>
   <div class="page-hero__blob2"></div>
-  <p class="page-hero__eyebrow">Search · 222 federal seats · 576 state seats</p>
-  <h1 class="t-display">Find your<br><span style="color:var(--rose);">representative</span></h1>
-  <p class="page-hero__sub">Search by area, seat code, or name. Or browse by representative.</p>
+  <p class="page-hero__eyebrow"
+     data-en="Search · 222 federal seats · 576 state seats"
+     data-ms="Cari · 222 kerusi persekutuan · 576 kerusi negeri">Search · 222 federal seats · 576 state seats</p>
+  <h1 class="t-display"
+      data-en='Find your<br><span style="color:var(--violet);">representative</span>'
+      data-ms='Cari wakil<br><span style="color:var(--violet);">anda</span>'>Find your<br><span style="color:var(--violet);">representative</span></h1>
+  <p class="page-hero__sub"
+     data-en="Search by area, seat code, party, or representative name. Use the filters to narrow it down."
+     data-ms="Cari mengikut kawasan, kod kerusi, parti, atau nama wakil. Gunakan penapis untuk menyempitkan hasil.">Search by area, seat code, party, or representative name. Use the filters to narrow it down.</p>
 </div>
 
 <!-- ── Search zone ── -->
 <div class="search-zone">
-  <div class="mode-toggle">
-    <button class="mode-btn active" id="btnConstituency" onclick="setMode('constituency')">By Constituency</button>
-    <button class="mode-btn" id="btnIndividual" onclick="setMode('individual')">By Representative</button>
-  </div>
-
   <div class="search-row">
     <div class="search-input-wrap">
       <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input id="mainSearch" class="search-input" type="text" placeholder="e.g. Padang Besar, P001, Rusydan…" autocomplete="off" oninput="handleSearch()">
+      <input id="mainSearch" class="search-input" type="text"
+             placeholder="e.g. Padang Besar, P001, Hannah Yeoh, PAS…"
+             data-en-placeholder="e.g. Padang Besar, P001, Hannah Yeoh, PAS…"
+             data-ms-placeholder="cth. Padang Besar, P001, Hannah Yeoh, PAS…"
+             autocomplete="off" oninput="handleSearch()">
     </div>
-    <button class="search-btn" onclick="handleSearch()">Search</button>
+    <button class="search-btn" onclick="handleSearch()" data-en="Search" data-ms="Cari">Search</button>
   </div>
 
-  <!-- Filters (individual mode only) -->
-  <div class="filters-row" id="filtersRow" style="display:none;">
+  <div class="filters-row">
+    <span class="filters-row__label" data-en="Filter" data-ms="Tapis">Filter</span>
     <select class="filter-select" id="filterParty" onchange="handleSearch()">
-      <option value="">All parties</option>
+      <option value="" data-en="All parties" data-ms="Semua parti">All parties</option>
       <option>PAS</option><option>PKR</option><option>DAP</option><option>UMNO</option>
       <option>BERSATU</option><option>AMANAH</option><option>GPS</option><option>GRS</option>
     </select>
     <select class="filter-select" id="filterYear" onchange="handleSearch()">
-      <option value="">All elections</option>
+      <option value="" data-en="All elections" data-ms="Semua pilihan raya">All elections</option>
       <option>2022</option><option>2023</option>
     </select>
     <select class="filter-select" id="filterGender" onchange="handleSearch()">
-      <option value="">All genders</option>
-      <option value="M">Male</option>
-      <option value="F">Female</option>
+      <option value="" data-en="All genders" data-ms="Semua jantina">All genders</option>
+      <option value="M" data-en="Male" data-ms="Lelaki">Male</option>
+      <option value="F" data-en="Female" data-ms="Perempuan">Female</option>
     </select>
     <select class="filter-select" id="filterType" onchange="handleSearch()">
-      <option value="">MP &amp; ADUN</option>
-      <option value="MP">MP only</option>
-      <option value="ADUN">ADUN only</option>
+      <option value="" data-en="MP &amp; ADUN" data-ms="MP &amp; ADUN">MP &amp; ADUN</option>
+      <option value="MP" data-en="MP only" data-ms="MP sahaja">MP only</option>
+      <option value="ADUN" data-en="ADUN only" data-ms="ADUN sahaja">ADUN only</option>
     </select>
-    <button class="filter-clear-btn" onclick="clearFilters()">Clear filters</button>
+    <button class="filter-clear-btn" onclick="clearFilters()" data-en="Clear" data-ms="Kosongkan">Clear</button>
   </div>
 </div>
 
 <!-- ── Results area ── -->
-<div class="results-area">
-
-  <!-- Constituency mode -->
-  <div id="mode-constituency">
-    <div id="constResults"></div>
-  </div>
-
-  <!-- Individual mode -->
-  <div id="mode-individual" style="display:none;">
-    <div id="indResults"></div>
-  </div>
-
-</div>
+<div class="results-area" id="resultsArea"></div>
 
 <!-- ── Footer ── -->
 <footer>
   <div class="footer-top">
     <div>
       <div class="footer-logo">Whoadunit</div>
-      <div class="footer-tagline">Demystifying Malaysian democracy, one constituency at a time.</div>
+      <div class="footer-tagline">Your rep, your voice. Jom kenal.</div>
     </div>
     <div class="footer-links">
-      <a href="learn.html">Learn</a>
-      <a href="find.html">Find</a>
-      <a href="learn.html#methodology">Methodology</a>
-      <a href="volunteer.html">Volunteer</a>
+      <a href="learn.html" data-en="Learn" data-ms="Pelajari">Learn</a>
+      <a href="find.html" data-en="Find" data-ms="Cari">Find</a>
+      <a href="methodology.html" data-en="Methodology" data-ms="Metodologi">Methodology</a>
+      <a href="volunteer.html" data-en="Volunteer" data-ms="Sukarelawan">Volunteer</a>
+      <a href="https://github.com/delacrixmorgan/whoadunit.github.io" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 Whoadunit. Data from Wikipedia &amp; community volunteers.</span>
     <div style="display:flex; gap:1.5rem;">
-      <a href="#">Privacy</a>
-      <a href="#">Open data licence</a>
+      <a href="#" data-en="Privacy" data-ms="Privasi">Privacy</a>
+      <a href="#" data-en="Open data licence" data-ms="Lesen data terbuka">Open data licence</a>
     </div>
   </div>
 </footer>
@@ -399,7 +424,7 @@ const SEATS = [
     code: 'P104', name: 'Lembah Pantai', state: 'Kuala Lumpur',
     mp: { name: 'Fahmi Fadzil', party: 'PKR', year: 2022, gender: 'M',
           contact: { email: 'p104.mp@parlimen.gov.my', phone: '03-2282 7700', office: 'Lembah Pantai Service Centre, KL' } },
-    aduns: []  // Federal Territory — no ADUNs
+    aduns: []
   },
   {
     code: 'P105', name: 'Segambut', state: 'Kuala Lumpur',
@@ -435,82 +460,145 @@ const SEATS = [
   }
 ];
 
-// ── State ──────────────────────────────────────────────────
-let currentMode = 'constituency';
-
 // ── Init ───────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const q = params.get('q');
   if (q) {
     document.getElementById('mainSearch').value = q;
-    handleSearch();
-  } else {
-    renderPromptState();
   }
+  handleSearch();
 });
 
-function setMode(mode) {
-  currentMode = mode;
-  document.getElementById('btnConstituency').classList.toggle('active', mode === 'constituency');
-  document.getElementById('btnIndividual').classList.toggle('active', mode === 'individual');
-  document.getElementById('mode-constituency').style.display = mode === 'constituency' ? 'block' : 'none';
-  document.getElementById('mode-individual').style.display = mode === 'individual' ? 'block' : 'none';
-  document.getElementById('filtersRow').style.display = mode === 'individual' ? 'flex' : 'none';
-  handleSearch();
+function getFilters() {
+  return {
+    party:  document.getElementById('filterParty').value,
+    year:   document.getElementById('filterYear').value,
+    gender: document.getElementById('filterGender').value,
+    type:   document.getElementById('filterType').value
+  };
+}
+
+function anyFilterActive(f) {
+  return Boolean(f.party || f.year || f.gender || f.type);
 }
 
 function clearFilters() {
   ['filterParty','filterYear','filterGender','filterType'].forEach(id => document.getElementById(id).value = '');
+  syncFilterChrome();
   handleSearch();
 }
 
-function handleSearch() {
-  const q = document.getElementById('mainSearch').value.trim().toLowerCase();
-  if (currentMode === 'constituency') renderConstituency(q);
-  else renderIndividual(q);
+function syncFilterChrome() {
+  ['filterParty','filterYear','filterGender','filterType'].forEach(id => {
+    const sel = document.getElementById(id);
+    sel.classList.toggle('active', sel.value !== '');
+  });
 }
 
-// ── Constituency search ────────────────────────────────────
-function matchesSeat(seat, q) {
+function handleSearch() {
+  syncFilterChrome();
+  const q = document.getElementById('mainSearch').value.trim().toLowerCase();
+  const filters = getFilters();
+  renderResults(q, filters);
+}
+
+// ── Filtering ──────────────────────────────────────────────
+function candidatesFor(seat, type) {
+  if (type === 'MP')   return seat.mp ? [seat.mp] : [];
+  if (type === 'ADUN') return seat.aduns;
+  return [seat.mp, ...seat.aduns].filter(Boolean);
+}
+
+function textMatches(seat, q, type) {
   if (!q) return true;
   if (seat.code.toLowerCase().includes(q) || seat.name.toLowerCase().includes(q) || seat.state.toLowerCase().includes(q)) return true;
-  if (seat.mp) {
+  if (type !== 'ADUN' && seat.mp) {
     const mp = seat.mp;
     if (mp.name.toLowerCase().includes(q) || mp.party.toLowerCase().includes(q)) return true;
   }
-  if (seat.aduns.some(a => a.name.toLowerCase().includes(q) || a.party.toLowerCase().includes(q) || a.stateSeat?.toLowerCase().includes(q))) return true;
+  if (type !== 'MP') {
+    if (seat.aduns.some(a => a.name.toLowerCase().includes(q) || a.party.toLowerCase().includes(q) || (a.stateSeat && a.stateSeat.toLowerCase().includes(q)))) return true;
+  }
   return false;
 }
 
-function getMatchOrigin(seat, q) {
-  if (!q) return 'seat';
-  if (seat.code.toLowerCase().includes(q) || seat.name.toLowerCase().includes(q) || seat.state.toLowerCase().includes(q)) return 'seat';
+function matchesSeat(seat, q, filters) {
+  if (filters.type === 'MP'   && !seat.mp) return false;
+  if (filters.type === 'ADUN' && seat.aduns.length === 0) return false;
+  if (!textMatches(seat, q, filters.type)) return false;
+
+  const cs = candidatesFor(seat, filters.type);
+  if (filters.party  && !cs.some(p => p.party === filters.party)) return false;
+  if (filters.year   && !cs.some(p => String(p.year) === filters.year)) return false;
+  if (filters.gender && !cs.some(p => p.gender === filters.gender)) return false;
+  return true;
+}
+
+function getMatchOrigin(seat, q, filters) {
+  if (filters.type === 'MP')   return 'mp';
+  if (filters.type === 'ADUN') return 'adun';
+  if (!q) return 'mp';
+  if (seat.code.toLowerCase().includes(q) || seat.name.toLowerCase().includes(q) || seat.state.toLowerCase().includes(q)) return 'mp';
   if (seat.mp && (seat.mp.name.toLowerCase().includes(q) || seat.mp.party.toLowerCase().includes(q))) return 'mp';
   return 'adun';
 }
 
-function renderConstituency(q) {
-  const container = document.getElementById('constResults');
-  if (!q) { renderPromptState(); return; }
+// ── Renderers ──────────────────────────────────────────────
+function walkthroughCtaHtml() {
+  return `
+    <a href="index.html" class="walkthrough-cta">
+      <div class="walkthrough-cta__blob"></div>
+      <div class="walkthrough-cta__eyebrow">Not sure who represents you?</div>
+      <div class="walkthrough-cta__title">Take the guided walkthrough <span aria-hidden="true">→</span></div>
+      <div class="walkthrough-cta__sub">Ten seconds. Find your area, meet your reps, get their contact details.</div>
+    </a>`;
+}
 
-  const matched = SEATS.filter(s => matchesSeat(s, q));
+function renderResults(q, filters) {
+  const container = document.getElementById('resultsArea');
+
+  // Empty query AND no filters → prompt state with walkthrough CTA.
+  if (!q && !anyFilterActive(filters)) {
+    container.innerHTML = `
+      <div class="prompt-state">
+        ${walkthroughCtaHtml()}
+        <div class="prompt-divider">Or jump straight to a seat</div>
+        <div>
+          <div class="prompt-tips__heading">Try one of these:</div>
+          <div class="prompt-tips">
+            <button class="prompt-tip" onclick="quickSearch('Padang Besar')">Padang Besar</button>
+            <button class="prompt-tip" onclick="quickSearch('Lembah Pantai')">Lembah Pantai</button>
+            <button class="prompt-tip" onclick="quickSearch('Shah Alam')">Shah Alam</button>
+            <button class="prompt-tip" onclick="quickSearch('Johor Bahru')">Johor Bahru</button>
+            <button class="prompt-tip" onclick="quickSearch('Segambut')">Segambut</button>
+            <button class="prompt-tip" onclick="quickSearch('Bukit Bintang')">Bukit Bintang</button>
+            <button class="prompt-tip" onclick="quickSearch('PAS')">All PAS reps</button>
+            <button class="prompt-tip" onclick="quickSearch('DAP')">All DAP reps</button>
+          </div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const matched = SEATS.filter(s => matchesSeat(s, q, filters));
 
   if (matched.length === 0) {
     container.innerHTML = `
       <div class="empty-state">
         <div class="empty-state__icon">🔍</div>
-        <div class="empty-state__title">No results for "${q}"</div>
-        <p class="empty-state__body">Try a different spelling, use the seat code (e.g. P001), or search by state name.</p>
+        <div class="empty-state__title">${q ? `No results for "${escapeHtml(q)}"` : 'No matches for those filters'}</div>
+        <p class="empty-state__body">Try a different spelling, use a seat code (e.g. P001), search by state, or clear a filter.</p>
+        ${walkthroughCtaHtml()}
       </div>`;
     return;
   }
 
   container.innerHTML = `
     <div class="results-header">
-      <p class="results-count">Showing <strong>${matched.length}</strong> constituency result${matched.length !== 1 ? 's' : ''}</p>
+      <p class="results-count">Showing <strong>${matched.length}</strong> result${matched.length !== 1 ? 's' : ''}${q ? ` for "${escapeHtml(q)}"` : ''}</p>
     </div>
-    ${matched.map((seat, i) => renderSeatCard(seat, getMatchOrigin(seat, q), i)).join('')}
+    ${matched.map(seat => renderSeatCard(seat, getMatchOrigin(seat, q, filters))).join('')}
   `;
 
   // Activate tabs
@@ -525,10 +613,10 @@ function renderConstituency(q) {
   });
 }
 
-function renderSeatCard(seat, matchOrigin, i) {
-  const defaultTab = matchOrigin === 'adun' ? 'adun' : 'mp';
+function renderSeatCard(seat, defaultTab) {
   const adunCount = seat.aduns.length;
   const isFT = adunCount === 0;
+  const startTab = (defaultTab === 'adun' && !isFT) ? 'adun' : 'mp';
 
   const mpHtml = seat.mp ? `
     <div class="person-row">
@@ -543,7 +631,7 @@ function renderSeatCard(seat, matchOrigin, i) {
   ` : `<p style="color:var(--ink-faint); font-size:0.9rem; padding:1rem 0;">MP data not yet available.</p>`;
 
   const adunHtml = isFT
-    ? `<p style="color:var(--ink-faint); font-size:0.9rem; padding:0.5rem 0;">Federal Territory — no State Assembly.</p>`
+    ? `<p style="color:var(--ink-faint); font-size:0.9rem; padding:0.5rem 0;">Federal Territory. No State Assembly.</p>`
     : `<ul class="adun-list">${seat.aduns.map(a => `
       <li class="adun-item">
         <span class="adun-seat-code">${a.code}</span>
@@ -564,97 +652,11 @@ function renderSeatCard(seat, matchOrigin, i) {
         <span class="seat-state">${seat.state}${adunCount > 0 ? ` · ${adunCount} ADUNs` : ' · Federal Territory'}</span>
       </div>
       <div class="card-tabs">
-        <button class="card-tab ${defaultTab === 'mp' ? 'active' : ''}" data-tab="mp">MP</button>
-        ${!isFT ? `<button class="card-tab ${defaultTab === 'adun' ? 'active' : ''}" data-tab="adun">ADUN (${adunCount})</button>` : ''}
+        <button class="card-tab ${startTab === 'mp' ? 'active' : ''}" data-tab="mp">MP</button>
+        ${!isFT ? `<button class="card-tab ${startTab === 'adun' ? 'active' : ''}" data-tab="adun">ADUN (${adunCount})</button>` : ''}
       </div>
-      <div class="tab-content ${defaultTab === 'mp' ? 'active' : ''}" data-tab="mp">${mpHtml}</div>
-      ${!isFT ? `<div class="tab-content ${defaultTab === 'adun' ? 'active' : ''}" data-tab="adun">${adunHtml}</div>` : ''}
-    </div>
-  `;
-}
-
-// ── Individual search ──────────────────────────────────────
-function renderIndividual(q) {
-  const container = document.getElementById('indResults');
-  const party = document.getElementById('filterParty').value;
-  const year = document.getElementById('filterYear').value;
-  const gender = document.getElementById('filterGender').value;
-  const type = document.getElementById('filterType').value;
-
-  // Flatten
-  const flat = [];
-  SEATS.forEach(seat => {
-    if (seat.mp) flat.push({ ...seat.mp, repType: 'MP', seatCode: seat.code, seatName: seat.name, state: seat.state });
-    seat.aduns.forEach(a => flat.push({ ...a, repType: 'ADUN', seatCode: seat.code, seatName: seat.name, state: seat.state }));
-  });
-
-  const filtered = flat.filter(p => {
-    if (q && !p.name.toLowerCase().includes(q) && !p.party.toLowerCase().includes(q) && !p.seatName.toLowerCase().includes(q) && !p.seatCode.toLowerCase().includes(q)) return false;
-    if (party && p.party !== party) return false;
-    if (year && String(p.year) !== year) return false;
-    if (gender && p.gender !== gender) return false;
-    if (type && p.repType !== type) return false;
-    return true;
-  });
-
-  if (!q && !party && !year && !gender && !type) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state__icon">🔎</div>
-        <div class="empty-state__title">Search by name, party, or filter</div>
-        <p class="empty-state__body">Use the filters above to browse all representatives by party, election year, or gender.</p>
-      </div>`;
-    return;
-  }
-
-  if (filtered.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state__icon">🤷</div>
-        <div class="empty-state__title">No matches</div>
-        <p class="empty-state__body">Try adjusting your filters or search query.</p>
-      </div>`;
-    return;
-  }
-
-  container.innerHTML = `
-    <div class="results-header">
-      <p class="results-count">Showing <strong>${filtered.length}</strong> representative${filtered.length !== 1 ? 's' : ''}</p>
-    </div>
-    <div class="ind-results">
-      ${filtered.map(p => `
-        <a class="ind-row" href="constituency.html?seat=${p.seatCode}">
-          <div class="ind-type-badge ind-type-badge--${p.repType.toLowerCase()}">${p.repType}</div>
-          <div>
-            <div class="ind-name">${p.name}</div>
-            <div class="ind-meta">${p.party} · ${p.seatCode} ${p.seatName} · ${p.state} · Elected ${p.year}</div>
-          </div>
-          <svg class="ind-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-        </a>
-      `).join('')}
-    </div>
-  `;
-}
-
-function renderPromptState() {
-  const container = document.getElementById('constResults');
-  container.innerHTML = `
-    <div class="prompt-state">
-      <div style="text-align:center;">
-        <div style="font-size:2.5rem; margin-bottom:0.75rem;">🗺️</div>
-        <div style="font-size:1.125rem; font-weight:800; margin-bottom:0.5rem;">Where are you?</div>
-        <p style="font-size:0.9rem; color:var(--ink-faint); max-width:36ch; margin:0 auto 1.5rem;">Type your area name, seat code, or your representative's name above.</p>
-      </div>
-      <div class="prompt-tips">
-        <button class="prompt-tip" onclick="quickSearch('Padang Besar')">Padang Besar</button>
-        <button class="prompt-tip" onclick="quickSearch('Lembah Pantai')">Lembah Pantai</button>
-        <button class="prompt-tip" onclick="quickSearch('Shah Alam')">Shah Alam</button>
-        <button class="prompt-tip" onclick="quickSearch('Johor Bahru')">Johor Bahru</button>
-        <button class="prompt-tip" onclick="quickSearch('Segambut')">Segambut</button>
-        <button class="prompt-tip" onclick="quickSearch('Bukit Bintang')">Bukit Bintang</button>
-        <button class="prompt-tip" onclick="quickSearch('PAS')">All PAS reps</button>
-        <button class="prompt-tip" onclick="quickSearch('DAP')">All DAP reps</button>
-      </div>
+      <div class="tab-content ${startTab === 'mp' ? 'active' : ''}" data-tab="mp">${mpHtml}</div>
+      ${!isFT ? `<div class="tab-content ${startTab === 'adun' ? 'active' : ''}" data-tab="adun">${adunHtml}</div>` : ''}
     </div>
   `;
 }
@@ -663,6 +665,11 @@ function quickSearch(val) {
   document.getElementById('mainSearch').value = val;
   handleSearch();
 }
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
 </script>
+<script src="i18n.js" defer></script>
 </body>
 </html>

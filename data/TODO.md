@@ -1,5 +1,62 @@
 # TODO
 
+I've updated my @PRODUCT.md  and @DESIGN.md  
+I want to update /mockup.
+
+1) For @mockup/find.html 
+- Use blue palette.
+- separating by constituency and by representative is redundant, they should only be 1 search bar and filter at the bottom.
+- add CTA back to @index.html if user doesn't know who is their representative. 
+
+2) Add Methodology page
+- Remove Methodology section in @learn.html
+- It should have it's a dedicated page for Methodology
+- Expand the methodology page
+- Include source links
+## Electoral Districts
+
+- [List of Malaysian electoral districts](https://en.wikipedia.org/w/index.php?title=List_of_Malaysian_electoral_districts&useskin=vector)
+
+## 2022 Representatives
+
+### Federal
+
+#### 2022 General Election
+
+- [Results of the 2022 Malaysian general election by parliamentary constituency](https://en.wikipedia.org/wiki/Results_of_the_2022_Malaysian_general_election_by_parliamentary_constituency?useskin=vector)
+
+### State
+
+#### 2025 State Election (Sabah)
+
+- [2025 Sabah state election](https://en.wikipedia.org/wiki/2025_Sabah_state_election?useskin=vector#By_parliamentary_constituency)
+
+#### 2023 State Elections (Kedah, Kelantan, Negeri Sembilan, Penang, Selangor, Terengganu)
+> state_election_2023_kedah_kelantan_negerisembilan_penang_selangor_terengganu.mw
+
+- [Results of the 2023 Malaysian state elections by constituency](https://en.wikipedia.org/wiki/Results_of_the_2023_Malaysian_state_elections_by_constituency?useskin=vector)
+
+#### 2022 State Elections (Johor, Perlis, Pahang, Perak)
+
+- [Results of the 2022 Johor state election](https://en.wikipedia.org/wiki/Results_of_the_2022_Johor_state_election?useskin=vector)
+
+- [Results of the 2022 Malaysian state elections by constituency](https://en.wikipedia.org/wiki/Results_of_the_2022_Malaysian_state_elections_by_constituency?useskin=vector)
+
+#### 2021 State Election (Sarawak, Malacca)
+
+- [Results of the 2021 Sarawak state election](https://en.wikipedia.org/wiki/Results_of_the_2021_Sarawak_state_election?useskin=vector#Full_result)
+
+- [2021 Malacca state election](https://en.wikipedia.org/wiki/2021_Malacca_state_election?useskin=vector#By_parliamentary_constituency)
+
+3) Change Tagline to Your rep, your voice. Jom kenal.
+
+4) Based on the methodology section above, update the Elections section in Learn.
+
+5) In Volunteer section in how to help.
+The numbering 1,2,3,4. It should use the green colour you're using for 2.
+For consistency.
+
+
 ## Update Website Data Structure Implementation
 
 Update the website based on this new data structure DATA_SCHEMA.md.
