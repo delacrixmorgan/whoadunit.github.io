@@ -28,9 +28,9 @@ export default function MethodologyPage() {
 
   return (
     <>
-      <header className="page-hero bg-paper">
-        <DecoBlob tone="gold"   size={520} opacity={0.12} top={-180} right={-120} />
-        <DecoBlob tone="violet" size={300} opacity={0.08} bottom={-100} left="5%" />
+      <header className="page-hero bg-ink">
+        <DecoBlob tone="gold" size={520} opacity={0.10} top={-180} right={-120} />
+        <DecoBlob tone="gold" size={300} opacity={0.07} bottom={-100} left="5%" />
         <p className="page-hero__eyebrow" style={{ color: 'var(--gold)' }}>How this site is built</p>
         <h1 className="t-display page-hero__title">
           Our data, in plain<br />
@@ -98,12 +98,12 @@ function PrinciplesSection() {
 
 function SourcesSection() {
   return (
-    <section className="m-section m-section--violet" id="sources">
-      <DecoBlob tone="violet" size={500} opacity={0.1} top={-180} right={-120} />
+    <section className="m-section m-section--ink" id="sources">
+      <DecoBlob tone="gold" size={500} opacity={0.08} top={-180} right={-120} />
       <div className="section-inner">
-        <p className="t-label" style={{ color: 'var(--violet)', marginBottom: '1rem' }}>Where the records come from</p>
-        <Reveal as="h2" className="t-headline">Sources, in <span className="kw-violet">order</span>.</Reveal>
-        <Reveal as="p" className="t-body" style={{ color: 'var(--ink-soft)', marginTop: '1.25rem' }}>
+        <p className="t-label" style={{ color: 'var(--gold)', marginBottom: '1rem' }}>Where the records come from</p>
+        <Reveal as="h2" className="t-headline">Sources, in <span className="kw-gold">order</span>.</Reveal>
+        <Reveal as="p" className="t-body" style={{ color: 'rgba(255, 255, 255, 0.65)', marginTop: '1.25rem' }}>
           Eight Wikipedia pages cover everything we publish about seats, parties, and election results. Each entry below shows what we use it for, and links straight to the source.
         </Reveal>
 
@@ -129,11 +129,11 @@ function SourcesSection() {
 
 function GapsSection() {
   return (
-    <section className="m-section m-section--rose" id="limitations">
-      <DecoBlob tone="rose" size={480} opacity={0.1} top={-160} right={-120} />
+    <section className="m-section m-section--paper" id="limitations">
+      <DecoBlob tone="gold" size={480} opacity={0.08} top={-160} right={-120} />
       <div className="section-inner">
-        <p className="t-label" style={{ color: 'var(--rose)', marginBottom: '1rem' }}>What we don't have</p>
-        <Reveal as="h2" className="t-headline">The list of <span className="kw-rose">honest gaps</span>.</Reveal>
+        <p className="t-label" style={{ color: 'var(--gold)', marginBottom: '1rem' }}>What we don't have</p>
+        <Reveal as="h2" className="t-headline">The list of <span className="kw-gold">honest gaps</span>.</Reveal>
         <Reveal as="p" className="t-body" style={{ color: 'var(--ink-soft)', marginTop: '1.25rem' }}>
           If you find something stale here, it almost certainly falls under one of these. Spot one, and the volunteer page can fix it.
         </Reveal>
@@ -165,7 +165,7 @@ function GapsSection() {
 
 function ClosingSection() {
   return (
-    <section className="m-section m-section--paper">
+    <section className="m-section m-section--gold">
       <div className="section-inner">
         <Reveal className="closing-cta">
           <div className="closing-cta__blob" />
