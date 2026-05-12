@@ -102,6 +102,8 @@ The palette is fully saturated and fully distinct. Each colour role maps to a se
 
 **The Ink Anchor Rule.** Vivid colour backgrounds (rep cards, stat blocks, diff tiles) use white text. Light colour backgrounds (sections, panels) use ink-dark text. Never pair light-tinted text on a light-tinted surface.
 
+**The Page Theme Rule.** Single-topic pages (anything other than the four-step homepage narrative) own one theme colour — chosen to match the page's role: gold for action/contribution, rose for discovery, leaf for education, violet for state/local content. On such a page, the header uses the theme's light tint, and every other section alternates between that same light tint and `paper`. Accents (eyebrows, keyword spans, decorative blobs, stat numbers, step badges) stay in the theme colour across both the tinted and the paper sections so the page reads as one. The Full-Saturation Rule still applies — at least one card, button, or stat block must render the theme at full saturation.
+
 ## 3. Typography
 
 **Body Font:** Plus Jakarta Sans (warm geometric sans). Weights used: 400, 600, 700, 800.
@@ -190,6 +192,7 @@ Full rose-vivid background card (not a section, but an inline block). White head
 - **Do** design every layout to work at classroom projector scale (1280px+, viewed from 3m+).
 - **Do** include bilingual labels (BM/EN) in every wayfinding element.
 - **Do** ensure all text meets WCAG AA: ink on light backgrounds, white on vivid backgrounds.
+- **Do** give every single-topic page one theme colour. Use the theme's light tint for the header, alternate light-tint and paper for the remaining sections, and keep all accents in the theme colour.
 
 ### Don't:
 - **Don't** revert to the old pastel-only system. Pastels are now light tints used as section backgrounds. The vivid colours are the system.
@@ -201,3 +204,4 @@ Full rose-vivid background card (not a section, but an inline block). White head
 - **Don't** animate CSS layout properties. Reveals and entrances use `opacity` + `transform` only.
 - **Don't** add a fourth typeface, a serif display, or an italic style. Plus Jakarta Sans only, four weights.
 - **Don't** mute the colour to pastel on sections that already have a light-tint background — something on the screen must be vivid.
+- **Don't** mix more than one theme colour across a single non-narrative page's sections. Multi-colour section flow is reserved for the homepage narrative.

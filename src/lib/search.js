@@ -112,13 +112,39 @@ export function individualSearch(seats, query, filters = {}) {
     .filter((r) => r.matched)
 }
 
+/* ── Random tip generation (stable per session via useMemo) ──── */
+const TIP_LIMIT = 6
+
+export function getRandomTips(seats, n = TIP_LIMIT) {
+  if (!seats.length) return []
+  const pool = []
+  for (const s of seats) {
+    pool.push(s.federalSeatName)
+    if (s.state) pool.push(s.state)
+    if (s.mp?.name) pool.push(s.mp.name)
+    if (s.mp?.party) pool.push(s.mp.party)
+    for (const a of s.aduns || []) {
+      if (a.stateSeatName) pool.push(a.stateSeatName)
+      if (a.name) pool.push(a.name)
+    }
+  }
+  const unique = [...new Set(pool.filter(Boolean))]
+  for (let i = unique.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [unique[i], unique[j]] = [unique[j], unique[i]]
+  }
+  return unique.slice(0, n)
+}
+
 /* ── Filter option derivation (dynamic from data) ────────────── */
 export function deriveFilterOptions(flatList) {
-  const years = [...new Set(flatList.map((p) => p.electedYear).filter(Boolean))].sort()
+  const years = [...new Set(flatList.map((p) => p.electedYear).filter(Boolean))].sort((a, b) => b - a)
   const parties = [...new Set(flatList.map((p) => p.party).filter(Boolean))].sort()
+  const states = [...new Set(flatList.map((p) => p.state).filter(Boolean))].sort()
   return {
     years,
     parties,
+    states,
     genders: [
       { value: 'M', label: 'Male' },
       { value: 'F', label: 'Female' },

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useRepresentatives, getContactCompleteness } from '../hooks/useRepresentatives.js'
-import { groupSearch } from '../lib/search.js'
+import { groupSearch, getRandomTips } from '../lib/search.js'
 import { usePageMeta } from '../hooks/usePageMeta.js'
 import { useT } from '../i18n/LanguageContext.jsx'
 import StepPill from '../components/StepPill.jsx'
@@ -15,7 +15,6 @@ import Reveal from '../components/Reveal.jsx'
 import CopyButton from '../components/CopyButton.jsx'
 
 const SUGGESTION_LIMIT = 6
-const QUICK_TIPS = ['Padang Besar', 'Hannah Yeoh', 'PAS', 'Selangor', 'P051']
 
 const EMAIL_TEMPLATE = `Dear YB [Representative Name],
 
@@ -54,6 +53,8 @@ export default function HomePage() {
     () => seats.find((s) => s.federalSeatCode === seatCode) || null,
     [seats, seatCode],
   )
+
+  const tips = useMemo(() => getRandomTips(seats), [seats])
 
   const suggestions = useMemo(() => {
     if (!query.trim()) return []
@@ -96,6 +97,7 @@ export default function HomePage() {
         suggestions={suggestions}
         showSuggestions={showSuggestions}
         dropdownRef={dropdownRef}
+        tips={tips}
         t={t}
       />
 
@@ -118,7 +120,7 @@ export default function HomePage() {
 
 function Step1Search({
   query, onQueryChange, onSubmit, onSelect, onFocus,
-  suggestions, showSuggestions, dropdownRef, t,
+  suggestions, showSuggestions, dropdownRef, tips, t,
 }) {
   return (
     <section className="step-search" id="s1">
@@ -178,17 +180,20 @@ function Step1Search({
         )}
       </form>
 
-      <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-        <span className="t-label" style={{ color: 'var(--ink-faint)' }}>{t('search.quick_label')}:</span>
-        {QUICK_TIPS.map((tip) => (
-          <button
-            key={tip}
-            type="button"
-            className="prompt-tip"
-            onClick={() => { onQueryChange(tip); onFocus(); }}
-          >{tip}</button>
-        ))}
-      </div>
+      {tips.length > 0 && (
+        <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          <span className="t-label" style={{ color: 'var(--ink-faint)' }}>{t('search.quick_label')}:</span>
+          {tips.map((tip, i) => (
+            <button
+              key={tip}
+              type="button"
+              className="prompt-tip"
+              style={{ '--tip-i': i }}
+              onClick={() => { onQueryChange(tip); onFocus(); }}
+            >{tip}</button>
+          ))}
+        </div>
+      )}
     </section>
   )
 }

@@ -110,11 +110,11 @@ function WhySection() {
 
 function MissingSection() {
   return (
-    <section className="v-section v-section--rose" id="missing">
-      <DecoBlob tone="rose" size={450} opacity={0.1} top={-160} right={-120} />
+    <section className="v-section v-section--gold" id="missing">
+      <DecoBlob tone="gold" size={450} opacity={0.1} top={-160} right={-120} />
       <div className="section-inner">
-        <p className="t-label" style={{ color: 'var(--rose)', marginBottom: '1rem' }}>Where the gaps are</p>
-        <Reveal as="h2" className="t-headline">What's<br /><span className="kw-rose">still missing</span></Reveal>
+        <p className="t-label" style={{ color: 'var(--gold)', marginBottom: '1rem' }}>Where the gaps are</p>
+        <Reveal as="h2" className="t-headline">What's<br /><span className="kw-gold">still missing</span></Reveal>
         <Reveal as="p" className="t-body" style={{ color: 'var(--ink-soft)', marginTop: '1.25rem' }}>
           ADUN contact details are the biggest gap. MPs tend to have better-documented contacts through Parliament. Here's the current state, by state.
         </Reveal>
@@ -155,8 +155,8 @@ function HowSection() {
   return (
     <section className="v-section v-section--white" id="how">
       <div className="section-inner">
-        <p className="t-label" style={{ color: 'var(--leaf)', marginBottom: '1rem' }}>How to help</p>
-        <Reveal as="h2" className="t-headline">Four ways to <span className="kw-leaf">contribute</span></Reveal>
+        <p className="t-label" style={{ color: 'var(--gold)', marginBottom: '1rem' }}>How to help</p>
+        <Reveal as="h2" className="t-headline">Four ways to <span className="kw-gold">contribute</span></Reveal>
         <Reveal as="p" className="t-body" style={{ color: 'var(--ink-soft)', marginTop: '1.25rem' }}>
           You don't need to be a developer or a political science grad. You just need to know where to look — and a few minutes.
         </Reveal>
@@ -305,15 +305,15 @@ function SuggestSection() {
 
 function PhilosophySection() {
   return (
-    <section className="v-section v-section--ink" id="philosophy">
-      <DecoBlob tone="gold" size={400} opacity={0.07} top={-120} right={-100} />
-      <DecoBlob tone="leaf" size={280} opacity={0.07} bottom={-80} left="4%" />
+    <section className="v-section v-section--white" id="philosophy">
+      <DecoBlob tone="gold" size={400} opacity={0.12} top={-120} right={-100} />
+      <DecoBlob tone="rose" size={280} opacity={0.14} bottom={-80} left="4%" />
       <div className="section-inner">
-        <p className="t-label" style={{ color: 'rgba(255,255,255,0.4)', marginBottom: '1rem' }}>Our principles</p>
-        <Reveal as="h2" className="t-headline" style={{ color: 'white' }}>
+        <p className="t-label" style={{ color: 'var(--gold)', marginBottom: '1rem' }}>Our principles</p>
+        <Reveal as="h2" className="t-headline">
           Open data,<br /><span className="kw-gold">always</span>
         </Reveal>
-        <Reveal as="p" className="t-body" style={{ color: 'rgba(255,255,255,0.65)', marginTop: '1.25rem' }}>
+        <Reveal as="p" className="t-body" style={{ color: 'var(--ink-soft)', marginTop: '1.25rem' }}>
           Whoadunit is built on a few principles we won't compromise on.
         </Reveal>
 
@@ -358,7 +358,7 @@ function PhilosophySection() {
 
 function FinalCta() {
   return (
-    <section className="v-section v-section--white">
+    <section className="v-section v-section--gold">
       <div className="section-inner">
         <Reveal style={{ display: 'block' }}>
           <div style={{ background: 'var(--gold)', borderRadius: 'var(--r-card)', padding: '3rem 3.5rem', maxWidth: 720 }}>

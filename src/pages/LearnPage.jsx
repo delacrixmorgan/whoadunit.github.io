@@ -55,9 +55,9 @@ export default function LearnPage() {
 
   return (
     <>
-      <header className="page-hero bg-paper">
+      <header className="page-hero bg-leaf-light">
         <DecoBlob tone="leaf" size={600} opacity={0.12} top={-200} right={-150} />
-        <DecoBlob tone="gold" size={280} opacity={0.14} bottom={-80} left="5%" />
+        <DecoBlob tone="leaf" size={280} opacity={0.14} bottom={-80} left="5%" />
         <p className="page-hero__eyebrow" style={{ color: 'var(--leaf)' }}>Civic education · MP · ADUN · Parliament</p>
         <h1 className="t-display page-hero__title">
           How Malaysian<br />
@@ -189,8 +189,8 @@ function ParliamentSection() {
   return (
     <section className="learn-section learn-section--white" id="parliament">
       <div className="section-inner">
-        <p className="t-label" style={{ color: 'var(--rose)', marginBottom: '1rem' }}>The structure</p>
-        <Reveal as="h2" className="t-headline">How Malaysia's<br /><span className="kw-rose">parliament works</span></Reveal>
+        <p className="t-label" style={{ color: 'var(--leaf)', marginBottom: '1rem' }}>The structure</p>
+        <Reveal as="h2" className="t-headline">How Malaysia's<br /><span className="kw-leaf">parliament works</span></Reveal>
         <Reveal as="p" className="t-body" style={{ color: 'var(--ink-soft)', marginTop: '1.25rem' }}>
           Malaysia is a constitutional monarchy with a bicameral parliament. Here's the stack, from top to bottom.
         </Reveal>
@@ -218,11 +218,11 @@ function ParliamentSection() {
 
 function ElectionsSection() {
   return (
-    <section className="learn-section learn-section--violet" id="elections">
-      <DecoBlob tone="violet" size={500} opacity={0.12} top={-180} right={-120} />
+    <section className="learn-section learn-section--leaf" id="elections">
+      <DecoBlob tone="leaf" size={500} opacity={0.12} top={-180} right={-120} />
       <div className="section-inner">
-        <p className="t-label" style={{ color: 'var(--violet)', marginBottom: '1rem' }}>How you vote</p>
-        <Reveal as="h2" className="t-headline">Malaysian<br /><span className="kw-violet">elections, explained</span></Reveal>
+        <p className="t-label" style={{ color: 'var(--leaf)', marginBottom: '1rem' }}>How you vote</p>
+        <Reveal as="h2" className="t-headline">Malaysian<br /><span className="kw-leaf">elections, explained</span></Reveal>
         <Reveal as="p" className="t-body" style={{ color: 'var(--ink-soft)', marginTop: '1.25rem' }}>
           Two types of elections. You vote in both. Here's what happened recently and what to expect next.
         </Reveal>
@@ -242,11 +242,11 @@ function ElectionsSection() {
 
         <p style={{ fontSize: '0.85rem', color: 'var(--ink-faint)', marginTop: '1.5rem' }}>
           Sources for every line above are cited on the{' '}
-          <Link to="/methodology" style={{ color: 'var(--violet)', fontWeight: 700 }}>methodology page</Link>.
+          <Link to="/methodology" style={{ color: 'var(--leaf)', fontWeight: 700 }}>methodology page</Link>.
         </p>
 
         <Reveal style={{ display: 'block', marginTop: '3rem' }}>
-          <div style={{ background: 'var(--violet)', borderRadius: 'var(--r-card)', padding: '2rem 2.5rem', maxWidth: 560 }}>
+          <div style={{ background: 'var(--leaf)', borderRadius: 'var(--r-card)', padding: '2rem 2.5rem', maxWidth: 560 }}>
             <div className="t-label" style={{ color: 'rgba(255,255,255,0.65)', marginBottom: '0.5rem' }}>Automatic voter registration</div>
             <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'white', lineHeight: 1.1, marginBottom: '0.75rem' }}>
               Malaysia introduced automatic voter registration in 2021
@@ -266,8 +266,8 @@ function FaqSection() {
   return (
     <section className="learn-section learn-section--white" id="faq">
       <div className="section-inner">
-        <p className="t-label" style={{ color: 'var(--gold)', marginBottom: '1rem' }}>Common questions</p>
-        <Reveal as="h2" className="t-headline">Frequently<br /><span className="kw-gold">asked</span></Reveal>
+        <p className="t-label" style={{ color: 'var(--leaf)', marginBottom: '1rem' }}>Common questions</p>
+        <Reveal as="h2" className="t-headline">Frequently<br /><span className="kw-leaf">asked</span></Reveal>
 
         <div className="faq-list">
           {FAQS.map((f, i) => {
@@ -297,7 +297,7 @@ function FaqSection() {
 
 function FinalCta() {
   return (
-    <section className="learn-section learn-section--white">
+    <section className="learn-section learn-section--leaf">
       <div className="section-inner">
         <Reveal className="learn-cta">
           <h3>Now you know.<br />Go find yours.</h3>
