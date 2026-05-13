@@ -9,7 +9,6 @@ import RepCard from '../components/RepCard.jsx'
 import ContactCard from '../components/ContactCard.jsx'
 import ExplainerPanel from '../components/ExplainerPanel.jsx'
 import StatBlock from '../components/StatBlock.jsx'
-import DiffGrid from '../components/DiffGrid.jsx'
 import DecoBlob from '../components/DecoBlob.jsx'
 import Reveal from '../components/Reveal.jsx'
 import CopyButton from '../components/CopyButton.jsx'
@@ -78,12 +77,18 @@ export default function HomePage() {
   const handleSelect = (code) => {
     setParams({ seat: code }, { replace: false })
     setShowSuggestions(false)
-    setQuery('')
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
     if (suggestions[0]) handleSelect(suggestions[0].seat.federalSeatCode)
+  }
+
+  const handleTip = (tip) => {
+    setQuery(tip)
+    setShowSuggestions(false)
+    const hits = groupSearch(seats, tip)
+    if (hits[0]) handleSelect(hits[0].seat.federalSeatCode)
   }
 
   return (
@@ -93,6 +98,7 @@ export default function HomePage() {
         onQueryChange={(v) => { setQuery(v); setShowSuggestions(true) }}
         onSubmit={handleSubmit}
         onSelect={handleSelect}
+        onTip={handleTip}
         onFocus={() => setShowSuggestions(true)}
         suggestions={suggestions}
         showSuggestions={showSuggestions}
@@ -119,7 +125,7 @@ export default function HomePage() {
 }
 
 function Step1Search({
-  query, onQueryChange, onSubmit, onSelect, onFocus,
+  query, onQueryChange, onSubmit, onSelect, onTip, onFocus,
   suggestions, showSuggestions, dropdownRef, tips, t,
 }) {
   return (
@@ -189,7 +195,7 @@ function Step1Search({
               type="button"
               className="prompt-tip"
               style={{ '--tip-i': i }}
-              onClick={() => { onQueryChange(tip); onFocus(); }}
+              onClick={() => onTip(tip)}
             >{tip}</button>
           ))}
         </div>
@@ -238,7 +244,14 @@ function Step2Mp({ seat, t }) {
 
         <div style={{ marginTop: '2rem' }}>
           {seat.mp ? (
-            <Reveal><RepCard person={seat.mp} kind="mp" /></Reveal>
+            <Reveal>
+              <Link
+                to={`/representative/2022/${seat.mp.federalSeatCode}`}
+                className="rep-card-link"
+              >
+                <RepCard person={seat.mp} kind="mp" />
+              </Link>
+            </Reveal>
           ) : (
             <p className="contact-row__missing" style={{ background: 'white', padding: '1.5rem', borderRadius: 'var(--r-card)' }}>
               MP data not yet available for this constituency.
@@ -298,10 +311,19 @@ function Step3Aduns({ seat, t }) {
             </div>
           </Reveal>
         ) : (
-          <div style={{ marginTop: '2rem', display: 'grid', gap: '1rem' }}>
+          <div className="adun-row" style={{ marginTop: '2rem' }}>
             {aduns.map((adun, i) => (
-              <Reveal key={`${adun.federalSeatCode}-${adun.stateSeatCode}`} delay={Math.min(i + 1, 3)}>
-                <RepCard person={adun} kind="adun" />
+              <Reveal
+                key={`${adun.federalSeatCode}-${adun.stateSeatCode}`}
+                delay={Math.min(i + 1, 3)}
+                style={{ display: 'block', flex: '1 1 280px' }}
+              >
+                <Link
+                  to={`/representative/2022/${adun.federalSeatCode}/${adun.stateSeatCode}`}
+                  className="rep-card-link"
+                >
+                  <RepCard person={adun} kind="adun" />
+                </Link>
               </Reveal>
             ))}
           </div>
@@ -320,11 +342,6 @@ function Step3Aduns({ seat, t }) {
           />
         </Reveal>
 
-        {!isFT && (
-          <Reveal delay={3} style={{ display: 'block', marginTop: '2rem' }}>
-            <DiffGrid mp={seat.mp} adun={aduns[0]} />
-          </Reveal>
-        )}
       </div>
     </section>
   )
@@ -423,8 +440,8 @@ function RepScoreRow({ rep }) {
   const tone = pct >= 75 ? 'leaf' : pct >= 50 ? '' : 'rose'
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
-      <span style={{ fontSize: '0.85rem', fontWeight: 700, flex: '0 0 auto', minWidth: 84 }}>
-        {rep.type === 'MP' ? 'MP' : `ADUN ${rep.stateSeatCode}`}
+      <span style={{ fontSize: '0.85rem', fontWeight: 700, flex: '0 1 auto', lineHeight: 1.2, minWidth: 0 }}>
+        {rep.name}
       </span>
       <div className="bar-track" style={{ flex: 1, height: 6 }}>
         <div className={`bar-fill ${tone ? `bar-fill--${tone}` : ''}`} style={{ width: `${pct}%` }} />

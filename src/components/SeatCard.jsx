@@ -47,7 +47,8 @@ export default function SeatCard({
   const [tab, setTab] = useState(initialTab)
   const baseId = useId()
 
-  const seatHref = detailHref || `/seat/${seat.federalSeatCode}`
+  const mpYear = seat.mp?.electedYear || 2022
+  const seatHref = detailHref || `/representative/${mpYear}/${seat.federalSeatCode}`
   const adunCount = visibleAdunIndices ? visibleAduns.length : allAduns.length
 
   // If the only visible side is ADUN (e.g. filter excluded the MP), force tab there.

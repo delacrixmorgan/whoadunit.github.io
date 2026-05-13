@@ -1,11 +1,12 @@
+import { Link } from 'react-router-dom'
 import CopyButton from './CopyButton.jsx'
 
 const ROW_DEFS = [
-  { key: 'email',       label: 'Email',  iconTone: 'rose',   icon: '✉' },
-  { key: 'phoneNumber', label: 'Phone',  iconTone: 'leaf',   icon: '☎' },
-  { key: 'address',     label: 'Office', iconTone: 'violet', icon: '⌂' },
-  { key: 'facebook',    label: 'Facebook', iconTone: 'violet', icon: 'f' },
-  { key: 'twitter',     label: 'X / Twitter', iconTone: 'gold', icon: '𝕏' },
+  { key: 'email',       label: 'Email' },
+  { key: 'phoneNumber', label: 'Phone' },
+  { key: 'address',     label: 'Service Centre' },
+  { key: 'facebook',    label: 'Facebook' },
+  { key: 'twitter',     label: 'X / Twitter' },
 ]
 
 const firstValue = (v) => {
@@ -15,32 +16,53 @@ const firstValue = (v) => {
   return s ? s : null
 }
 
-export default function ContactCard({ person, kind = 'mp' }) {
+export default function ContactCard({ person, kind = 'mp', asLink = true }) {
   if (!person) return null
   const tone = kind === 'mp' ? 'leaf' : 'violet'
   const roleLabel = kind === 'mp' ? 'Member of Parliament' : 'State Assemblyman'
+  const profilePath = kind === 'mp'
+    ? `/representative/2022/${person.federalSeatCode}`
+    : `/representative/2022/${person.federalSeatCode}/${person.stateSeatCode}`
+
+  const subLabel = `${person.party}${
+    kind === 'mp'
+      ? ` · ${person.federalSeatCode} ${person.federalSeatName}`
+      : ` · ${person.stateSeatCode} ${person.stateSeatName}`
+  }`
+
+  const headerInner = (
+    <>
+      <div className="contact-card__role">{roleLabel}</div>
+      <div className="contact-card__name">
+        {person.name}
+        {asLink && <span className="contact-card__header-arrow" aria-hidden="true">→</span>}
+      </div>
+      <div style={{ marginTop: '0.25rem', fontSize: '0.8125rem', opacity: 0.85 }}>
+        {subLabel}
+      </div>
+    </>
+  )
 
   return (
     <article className="contact-card">
-      <header className={`contact-card__header contact-card__header--${tone}`}>
-        <div className="contact-card__role">{roleLabel}</div>
-        <div className="contact-card__name">{person.name}</div>
-        <div style={{ marginTop: '0.25rem', fontSize: '0.8125rem', opacity: 0.85 }}>
-          {person.party}
-          {kind === 'mp'
-            ? ` · ${person.federalSeatCode} ${person.federalSeatName}`
-            : ` · ${person.stateSeatCode} ${person.stateSeatName}`}
+      {asLink ? (
+        <Link
+          to={profilePath}
+          className={`contact-card__header contact-card__header--${tone} contact-card__header--link`}
+        >
+          {headerInner}
+        </Link>
+      ) : (
+        <div className={`contact-card__header contact-card__header--${tone}`}>
+          {headerInner}
         </div>
-      </header>
+      )}
 
       <div className="contact-card__body">
         {ROW_DEFS.map((def) => {
           const value = firstValue(person[def.key])
           return (
             <div className="contact-row" key={def.key}>
-              <div className={`contact-row__icon contact-row__icon--${def.iconTone}`} aria-hidden="true">
-                {def.icon}
-              </div>
               <div className="contact-row__main">
                 <div className="contact-row__label">{def.label}</div>
                 {value ? (

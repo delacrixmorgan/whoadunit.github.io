@@ -21,7 +21,7 @@ function NavBar() {
   return (
     <>
       <nav className="nav">
-        <Link to="/" className="nav__logo">Whoadunit</Link>
+        <Link to="/" className="nav__logo">Who<span className="kw-rose">adun</span>it</Link>
 
         <ul className="nav__links">
           {NAV_LINKS.map((l) => (
@@ -108,7 +108,7 @@ function Footer() {
     <footer className="footer">
       <div className="footer-top">
         <div>
-          <div className="footer-logo">Whoadunit</div>
+          <div className="footer-logo">Who<span className="kw-rose">adun</span>it</div>
           <div className="footer-tagline">{t('nav.tagline')}</div>
         </div>
         <div className="footer-links">

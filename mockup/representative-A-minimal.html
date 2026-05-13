@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rusydan Rusmi — MP P001 Padang Besar · Whoadunit (Minimal)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rose:         #e8614a;
+  --rose-light:   #fce7e3;
+  --rose-shadow:  #c84a35;
+  --leaf:         #2d9e6b;
+  --leaf-light:   #d4f0e4;
+  --leaf-shadow:  #1e7050;
+  --violet:       #5b5bd6;
+  --violet-light: #e0e0fa;
+  --violet-deep:  #3e3eb8;
+  --gold:         #e8a320;
+  --gold-light:   #fef4d6;
+  --gold-shadow:  #b6801a;
+  --paper:        #fdf9f4;
+  --ink:          #1a1714;
+  --ink-soft:     #3e3a36;
+  --ink-faint:    #7a746e;
+  --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font); background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+/* Nav */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 1rem clamp(1.5rem, 6vw, 5rem);
+  background: rgba(253,249,244,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(26,23,20,0.08);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav__logo { font-weight: 800; font-size: 1rem; letter-spacing: -0.02em; }
+.nav__logo span { color: var(--rose); }
+.nav__back { font-size: 0.8rem; font-weight: 700; color: var(--ink-faint); display: flex; align-items: center; gap: 0.4rem; }
+.nav__back:hover { color: var(--ink); }
+
+/* Hero */
+.hero {
+  padding: clamp(7rem, 12vw, 11rem) clamp(1.5rem, 6vw, 5rem) clamp(4rem, 6vw, 6rem);
+  border-bottom: 1px solid rgba(26,23,20,0.06);
+  max-width: 900px; margin: 0 auto;
+}
+.hero__breadcrumb { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 2.5rem; }
+.hero__breadcrumb a, .hero__breadcrumb span { font-size: 0.8rem; font-weight: 700; color: var(--ink-faint); }
+.hero__breadcrumb .sep { color: rgba(26,23,20,0.2); }
+.hero__breadcrumb .active { color: var(--leaf); }
+.hero__role-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+.role-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--leaf-light); color: var(--leaf);
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.35rem 0.9rem 0.35rem 0.5rem; border-radius: 999px;
+}
+.role-badge__dot { width: 20px; height: 20px; background: var(--leaf); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.65rem; font-weight: 800; }
+.party-tag {
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em;
+  padding: 0.3rem 0.75rem; border-radius: 999px;
+  border: 1.5px solid rgba(26,23,20,0.12); color: var(--ink-soft);
+}
+.hero__name {
+  font-size: clamp(2.5rem, 7vw, 5rem); font-weight: 800;
+  line-height: 0.98; letter-spacing: -0.025em;
+  color: var(--ink); margin-bottom: 1.25rem;
+}
+.hero__meta { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-top: 0.75rem; }
+.hero__meta-item { display: flex; flex-direction: column; gap: 0.2rem; }
+.hero__meta-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+.hero__meta-value { font-size: 0.9rem; font-weight: 700; color: var(--ink); }
+.hero__divider { width: 48px; height: 3px; background: var(--leaf); border-radius: 2px; margin: 2rem 0; }
+
+/* Sections */
+.section { padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 6vw, 5rem); border-bottom: 1px solid rgba(26,23,20,0.06); }
+.section-inner { max-width: 900px; margin: 0 auto; }
+.section--paper { background: var(--paper); }
+.section--tint { background: var(--leaf-light); }
+.section--gold { background: var(--gold-light); }
+
+.section__eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--leaf); margin-bottom: 1rem; }
+.section__eyebrow--gold { color: var(--gold); }
+.section__eyebrow--violet { color: var(--violet); }
+.section__title { font-size: clamp(1.5rem, 3.5vw, 2.25rem); font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+
+/* Contact rows */
+.contact-block { background: var(--paper); border-radius: 20px; border: 1.5px solid rgba(26,23,20,0.07); overflow: hidden; }
+.contact-row { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid rgba(26,23,20,0.06); }
+.contact-row:last-child { border-bottom: none; }
+.contact-row__icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+.contact-row__icon--rose   { background: var(--rose-light);   color: var(--rose); }
+.contact-row__icon--leaf   { background: var(--leaf-light);   color: var(--leaf); }
+.contact-row__icon--violet { background: var(--violet-light); color: var(--violet); }
+.contact-row__icon--gold   { background: var(--gold-light);   color: var(--gold); }
+.contact-row__main { flex: 1; }
+.contact-row__label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+.contact-row__value { font-size: 0.9rem; font-weight: 700; color: var(--ink); margin-top: 0.1rem; }
+.contact-row__missing { font-size: 0.875rem; color: var(--ink-faint); margin-top: 0.1rem; font-style: italic; }
+.copy-btn {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+  background: var(--gold-light); color: var(--gold);
+  padding: 0.35rem 0.75rem; border-radius: 999px;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+.copy-btn:hover { background: var(--gold); color: white; }
+
+/* Completeness */
+.completeness-bar { margin-top: 1.5rem; }
+.completeness-bar__header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; }
+.completeness-bar__label { font-size: 0.75rem; font-weight: 700; color: var(--ink-faint); letter-spacing: 0.04em; }
+.completeness-bar__pct { font-size: 1.25rem; font-weight: 800; color: var(--gold); }
+.bar-track { height: 8px; background: rgba(26,23,20,0.08); border-radius: 999px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--gold); border-radius: 999px; }
+
+/* Email template */
+.email-card { background: var(--paper); border-radius: 20px; border: 1.5px solid rgba(26,23,20,0.07); overflow: hidden; }
+.email-card__topbar { height: 4px; background: var(--gold); }
+.email-card__head { padding: 1.25rem 1.5rem; display: flex; gap: 1rem; align-items: flex-start; border-bottom: 1px solid rgba(26,23,20,0.06); }
+.email-card__icon { font-size: 1.5rem; line-height: 1; }
+.email-card__eyebrow { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold); }
+.email-card__title { font-size: 1rem; font-weight: 800; color: var(--ink); margin-top: 0.15rem; }
+.email-blocks { padding: 0; list-style: none; }
+.etb { padding: 1rem 1.5rem; border-bottom: 1px solid rgba(26,23,20,0.05); display: flex; gap: 1rem; }
+.etb:last-child { border-bottom: none; }
+.etb__num { font-size: 0.65rem; font-weight: 800; color: var(--gold); letter-spacing: 0.06em; flex-shrink: 0; padding-top: 0.15rem; min-width: 28px; }
+.etb__body { flex: 1; }
+.etb__label { font-size: 0.75rem; font-weight: 800; color: var(--ink); }
+.etb__hint { font-size: 0.8rem; color: var(--ink-faint); margin: 0.15rem 0 0.35rem; line-height: 1.5; }
+.etb__example { font-size: 0.8rem; color: var(--ink-soft); background: rgba(232,163,32,0.07); border-radius: 8px; padding: 0.5rem 0.75rem; line-height: 1.55; white-space: pre-line; }
+.email-card__foot { padding: 1rem 1.5rem; }
+.copy-template-btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-size: 0.8rem; font-weight: 700;
+  background: var(--gold); color: white;
+  padding: 0.6rem 1.25rem; border-radius: 999px;
+  box-shadow: 0 4px 0 var(--gold-shadow);
+  transition: box-shadow 0.12s, transform 0.12s;
+}
+.copy-template-btn:hover { box-shadow: 0 6px 0 var(--gold-shadow); transform: translateY(-1px); }
+
+/* Related reps scroll */
+.scroll-track { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+.scroll-track::-webkit-scrollbar { height: 4px; }
+.scroll-track::-webkit-scrollbar-track { background: rgba(26,23,20,0.05); border-radius: 2px; }
+.scroll-track::-webkit-scrollbar-thumb { background: rgba(26,23,20,0.15); border-radius: 2px; }
+.rep-scroll-card {
+  flex-shrink: 0; scroll-snap-align: start;
+  width: 220px; border-radius: 16px;
+  border: 1.5px solid rgba(26,23,20,0.08);
+  background: var(--paper); padding: 1.25rem;
+  display: flex; flex-direction: column; gap: 0.4rem;
+  transition: border-color 0.15s;
+}
+.rep-scroll-card:hover { border-color: var(--violet); }
+.rep-scroll-card--mp:hover { border-color: var(--leaf); }
+.rep-scroll-card__code { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--violet); }
+.rep-scroll-card--mp .rep-scroll-card__code { color: var(--leaf); }
+.rep-scroll-card__name { font-size: 0.95rem; font-weight: 800; color: var(--ink); line-height: 1.2; }
+.rep-scroll-card__seat { font-size: 0.8rem; color: var(--ink-faint); }
+.rep-scroll-card__party { font-size: 0.75rem; font-weight: 700; color: var(--ink-soft); margin-top: 0.25rem; }
+.rep-scroll-card__arrow { font-size: 0.75rem; color: var(--ink-faint); margin-top: auto; padding-top: 0.75rem; font-weight: 700; }
+
+/* Footer */
+.footer { padding: 2rem clamp(1.5rem, 6vw, 5rem); text-align: center; }
+.footer p { font-size: 0.8rem; color: var(--ink-faint); }
+
+@media (max-width: 600px) {
+  .hero__meta { gap: 1rem; }
+}
+</style>
+</head>
+<body>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav__logo">Whoa<span>dunit</span></div>
+  <a href="#" class="nav__back">← Back to search</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <nav class="hero__breadcrumb" aria-label="Breadcrumb">
+    <a href="#">Find</a>
+    <span class="sep">/</span>
+    <span>P001 Padang Besar</span>
+    <span class="sep">/</span>
+    <span class="active">Rusydan Rusmi</span>
+  </nav>
+
+  <div class="hero__role-row">
+    <span class="role-badge">
+      <span class="role-badge__dot">MP</span>
+      Member of Parliament
+    </span>
+    <span class="party-tag">PAS</span>
+  </div>
+
+  <h1 class="hero__name">Rusydan<br>Rusmi</h1>
+
+  <div class="hero__divider"></div>
+
+  <div class="hero__meta">
+    <div class="hero__meta-item">
+      <span class="hero__meta-label">Constituency</span>
+      <span class="hero__meta-value">P001 Padang Besar</span>
+    </div>
+    <div class="hero__meta-item">
+      <span class="hero__meta-label">State</span>
+      <span class="hero__meta-value">Perlis</span>
+    </div>
+    <div class="hero__meta-item">
+      <span class="hero__meta-label">Elected</span>
+      <span class="hero__meta-value">2022</span>
+    </div>
+    <div class="hero__meta-item">
+      <span class="hero__meta-label">Level</span>
+      <span class="hero__meta-value">Federal — Dewan Rakyat</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT SECTION -->
+<section class="section section--paper">
+  <div class="section-inner">
+    <p class="section__eyebrow">Contact</p>
+    <h2 class="section__title">Reach Rusydan Rusmi</h2>
+    <p style="font-size:0.9rem; color:var(--ink-faint); margin:0.5rem 0 1.5rem; max-width:55ch;">
+      Copy any detail below and send your message. Your representative is accountable to you.
+    </p>
+
+    <div class="contact-block">
+      <div class="contact-row">
+        <div class="contact-row__icon contact-row__icon--rose">✉</div>
+        <div class="contact-row__main">
+          <div class="contact-row__label">Email</div>
+          <div class="contact-row__missing">Not yet available</div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-row__icon contact-row__icon--leaf">☎</div>
+        <div class="contact-row__main">
+          <div class="contact-row__label">Phone</div>
+          <div class="contact-row__missing">Not yet available</div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-row__icon contact-row__icon--violet">⌂</div>
+        <div class="contact-row__main">
+          <div class="contact-row__label">Office Address</div>
+          <div class="contact-row__missing">Not yet available</div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-row__icon contact-row__icon--violet" style="font-weight:800;font-size:0.75rem;">f</div>
+        <div class="contact-row__main">
+          <div class="contact-row__label">Facebook</div>
+          <div class="contact-row__missing">Not yet available</div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-row__icon contact-row__icon--gold" style="font-size:0.75rem;font-weight:800;">𝕏</div>
+        <div class="contact-row__main">
+          <div class="contact-row__label">X / Twitter</div>
+          <div class="contact-row__missing">Not yet available</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="completeness-bar">
+      <div class="completeness-bar__header">
+        <span class="completeness-bar__label">Profile completeness</span>
+        <span class="completeness-bar__pct">0%</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:0%"></div>
+      </div>
+      <p style="font-size:0.78rem;color:var(--ink-faint);margin-top:0.75rem;">
+        Something missing? <a href="#" style="color:var(--rose);font-weight:700;">Suggest a correction →</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- EMAIL TEMPLATE SECTION -->
+<section class="section section--gold">
+  <div class="section-inner">
+    <p class="section__eyebrow section__eyebrow--gold">Write to your MP</p>
+    <h2 class="section__title">Stuck on what to say?</h2>
+    <p style="font-size:0.9rem;color:var(--ink-soft);margin:0.5rem 0 1.5rem;max-width:55ch;">
+      Borrow this template. Fill in the brackets, send it, and you've done your part.
+    </p>
+
+    <div class="email-card">
+      <div class="email-card__topbar"></div>
+      <div class="email-card__head">
+        <div class="email-card__icon">✉️</div>
+        <div>
+          <div class="email-card__eyebrow">Sample email</div>
+          <div class="email-card__title">Stuck? Borrow this template.</div>
+        </div>
+      </div>
+      <ol class="email-blocks">
+        <li class="etb">
+          <div class="etb__num">01</div>
+          <div class="etb__body">
+            <div class="etb__label">Greeting</div>
+            <div class="etb__hint">Address the rep with their title and name.</div>
+            <div class="etb__example">Dear YB Rusydan Rusmi,</div>
+          </div>
+        </li>
+        <li class="etb">
+          <div class="etb__num">02</div>
+          <div class="etb__body">
+            <div class="etb__label">The issue</div>
+            <div class="etb__hint">State the topic and your concern in one paragraph.</div>
+            <div class="etb__example">I am writing concerning [the issue]. [What's happening and why it matters.]</div>
+          </div>
+        </li>
+        <li class="etb">
+          <div class="etb__num">03</div>
+          <div class="etb__body">
+            <div class="etb__label">Your story</div>
+            <div class="etb__hint">Make it personal. Why does this matter to you?</div>
+            <div class="etb__example">I have lived in Padang Besar for [years]. [Personal stake — family, work, daily life.]</div>
+          </div>
+        </li>
+        <li class="etb">
+          <div class="etb__num">04</div>
+          <div class="etb__body">
+            <div class="etb__label">Your ask</div>
+            <div class="etb__hint">Be specific about what you want them to do.</div>
+            <div class="etb__example">[One clear request — vote against, raise in parliament, pressure the minister.]</div>
+          </div>
+        </li>
+        <li class="etb">
+          <div class="etb__num">05</div>
+          <div class="etb__body">
+            <div class="etb__label">Sign off</div>
+            <div class="etb__hint">Optional thanks, questions, or a request for reply. Always sign your name.</div>
+            <div class="etb__example">A reply to these key questions will be highly appreciated.
+
+Sincerely,
+[Your name]</div>
+          </div>
+        </li>
+      </ol>
+      <div class="email-card__foot">
+        <button class="copy-template-btn">📋 Copy template</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RELATED: ADUN SCROLL -->
+<section class="section section--paper">
+  <div class="section-inner">
+    <p class="section__eyebrow section__eyebrow--violet">State Representatives</p>
+    <h2 class="section__title">ADUNs under P001 Padang Besar</h2>
+    <p style="font-size:0.9rem;color:var(--ink-faint);margin:0.5rem 0 1.5rem;max-width:55ch;">
+      These state assembly members represent areas within Padang Besar constituency.
+    </p>
+    <div class="scroll-track">
+      <a href="representative-A-minimal-adun.html" class="rep-scroll-card">
+        <span class="rep-scroll-card__code">N01</span>
+        <span class="rep-scroll-card__name">Ibizan Ibrahim</span>
+        <span class="rep-scroll-card__seat">Titi Tinggi</span>
+        <span class="rep-scroll-card__party">BERSATU</span>
+        <span class="rep-scroll-card__arrow">View profile →</span>
+      </a>
+      <a href="#" class="rep-scroll-card">
+        <span class="rep-scroll-card__code">N02</span>
+        <span class="rep-scroll-card__name">Ahmad Fadzli Ahmad Tajuddin</span>
+        <span class="rep-scroll-card__seat">Beseri</span>
+        <span class="rep-scroll-card__party">PAS</span>
+        <span class="rep-scroll-card__arrow">View profile →</span>
+      </a>
+      <a href="#" class="rep-scroll-card">
+        <span class="rep-scroll-card__code">N03</span>
+        <span class="rep-scroll-card__name">Mohd Shukri Ramli</span>
+        <span class="rep-scroll-card__seat">Kayang</span>
+        <span class="rep-scroll-card__party">PAS</span>
+        <span class="rep-scroll-card__arrow">View profile →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Whoadunit · Open civic data for Malaysians · <a href="#" style="color:var(--rose);font-weight:700;">Help improve this data</a></p>
+</footer>
+
+</body>
+</html>

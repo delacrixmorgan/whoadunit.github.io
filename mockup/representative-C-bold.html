@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rusydan Rusmi — MP P001 · Whoadunit (Bold)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rose:#e8614a;--rose-light:#fce7e3;--rose-shadow:#c84a35;
+  --leaf:#2d9e6b;--leaf-light:#d4f0e4;--leaf-shadow:#1e7050;
+  --violet:#5b5bd6;--violet-light:#e0e0fa;--violet-deep:#3e3eb8;
+  --gold:#e8a320;--gold-light:#fef4d6;--gold-shadow:#b6801a;
+  --paper:#fdf9f4;--ink:#1a1714;--ink-soft:#3e3a36;--ink-faint:#7a746e;
+  --font:'Plus Jakarta Sans',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem clamp(1.5rem,6vw,5rem);background:rgba(253,249,244,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(26,23,20,0.08);display:flex;align-items:center;justify-content:space-between;}
+.nav__logo{font-weight:800;font-size:1rem;letter-spacing:-0.02em;}
+.nav__logo span{color:var(--rose);}
+.nav__back{font-size:0.8rem;font-weight:700;color:var(--ink-faint);}
+
+/* HERO — full leaf background */
+.hero{background:var(--leaf);position:relative;overflow:hidden;padding:clamp(7rem,12vw,11rem) clamp(1.5rem,6vw,5rem) clamp(4rem,7vw,6rem);}
+.blob{position:absolute;border-radius:50%;pointer-events:none;}
+.blob--1{width:600px;height:600px;background:rgba(255,255,255,0.06);top:-250px;right:-200px;}
+.blob--2{width:350px;height:350px;background:rgba(232,163,32,0.2);bottom:-120px;left:-80px;}
+.hero-inner{max-width:900px;margin:0 auto;position:relative;z-index:1;}
+.hero__bc{display:flex;align-items:center;gap:0.5rem;margin-bottom:2rem;}
+.hero__bc a,.hero__bc span{font-size:0.8rem;font-weight:700;color:rgba(255,255,255,0.6);}
+.hero__bc .sep{color:rgba(255,255,255,0.25);}
+.hero__bc .active{color:white;}
+
+.role-pill{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,255,255,0.18);border-radius:999px;padding:0.4rem 1.1rem 0.4rem 0.4rem;margin-bottom:1.5rem;}
+.role-pill__dot{width:28px;height:28px;border-radius:50%;background:white;color:var(--leaf);font-size:0.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.role-pill__text{font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:white;}
+
+.hero__grid{display:grid;grid-template-columns:1fr 260px;gap:2.5rem;align-items:center;}
+.hero__left{}
+.hero__avatar-wrap{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.2);border:3px solid rgba(255,255,255,0.35);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin-bottom:1.25rem;}
+.hero__name{font-size:clamp(2.5rem,7vw,5rem);font-weight:800;line-height:0.98;letter-spacing:-0.025em;color:white;}
+.hero__party{display:inline-block;background:white;color:var(--leaf);font-size:0.8rem;font-weight:800;letter-spacing:0.04em;padding:0.35rem 1rem;border-radius:999px;margin-top:1.25rem;}
+.hero__meta-row{display:flex;flex-wrap:wrap;gap:1rem;margin-top:1.5rem;}
+.hero__meta-item{display:flex;flex-direction:column;gap:0.15rem;}
+.hero__meta-label{font-size:0.6rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.6);}
+.hero__meta-val{font-size:0.9rem;font-weight:700;color:white;}
+
+/* info panel on right */
+.hero__info{background:rgba(255,255,255,0.12);border-radius:20px;padding:1.5rem;border:1.5px solid rgba(255,255,255,0.2);}
+.hero__info-title{font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-bottom:1rem;}
+.info-row{display:flex;flex-direction:column;gap:0.1rem;padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.1);}
+.info-row:last-child{border-bottom:none;padding-bottom:0;}
+.info-row__label{font-size:0.6rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.55);}
+.info-row__val{font-size:0.85rem;font-weight:700;color:white;}
+
+/* CONTACT SECTION */
+.contact-sec{background:var(--leaf-light);padding:clamp(3rem,6vw,5rem) clamp(1.5rem,6vw,5rem);border-bottom:1px solid rgba(26,23,20,0.06);}
+.sec-inner{max-width:900px;margin:0 auto;}
+.step-pill{display:inline-flex;align-items:center;gap:0.6rem;border-radius:999px;padding:0.4rem 1.1rem 0.4rem 0.4rem;margin-bottom:1.25rem;}
+.step-pill--leaf{background:rgba(45,158,107,0.12);}
+.step-pill--leaf .sp-num{background:var(--leaf);}
+.step-pill--leaf .sp-txt{color:var(--leaf);}
+.step-pill--gold{background:rgba(232,163,32,0.12);}
+.step-pill--gold .sp-num{background:var(--gold);}
+.step-pill--gold .sp-txt{color:var(--gold);}
+.step-pill--violet{background:rgba(91,91,214,0.1);}
+.step-pill--violet .sp-num{background:var(--violet);}
+.step-pill--violet .sp-txt{color:var(--violet);}
+.sp-num{width:26px;height:26px;border-radius:50%;color:white;font-size:0.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.sp-txt{font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;}
+.sec-headline{font-size:clamp(1.75rem,4.5vw,3rem);font-weight:800;line-height:1.05;letter-spacing:-0.02em;margin-bottom:0.75rem;}
+.kw-leaf{color:var(--leaf);}
+.kw-gold{color:var(--gold);}
+.kw-violet{color:var(--violet);}
+
+/* contact card */
+.contact-card{background:var(--paper);border-radius:24px;overflow:hidden;border:2px solid rgba(26,23,20,0.06);}
+.contact-card__header{background:var(--leaf);padding:1.5rem;color:white;}
+.contact-card__role{font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;opacity:0.8;}
+.contact-card__name{font-size:1.375rem;font-weight:800;margin-top:0.25rem;}
+.contact-card__sub{font-size:0.85rem;opacity:0.85;margin-top:0.2rem;}
+.contact-card__body{padding:0;}
+.contact-row{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;border-bottom:1px solid rgba(26,23,20,0.05);}
+.contact-row:last-child{border-bottom:none;}
+.contact-row__icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;}
+.contact-row__icon--rose{background:var(--rose-light);color:var(--rose);}
+.contact-row__icon--leaf{background:var(--leaf-light);color:var(--leaf);}
+.contact-row__icon--violet{background:var(--violet-light);color:var(--violet);}
+.contact-row__icon--gold{background:var(--gold-light);color:var(--gold);}
+.contact-row__main{flex:1;}
+.contact-row__label{font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-faint);}
+.contact-row__value{font-size:0.9rem;font-weight:700;color:var(--ink);margin-top:0.1rem;}
+.contact-row__missing{font-size:0.875rem;color:var(--ink-faint);margin-top:0.1rem;font-style:italic;}
+.copy-btn{font-size:0.72rem;font-weight:700;background:var(--gold-light);color:var(--gold);padding:0.38rem 0.85rem;border-radius:999px;transition:background 0.15s,color 0.15s;flex-shrink:0;cursor:pointer;}
+.copy-btn:hover{background:var(--gold);color:white;}
+
+/* completeness */
+.completeness{background:var(--paper);border-radius:20px;border:2px solid rgba(26,23,20,0.06);padding:1.5rem;margin-top:1.25rem;}
+.completeness__top{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;}
+.completeness__label{font-size:0.8rem;font-weight:700;color:var(--ink-soft);}
+.completeness__pct{font-size:2rem;font-weight:800;color:var(--gold);}
+.bar-track{height:10px;background:rgba(26,23,20,0.08);border-radius:999px;overflow:hidden;}
+.bar-fill{height:100%;background:var(--gold);border-radius:999px;}
+.completeness__note{font-size:0.78rem;color:var(--ink-faint);margin-top:0.75rem;}
+
+/* EMAIL section */
+.email-sec{background:var(--gold-light);padding:clamp(3rem,6vw,5rem) clamp(1.5rem,6vw,5rem);border-bottom:1px solid rgba(26,23,20,0.06);}
+.email-card{background:var(--paper);border-radius:24px;overflow:hidden;border:2px solid rgba(26,23,20,0.06);max-width:680px;}
+.email-card__bar{height:6px;background:var(--gold);}
+.email-card__head{padding:1.5rem;display:flex;gap:1rem;align-items:flex-start;border-bottom:1px solid rgba(26,23,20,0.06);}
+.email-card__icon{font-size:2rem;line-height:1;}
+.email-card__eyebrow{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--gold);}
+.email-card__title{font-size:1.125rem;font-weight:800;color:var(--ink);margin-top:0.15rem;}
+.etb-list{list-style:none;padding:0;}
+.etb{display:flex;gap:1.25rem;padding:1rem 1.5rem;border-bottom:1px solid rgba(26,23,20,0.05);}
+.etb:last-child{border-bottom:none;}
+.etb__num{font-size:0.65rem;font-weight:800;color:var(--gold);letter-spacing:0.06em;flex-shrink:0;padding-top:0.15rem;min-width:28px;}
+.etb__body{flex:1;}
+.etb__label{font-size:0.8rem;font-weight:800;color:var(--ink);}
+.etb__hint{font-size:0.8rem;color:var(--ink-faint);margin:0.15rem 0 0.35rem;line-height:1.5;}
+.etb__example{font-size:0.8rem;color:var(--ink-soft);background:rgba(232,163,32,0.09);border-radius:8px;padding:0.5rem 0.75rem;line-height:1.55;white-space:pre-line;}
+.email-card__foot{padding:1.25rem 1.5rem;}
+.btn-gold{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.875rem;font-weight:700;background:var(--gold);color:white;padding:0.7rem 1.5rem;border-radius:999px;box-shadow:0 4px 0 var(--gold-shadow);transition:box-shadow 0.12s,transform 0.12s;cursor:pointer;}
+.btn-gold:hover{box-shadow:0 6px 0 var(--gold-shadow);transform:translateY(-1px);}
+
+/* ADUN scroll */
+.adun-sec{background:var(--violet-light);padding:clamp(3rem,6vw,5rem) clamp(1.5rem,6vw,5rem);}
+.scroll-track{display:flex;gap:1rem;overflow-x:auto;padding-bottom:1rem;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;}
+.scroll-track::-webkit-scrollbar{height:5px;}
+.scroll-track::-webkit-scrollbar-track{background:rgba(26,23,20,0.05);border-radius:3px;}
+.scroll-track::-webkit-scrollbar-thumb{background:var(--violet);border-radius:3px;}
+.adun-card{flex-shrink:0;scroll-snap-align:start;width:250px;border-radius:24px;background:var(--violet);padding:1.75rem 1.5rem;display:flex;flex-direction:column;color:white;transition:transform 0.18s;}
+.adun-card:hover{transform:translateY(-4px);}
+.adun-card__avatar{font-size:2rem;margin-bottom:0.75rem;}
+.adun-card__code{font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(255,255,255,0.18);border-radius:999px;display:inline-block;padding:0.2rem 0.6rem;margin-bottom:0.5rem;}
+.adun-card__name{font-size:1.05rem;font-weight:800;line-height:1.2;}
+.adun-card__seat{font-size:0.85rem;opacity:0.8;margin-top:0.25rem;}
+.adun-card__party{font-size:0.75rem;font-weight:700;opacity:0.65;margin-top:0.2rem;}
+.adun-card__link{margin-top:auto;padding-top:1.25rem;font-size:0.8rem;font-weight:700;opacity:0.9;display:flex;align-items:center;gap:0.4rem;}
+
+.footer{background:var(--paper);padding:2rem clamp(1.5rem,6vw,5rem);border-top:1px solid rgba(26,23,20,0.07);text-align:center;}
+.footer p{font-size:0.8rem;color:var(--ink-faint);}
+
+@media(max-width:680px){
+  .hero__grid{grid-template-columns:1fr;}
+  .hero__info{display:none;}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav__logo">Whoa<span>dunit</span></div>
+  <a href="#" class="nav__back">← Back to search</a>
+</nav>
+
+<!-- HERO: full vivid leaf -->
+<section class="hero">
+  <div class="blob blob--1"></div>
+  <div class="blob blob--2"></div>
+  <div class="hero-inner">
+    <nav class="hero__bc" aria-label="Breadcrumb">
+      <a href="#">Find</a><span class="sep">/</span>
+      <span>P001 Padang Besar</span><span class="sep">/</span>
+      <span class="active">Rusydan Rusmi</span>
+    </nav>
+    <div class="role-pill">
+      <span class="role-pill__dot">MP</span>
+      <span class="role-pill__text">Member of Parliament · Federal</span>
+    </div>
+    <div class="hero__grid">
+      <div class="hero__left">
+        <div class="hero__avatar-wrap">👨</div>
+        <h1 class="hero__name">Rusydan<br>Rusmi</h1>
+        <span class="hero__party">PAS</span>
+        <div class="hero__meta-row">
+          <div class="hero__meta-item">
+            <span class="hero__meta-label">Constituency</span>
+            <span class="hero__meta-val">P001 Padang Besar</span>
+          </div>
+          <div class="hero__meta-item">
+            <span class="hero__meta-label">State</span>
+            <span class="hero__meta-val">Perlis</span>
+          </div>
+          <div class="hero__meta-item">
+            <span class="hero__meta-label">Elected</span>
+            <span class="hero__meta-val">2022</span>
+          </div>
+          <div class="hero__meta-item">
+            <span class="hero__meta-label">Level</span>
+            <span class="hero__meta-val">Dewan Rakyat</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero__info">
+        <div class="hero__info-title">Quick facts</div>
+        <div class="info-row">
+          <span class="info-row__label">Role</span>
+          <span class="info-row__val">Member of Parliament</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row__label">House</span>
+          <span class="info-row__val">Dewan Rakyat</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row__label">ADUNs under seat</span>
+          <span class="info-row__val">3 state reps</span>
+        </div>
+        <div class="info-row">
+          <span class="info-row__label">Polling districts</span>
+          <span class="info-row__val">27 areas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-sec">
+  <div class="sec-inner">
+    <div class="step-pill step-pill--leaf">
+      <span class="sp-num">1</span>
+      <span class="sp-txt">Contact your MP</span>
+    </div>
+    <h2 class="sec-headline">Now <span class="kw-leaf">contact them</span></h2>
+    <p style="font-size:0.9rem;color:var(--ink-soft);max-width:55ch;margin:0.5rem 0 1.5rem;line-height:1.65;">Copy what you need. Then actually send that message. Your representative is accountable to you — not the other way around.</p>
+    <div class="contact-card">
+      <div class="contact-card__header">
+        <div class="contact-card__role">Member of Parliament</div>
+        <div class="contact-card__name">Rusydan Rusmi</div>
+        <div class="contact-card__sub">PAS · P001 Padang Besar · Perlis</div>
+      </div>
+      <div class="contact-card__body">
+        <div class="contact-row">
+          <div class="contact-row__icon contact-row__icon--rose">✉</div>
+          <div class="contact-row__main">
+            <div class="contact-row__label">Email</div>
+            <div class="contact-row__missing">Not yet available</div>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-row__icon contact-row__icon--leaf">☎</div>
+          <div class="contact-row__main">
+            <div class="contact-row__label">Phone</div>
+            <div class="contact-row__missing">Not yet available</div>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-row__icon contact-row__icon--violet">⌂</div>
+          <div class="contact-row__main">
+            <div class="contact-row__label">Office Address</div>
+            <div class="contact-row__missing">Not yet available</div>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-row__icon contact-row__icon--violet" style="font-weight:800;font-size:0.75rem;">f</div>
+          <div class="contact-row__main">
+            <div class="contact-row__label">Facebook</div>
+            <div class="contact-row__missing">Not yet available</div>
+          </div>
+        </div>
+        <div class="contact-row">
+          <div class="contact-row__icon contact-row__icon--gold" style="font-size:0.75rem;font-weight:800;">𝕏</div>
+          <div class="contact-row__main">
+            <div class="contact-row__label">X / Twitter</div>
+            <div class="contact-row__missing">Not yet available</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="completeness">
+      <div class="completeness__top">
+        <span class="completeness__label">Profile completeness</span>
+        <span class="completeness__pct">0%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:0%"></div></div>
+      <p class="completeness__note">Something missing? <a href="#" style="color:var(--rose);font-weight:700;">Suggest a correction →</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- EMAIL TEMPLATE -->
+<section class="email-sec">
+  <div class="sec-inner">
+    <div class="step-pill step-pill--gold">
+      <span class="sp-num">2</span>
+      <span class="sp-txt">Write to your MP</span>
+    </div>
+    <h2 class="sec-headline">Stuck? Use this <span class="kw-gold">template</span></h2>
+    <p style="font-size:0.9rem;color:var(--ink-soft);max-width:55ch;margin:0.5rem 0 1.5rem;line-height:1.65;">A good email is specific, personal, and has one clear ask. Fill in the brackets and send.</p>
+    <div class="email-card">
+      <div class="email-card__bar"></div>
+      <div class="email-card__head">
+        <div class="email-card__icon">✉️</div>
+        <div>
+          <div class="email-card__eyebrow">Sample email</div>
+          <div class="email-card__title">Stuck? Borrow this template.</div>
+        </div>
+      </div>
+      <ol class="etb-list">
+        <li class="etb">
+          <div class="etb__num">01</div>
+          <div class="etb__body">
+            <div class="etb__label">Greeting</div>
+            <div class="etb__hint">Address the rep with their title and name.</div>
+            <div class="etb__example">Dear YB Rusydan Rusmi,</div>
+          </div>
+        </li>
+        <li class="etb">
+          <div class="etb__num">02</div>
+          <div class="etb__body">
+            <div class="etb__label">The issue</div>
+            <div class="etb__hint">State the topic and your concern in one paragraph.</div>
+            <div class="etb__example">I am writing concerning [the issue]. [What's happening and why it matters.]</div>
+          </div>
+        </li>
+        <li class="etb">
+          <div class="etb__num">03</div>
+          <div class="etb__body">
+            <div class="etb__label">Your story</div>
+            <div class="etb__hint">Make it personal. Why does this matter to you?</div>
+            <div class="etb__example">I have lived in Padang Besar for [years]. [Personal stake — family, work, daily life.]</div>
+          </div>
+        </li>
+        <li class="etb">
+          <div class="etb__num">04</div>
+          <div class="etb__body">
+            <div class="etb__label">Your ask</div>
+            <div class="etb__hint">Be specific. One ask per email.</div>
+            <div class="etb__example">[One clear request — vote against, raise in parliament, pressure the minister.]</div>
+          </div>
+        </li>
+        <li class="etb">
+          <div class="etb__num">05</div>
+          <div class="etb__body">
+            <div class="etb__label">Sign off</div>
+            <div class="etb__hint">Always sign your full name.</div>
+            <div class="etb__example">A reply to these key questions will be highly appreciated.
+
+Sincerely,
+[Your name]</div>
+          </div>
+        </li>
+      </ol>
+      <div class="email-card__foot">
+        <button class="btn-gold">📋 Copy full template</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ADUN SCROLL -->
+<section class="adun-sec">
+  <div class="sec-inner">
+    <div class="step-pill step-pill--violet">
+      <span class="sp-num">3</span>
+      <span class="sp-txt">State representatives</span>
+    </div>
+    <h2 class="sec-headline">Your <span class="kw-violet">ADUNs</span></h2>
+    <p style="font-size:0.9rem;color:var(--ink-soft);max-width:58ch;margin:0.5rem 0 1.5rem;line-height:1.65;">The state assembly members whose seats fall within P001 Padang Besar. They handle local matters — drains, parks, roads — at the state level.</p>
+    <div class="scroll-track">
+      <a href="#" class="adun-card">
+        <div class="adun-card__avatar">👨</div>
+        <span class="adun-card__code">N01 · ADUN</span>
+        <span class="adun-card__name">Ibizan Ibrahim</span>
+        <span class="adun-card__seat">Titi Tinggi</span>
+        <span class="adun-card__party">BERSATU · Elected 2022</span>
+        <span class="adun-card__link">View profile →</span>
+      </a>
+      <a href="#" class="adun-card">
+        <div class="adun-card__avatar">👨</div>
+        <span class="adun-card__code">N02 · ADUN</span>
+        <span class="adun-card__name">Ahmad Fadzli Ahmad Tajuddin</span>
+        <span class="adun-card__seat">Beseri</span>
+        <span class="adun-card__party">PAS · Elected 2022</span>
+        <span class="adun-card__link">View profile →</span>
+      </a>
+      <a href="#" class="adun-card">
+        <div class="adun-card__avatar">👨</div>
+        <span class="adun-card__code">N03 · ADUN</span>
+        <span class="adun-card__name">Mohd Shukri Ramli</span>
+        <span class="adun-card__seat">Kayang</span>
+        <span class="adun-card__party">PAS · Elected 2022</span>
+        <span class="adun-card__link">View profile →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Whoadunit · Open civic data for Malaysians · <a href="#" style="color:var(--rose);font-weight:700;">Help improve this data</a></p>
+</footer>
+</body>
+</html>

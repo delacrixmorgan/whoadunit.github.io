@@ -107,8 +107,28 @@ export default function FindPage() {
 
 const pickRandom = (arr) => arr[Math.floor(Math.random() * arr.length)]
 
-const SORT_COLS = ['type', 'name', 'party', 'seatName', 'state']
-const COL_LABELS = { type: 'Type', name: 'Name', party: 'Party', seatName: 'Seat Name', state: 'State' }
+const SORT_COLS = ['name', 'party', 'seatName', 'state']
+const COL_LABELS = { name: 'Name', party: 'Party', seatName: 'Constituency', state: 'State' }
+
+/** Derive 2-letter initials from a name */
+function getInitials(name) {
+  if (!name) return '??'
+  const parts = name.trim().split(/\s+/)
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+}
+
+/** Map party to a CSS modifier class */
+function getPartyModifier(party) {
+  if (!party) return 'other'
+  const p = party.toUpperCase()
+  if (p === 'PAS') return 'PAS'
+  if (p === 'DAP') return 'DAP'
+  if (p === 'UMNO') return 'UMNO'
+  if (p === 'PKR') return 'PKR'
+  if (p === 'BERSATU' || p === 'PPBM') return 'BERSATU'
+  return 'other'
+}
 
 function ResultsList({ results }) {
   const [sort, setSort] = useState({ key: null, dir: 'asc' })
@@ -128,21 +148,19 @@ function ResultsList({ results }) {
         : `${person.federalSeatCode}-adun-${person.stateSeatCode}`,
       federalSeatCode: person.federalSeatCode,
       stateSeatCode: person.type === 'ADUN' ? (person.stateSeatCode || null) : null,
+      seatCode: person.type === 'MP' ? person.federalSeatCode : person.stateSeatCode,
       seatName: person.type === 'MP' ? person.federalSeatName : person.stateSeatName,
       state: person.state,
       kind: person.type === 'MP' ? 'mp' : 'adun',
       name: person.name || null,
       party: person.party || null,
-      href: `/seat/${person.federalSeatCode}`,
+      href: person.type === 'ADUN'
+        ? `/representative/${person.electedYear}/${person.federalSeatCode}/${person.stateSeatCode}`
+        : `/representative/${person.electedYear}/${person.federalSeatCode}`,
     }))
 
     if (!sort.key) return base
     return [...base].sort((a, b) => {
-      if (sort.key === 'type') {
-        const va = a.kind === 'mp' ? 0 : 1
-        const vb = b.kind === 'mp' ? 0 : 1
-        return sort.dir === 'asc' ? va - vb : vb - va
-      }
       const va = a[sort.key] || ''
       const vb = b[sort.key] || ''
       const cmp = va.localeCompare(vb, undefined, { sensitivity: 'base' })
@@ -151,66 +169,80 @@ function ResultsList({ results }) {
   }, [results, sort])
 
   return (
-    <ul className="result-list" role="list">
-      <li className="result-list__header" aria-hidden="true">
-        {SORT_COLS.map((col) => {
-          const isActive = sort.key === col
-          const arrow = isActive ? (sort.dir === 'asc' ? '↑' : '↓') : null
-          return (
-            <button
-              key={col}
-              type="button"
-              className={`result-list__header-cell ${isActive ? 'is-active' : ''}`}
-              onClick={() => toggleSort(col)}
-            >
-              {COL_LABELS[col]}
-              <span className={`sort-indicator ${isActive ? 'sort-indicator--active' : ''}`}>
-                {arrow || '↕'}
-              </span>
-            </button>
-          )
-        })}
-        <span className="result-list__header-cell result-list__header-cell--spacer" />
-      </li>
-      {rows.map((row) => (
-        <ResultRow key={row.id} row={row} />
-      ))}
-    </ul>
+    <div className="table-wrap">
+      <table className="rep-table">
+        <thead>
+          <tr>
+            <th style={{ width: 52 }}></th>
+            {SORT_COLS.map((col) => {
+              const isActive = sort.key === col
+              const arrow = isActive ? (sort.dir === 'asc' ? '↑' : '↓') : '↕'
+              return (
+                <th
+                  key={col}
+                  className={isActive ? 'is-active' : ''}
+                  onClick={() => toggleSort(col)}
+                >
+                  {COL_LABELS[col]} <span className="arrow">{arrow}</span>
+                </th>
+              )
+            })}
+            <th style={{ width: 80 }}></th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <ResultRow key={row.id} row={row} />
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }
 
 function ResultRow({ row }) {
   const isMP = row.kind === 'mp'
   const navigate = useNavigate()
+  const partyMod = getPartyModifier(row.party)
+  const initials = getInitials(row.name)
+
   return (
-    <li className="result-row" onClick={() => navigate(row.href)} role="link" tabIndex={0}
+    <tr className="rep-table__row" onClick={() => navigate(row.href)}
+      role="link" tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter') navigate(row.href) }}>
-      <span className={`person-badge person-badge--${row.kind}`}>
-        {isMP ? 'MP' : 'ADUN'}
-      </span>
-
-      {row.name ? (
-        <span className="result-row__rep-name">{row.name}</span>
-      ) : (
-        <span className="result-row__rep-missing">Not available</span>
-      )}
-
-      <span className="result-row__party">{row.party || '—'}</span>
-
-      <span className="result-row__seat">
-        <span className="result-row__codes">
-          <span className="result-row__code result-row__code--mp">{row.federalSeatCode}</span>
-          {row.stateSeatCode && (
-            <span className="result-row__code result-row__code--adun">{row.stateSeatCode}</span>
+      <td>
+        <span className={`mono mono--${partyMod}`}>{initials}</span>
+      </td>
+      <td>
+        <div className="cell-name">
+          <div>
+            <span className="cell-name__text">{row.name || 'Not available'}</span>
+            <span className="cell-name__sub">{isMP ? 'MP' : 'ADUN'}</span>
+          </div>
+        </div>
+      </td>
+      <td>
+        <span className={`cell-party party--${partyMod}`}>{row.party || '—'}</span>
+      </td>
+      <td>
+        <div className="cell-seat">
+          <span className="code code--mp">{row.federalSeatCode}</span>
+          {row.kind === 'adun' && (
+            <span className="code code--adun">{row.stateSeatCode}</span>
           )}
+          <span className="seat-name">{row.seatName}</span>
+        </div>
+      </td>
+      <td>
+        <span className="cell-state">
+          <span className="cell-state__type">{isMP ? 'MP, ' : 'ADUN, '}</span>
+          {row.state}
         </span>
-        <span className="result-row__name">{row.seatName}</span>
-      </span>
-
-      <span className="result-row__state">{row.state}</span>
-
-      <Link to={row.href} className="result-row__cta" onClick={(e) => e.stopPropagation()}>View</Link>
-    </li>
+      </td>
+      <td>
+        <Link to={row.href} className="cell-cta" onClick={(e) => e.stopPropagation()}>View</Link>
+      </td>
+    </tr>
   )
 }
 
